@@ -8,24 +8,6 @@
 #include "invertedIndex.h"
 #include "set.h"
 
-void GetCollection(void) {
-    char array[7][6];
-    int i = 0;
-    char* tmp;
-    FILE* collection = fopen("Sample1/collection.txt", "r");
-    if (collection != NULL) {
-        while(fscanf(collection,"%s",tmp) != EOF) {
-            printf("%d:%s\n", i, tmp);
-            strcpy(array[i],tmp);
-            i++;
-        }
-    }
-    for (int k = 0; k < i; k++) {
-        printf("%s\n", array[k]);
-    }   
-    fclose(collection)
-}
-
 void LenCollection(void) {
     int i = 0;
     char* tmp;
@@ -39,6 +21,29 @@ void LenCollection(void) {
     fclose(collection)
     return i;
 }
+
+void GetCollection(void) {
+    int i = 0;
+    int len = LenCollection();
+    char** list = (char**) malloc(len);
+    for(int j = 0; j < len; j ++){
+        list[j] = (char*) malloc(7)
+    }
+    char* tmp;
+    FILE* collection = fopen("Sample1/collection.txt", "r");
+    if (collection != NULL) {
+        while(fscanf(collection,"%s",tmp) != EOF) {
+            printf("%d:%s\n", i, tmp);
+            strcpy(list[i],tmp);
+            i++;
+        }
+    }
+    for (int k = 0; k < i; k++) {
+        printf("%s\n", array[k]);
+    }   
+    fclose(collection)
+}
+
 
 void GetGraph(char *urlList){
     graphSize = LenCollection();
