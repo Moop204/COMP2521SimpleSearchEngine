@@ -10,7 +10,7 @@ int main (void) {
     //if (!cardinality) return 1;
     //char array[cardinality][URLNAMELEN];
     //if (!GetCollection(cardinality, URLNAMELEN, array[cardinality][URLNAMELEN])) return 1;
-    GetCollection();//cardinality, length);
+    GetCollection(cardinality, length);
     //for (int k = 0; k < cardinality; k++) {
         //printf("%s\n", array[k]);
     //}
