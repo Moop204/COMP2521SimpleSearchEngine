@@ -1,6 +1,8 @@
 //Completed by Justin Or and Andrew Phuoc Nguyen
 //Implement code to read data
 
+
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -8,10 +10,12 @@
 #include "invertedIndex.h"
 #include "set.h"
 #include "queue.h"
+#include "graph.h"
 
 int LenCollection(void) {
     int i = 0;
     char* tmp;
+    tmp = (char*) malloc((7)*sizeof(char));
     FILE* collection = fopen("Sample1/collection.txt", "r");
     if (collection != NULL) {
         while(fscanf(collection,"%s",tmp) != EOF) {
@@ -22,6 +26,7 @@ int LenCollection(void) {
     fclose(collection);
     return i;
 }
+
 
 void GetCollection(int elements, int length) {
     //char list[7][7];
@@ -37,11 +42,13 @@ void GetCollection(int elements, int length) {
     
     int i = 0;  
     char* tmp;
+    tmp = (char*) malloc((7)*sizeof(char));
     FILE* collection;
     collection = fopen("Sample1/collection.txt", "r");
     printf("%p\n", collection);
     if (collection != NULL) {
         printf("if(collection) == TRUE\n");
+        fscanf(collection, "%s", tmp);
         while (fscanf(collection,"%s",tmp) != EOF) {
             printf("%dth array list\n", i);
             printf("%d: %s\n", i, tmp);
@@ -56,6 +63,32 @@ void GetCollection(int elements, int length) {
 }
 
 
+/*
+void GetGraph(char *urlList){
+    int graphSize = LenCollection();
+    
+    Graph g = newGraph(graphSize);
+    
+    for(int i = 0; i < graphSize; i++){
+        for(int connection = 0; connection < graphSize; connection++){
+            char *file_name = strdup(urlList[i]);
+            FILE *open = fopen(file_name, "r");
+            char * tmp;
+            if( open != NULL){
+                while(fscanf(open,"%s", tmp) != EOF){
+                    for( int k = 0; k < graphSize; k++){
+                        if (strcmp(urlList[k], tmp){
+                            addEdge(g, urlList[i], urlList[k]);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    showGraph(g);
+}
+*/
 
 
 
@@ -74,8 +107,7 @@ void GetCollection(int elements, int length) {
 
 
 
-
-
+/////////////////////////////////////////////////////////////////////////////////////////////////
 
 /*int GetCardinality(void);
 
@@ -111,32 +143,6 @@ int GetCollection(int cardinality, int length, char array[cardinality][length]) 
         printf("%s\n", array[k]);
     }   
     fclose(collection)
-}
-
-
-void GetGraph(char *urlList){
-    graphSize = LenCollection();
-    
-    Graph g = newGraph(graphSize);
-    
-    for(int i = 0; i < graphSize; i++){
-        for(int connection = 0; connection < graphSize; connection++){
-            char *file_name = strdup(urlList[i]);
-            FILE *open = fopen(file_name, "r");
-            char * tmp;
-            if( open != NULL){
-                while(fscanf(open,"%s", tmp) != EOF){
-                    for( int k = 0; k < graphSize; k++){
-                        if (strcmp(urlList[k], tmp){
-                            addEdge(g, urlList[i], urlList[k]);
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-    }
-    showGraph(g);
 }
 
 int GetCardinality(void) {

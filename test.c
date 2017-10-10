@@ -4,6 +4,9 @@
 #include "readData.h"
 #include "invertedIndex.h"
 
+
+void GetCollection(int elements, int length);
+
 int main (void) {
     int cardinality = 7;//GetCardinality();
     int length = SIZEOFURL;
@@ -16,3 +19,5 @@ int main (void) {
     //}
     return 0;
 }
+
+
