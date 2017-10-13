@@ -11,10 +11,11 @@ int main (void) {
     //if (!cardinality) return 1;
     //char array[cardinality][URLNAMELEN];
     //if (!GetCollection(cardinality, URLNAMELEN, array[cardinality][URLNAMELEN])) return 1;
-    char** list = GetCollection(cardinality, length);
+    char** urlList = GetCollection(cardinality, length);
     int k;
     for (k = 0; k < cardinality; k++) {
-        printf("%s\n", list[k]);
+        printf("%s\n", urlList[k]);
     }
+    GetGraph(urlList);
     return 0;
 }
