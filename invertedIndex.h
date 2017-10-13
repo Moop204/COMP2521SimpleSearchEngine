@@ -1,2 +1,2 @@
-//Completed by Justin and Andrew
-//Interface for invertedIndex.c 
+// Completed by Justin and Andrew
+// Interface for invertedIndex.c
