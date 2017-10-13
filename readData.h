@@ -1,2 +1,1 @@
-# Interfaces of the readData file
-
+//Interfaces of the readData file
