@@ -1,5 +1,6 @@
 //Interfaces of the readData file
 #define SIZEOFURL 7
+#include "graph.h"
 char** GetCollection(int elements, int length);
 int LenCollection(void);
-void GetGraph(char** urlList);
+Graph GetGraph(char** urlList);

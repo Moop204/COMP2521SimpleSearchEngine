@@ -24,7 +24,7 @@ Graph newGraph();
 void  disposeGraph(Graph);
 int   addEdge(Graph,char *,char *);
 int   nVertices(Graph);
-int   isConnected(Graph, char *, char *);
+int   isConnected(Graph, char *, char *);//src, dest
 void  showGraph(Graph,int);
 
 static int vertexID(char *, char **, int);

@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include "readData.h"
 #include "invertedIndex.h"
+#include "pageRank.h"
 
 
 int main (void) {
@@ -13,9 +14,7 @@ int main (void) {
     //if (!GetCollection(cardinality, URLNAMELEN, array[cardinality][URLNAMELEN])) return 1;
     char** urlList = GetCollection(cardinality, length);
     int k;
-    for (k = 0; k < cardinality; k++) {
-        printf("%s\n", urlList[k]);
-    }
     GetGraph(urlList);
+    PageRankW(0.85,0.00001,10);
     return 0;
 }
