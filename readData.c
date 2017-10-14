@@ -35,7 +35,7 @@ char** GetCollection(int elements, int length) {
     }
     i = 0;
     char* tmp;
-    tmp = (char*) malloc((7)*sizeof(char));
+    tmp = (char*) malloc((SIZEOFURL) * sizeof(char));
     FILE* collection;
     collection = fopen("Sample1/collection.txt", "r");
     if (collection != NULL) {
@@ -51,37 +51,44 @@ char** GetCollection(int elements, int length) {
     return list;
 }
 
-void GetGraph(char** urlList){
+void GetGraph(char** urlList) {
     int graphSize = LenCollection();
     Graph g = newGraph(graphSize);
-    int i,k,connection;
+    int i, k; //i is for each url.txt, k is for each link in url.
+    char * tmp;     //where fscanf reads the urlnames
+    char * hashtag; //where fscanf reads "#start" and "#end" 
+    char * section; //where fscanf reads "Section-1" and "Section-2"
     for(i = 0; i < graphSize; i++){
-        for(connection = 0; connection < graphSize; connection++){
-            printf("@connection=%d\n", connection);
-            char file_name[8+SIZEOFURL] = "Sample1/";
-            if (urlList[i] == " ") continue;
-            strcat(file_name, urlList[i]);
-            strcat(file_name, ".txt");
-            printf("filename: %s\n", file_name);
-            FILE *open = fopen(file_name, "r");
-            char * tmp;
-            tmp = (char*) malloc((7)*sizeof(char));
-            if(open != NULL){
-                //printf("HELLO\n");
-                while(fscanf(open,"%s", tmp) != EOF){
-                    //printf("WHILE\n");
-                    for (k = 0; k < graphSize; k++){
-                        //printf("FOR\n");
-                        if (strcmp(urlList[k], tmp) == 0) {
-                            printf("Adding an edge between %s and %s\n", urlList[i], urlList[k]);
-                            addEdge(g, urlList[i], urlList[k]);
-                            break;
-                        }
+        printf("@i=%d\n", i);
+        char file_name[8+SIZEOFURL+4] = "Sample1/";
+        strcat(strcat(file_name, urlList[i]),".txt");
+        printf("filename: %s\n", file_name);
+        FILE *open = fopen(file_name, "r");
+        tmp = (char*) malloc((SIZEOFURL)*sizeof(char));
+        hashtag = (char*) malloc((SIZEOFURL)*sizeof(char));
+        section = (char*) malloc((10)*sizeof(char));
+        if(open != NULL){
+            printf("HELLO\n");
+            if (!(fscanf(open,"%s %s",hashtag, section) == 2)) return;//error
+            if (strcmp(hashtag,"#start")+strcmp(section,"Section-1") != 0) return;//error
+            printf("%s %s:\n",hashtag,section);
+            while((fscanf(open,"%s", tmp) != EOF) && strcmp(tmp,"#end") != 0) {
+                printf("WHILE: tmp = %s\n", tmp);
+                for (k = 0; k < graphSize; k++){
+                    printf("FOR k = %d\n", k);
+                    if (strcmp(urlList[k], tmp) == 0) {
+                        printf("Adding an edge between %s and %s\n", urlList[i], urlList[k]);
+                        addEdge(g, urlList[i], urlList[k]);
+                        //break;
                     }
                 }
             }
-            fclose(open);
+            //tmp == #end, make sure Section-1 is next and then close
+            if (!(fscanf(open,"%s",section) == 1 && strcmp(section,"Section-1") == 0)) return;//error
+            printf("%s %s. closing\n", tmp, section);
+            //done, close and break to next iteration of connection.
         }
+        fclose(open);
     }
     showGraph(g,0);
 }
