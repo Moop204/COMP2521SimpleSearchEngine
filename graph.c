@@ -125,6 +125,7 @@ void showGraph(Graph g, int mode)
 		int i, j;
 		if (mode == 1) {
 			for (i = 0; i < g->nV; i++) {
+                printf("%d -> %s|", i, g->vertex[i]);
 				for (j = 0; j < g->nV; j++)
 					printf("%d",g->edges[i][j]);
 				putchar('\n');

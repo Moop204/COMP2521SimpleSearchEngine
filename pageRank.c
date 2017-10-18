@@ -15,7 +15,6 @@ int PageRankW(double d, double diffPR, int maxIterations) {
     int sizeUrl = LenCollection();//sizeof(listOfUrls[0]);
     char** urlList = GetCollection(sizeUrl,SIZEOFURL);
     Graph g = GetGraph(urlList);
-    showGraph(g,0);
     double** urlPR;//[sizeUrl][maxIterations]
     urlPR = calloc(sizeUrl, sizeof(double *));
     int i,j,k,l;
@@ -56,7 +55,8 @@ int PageRankW(double d, double diffPR, int maxIterations) {
     }
     for (i = 0; i < sizeUrl; i++) {
         if (outLinks[i] == 0) outLinks[i] = 0.5;
-        printf("in: %d out: %lf\n", inLinks[i], outLinks[i]);
+        printf("for %d aka %s: ", i, urlList[i]);
+        printf("in: %d out: %1f\n", inLinks[i], outLinks[i]);
     }
     //PageRankWeighted algorithm
     while ((noIter < maxIterations-1 && diff >= diffPR) || noIter == 0) {
@@ -66,12 +66,13 @@ int PageRankW(double d, double diffPR, int maxIterations) {
             weightIn = weightOut = 0.0;
             //calculate the pagerank
             urlPR[i][noIter] = (double)(1-d)/sizeUrl;
-            printf("i = %d      PR of %s is %lf\n",i,urlList[i],urlPR[i][noIter]);
+            ////printf("i = %d      PR of %s is %lf\n",i,urlList[i],urlPR[i][noIter]);
             for (j = 0; j < sizeUrl; j++) {//for each other url
                 //calculate weightIn and weightOut
                 if (j == i || 
                     isConnected(g,urlList[j],urlList[i]) == 0 || 
-                    !"is a selfloop/parallel edge") continue;
+                    !"is a selfloop/parallel edge") continue;//HELP how do i find if its a selfloop/parallel edge?
+                printf("%s and %s isConnected?:%d\n", urlList[j], urlList[i], isConnected(g,urlList[j],urlList[i]));
                 //weightIn from j to i = (#inlinks of i)/(sum of inlinks of pages j links to);
                 //weightOut from j to i = (#outlinks of i)/(sum of outlinks of pages j links to);
                 double sumIn = sumOut = 0;
@@ -90,17 +91,33 @@ int PageRankW(double d, double diffPR, int maxIterations) {
         }
         diff = 0;
         for (i = 0; i < sizeUrl; i++) {
-            printf("before: %lf, after %lf\n", urlPR[i][noIter], urlPR[i][noIter-1]);
-            printf("therefore, add %lf\n", urlPR[i][noIter] - urlPR[i][noIter-1]);
+            //printf("before: %lf, after %lf\n", urlPR[i][noIter], urlPR[i][noIter-1]);
+            //printf("Difference: %lf\n", urlPR[i][noIter] - urlPR[i][noIter-1]);
             double difference = urlPR[i][noIter] - urlPR[i][noIter-1];
             if (difference < 0) difference = difference * -1;
-            printf("final difference: %lf\n", difference);
+            //printf("final difference: %lf\n", difference);
             diff += difference;
         }
-        printf("diff = %lf\n", diff);
+        //printf("diff = %lf\n", diff);
     }
+    int seen[7] = {0,0,0,0,0,0,0};
+    int maxurlPR = 0;
+    int max = 0;
     for (i = 0; i < sizeUrl; i++) {
-        printf("url:%s outgoing links:%lf page rank: %.7f\n", urlList[i], outLinks[i], urlPR[i][noIter]);
+        for (j = 0; j < sizeUrl; j++) {
+            if ((urlPR[j][noIter] - maxurlPR) > 0) {
+                if (seen[j] == 0) {
+                    maxurlPR = urlPR[j][noIter];
+                    max = j;
+                    printf("    maxurlPR = %lf max = %d\n   urlPR[%d][%d] = %lf, yes thats right j = %d\n",maxurlPR,max,j,noIter,urlPR[j][noIter],j);
+                }
+            }
+        }
+        printf("    max = %d, maxPR = %lf\n", max, maxurlPR);
+        seen[max] = 1;
+        printf("url:%s outgoing links:%.0f page rank: %.7f\n", urlList[max], outLinks[max], urlPR[max][noIter]);
+        maxurlPR = 0;
+        max = 0;
     }
     // Calculate Page Rank
     // Type? listUrlPageRank = calculatePageRank(g, d, diffPR, maxIterations);
@@ -109,5 +126,5 @@ int PageRankW(double d, double diffPR, int maxIterations) {
     //FILE *fp;
     //fp = fopen("pagerankList.txt","w");
     //fwrite(orderedListUrlsPageRank,1,  sizeof(orderedListUrlsPageRank), fp); 
-
+    return 0;
 }

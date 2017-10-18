@@ -89,7 +89,8 @@ Graph GetGraph(char** urlList) {
         }
         fclose(open);
     }
-    //showGraph(g,0);
+    showGraph(g,1);
+    showGraph(g,0);
     return g;
 }
 

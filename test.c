@@ -9,12 +9,9 @@
 int main (void) {
     int cardinality = LenCollection();
     int length = SIZEOFURL;
-    //if (!cardinality) return 1;
-    //char array[cardinality][URLNAMELEN];
-    //if (!GetCollection(cardinality, URLNAMELEN, array[cardinality][URLNAMELEN])) return 1;
     char** urlList = GetCollection(cardinality, length);
     int k;
-    GetGraph(urlList);
-    PageRankW(0.85,0.00001,10);
+    //GetGraph(urlList);
+    PageRankW(0.850000,0.000010,1000);
     return 0;
 }
