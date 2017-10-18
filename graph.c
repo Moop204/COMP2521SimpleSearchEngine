@@ -24,7 +24,7 @@ Graph newGraph();
 void  disposeGraph(Graph);
 int   addEdge(Graph,char *,char *);
 int   nVertices(Graph);
-int   isConnected(Graph, char *, char *);
+int   isConnected(Graph, char *, char *);//src, dest
 void  showGraph(Graph,int);
 
 static int vertexID(char *, char **, int);
@@ -125,6 +125,7 @@ void showGraph(Graph g, int mode)
 		int i, j;
 		if (mode == 1) {
 			for (i = 0; i < g->nV; i++) {
+                printf("%d -> %s|", i, g->vertex[i]);
 				for (j = 0; j < g->nV; j++)
 					printf("%d",g->edges[i][j]);
 				putchar('\n');

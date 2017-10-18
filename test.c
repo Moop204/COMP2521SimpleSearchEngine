@@ -3,19 +3,15 @@
 #include <stdlib.h>
 #include "readData.h"
 #include "invertedIndex.h"
+#include "pageRank.h"
 
-
-void GetCollection(int elements, int length);
 
 int main (void) {
-    int cardinality = 7;//GetCardinality();
+    int cardinality = LenCollection();
     int length = SIZEOFURL;
-    //if (!cardinality) return 1;
-    //char array[cardinality][URLNAMELEN];
-    //if (!GetCollection(cardinality, URLNAMELEN, array[cardinality][URLNAMELEN])) return 1;
-    GetCollection(cardinality, length);
-    //for (int k = 0; k < cardinality; k++) {
-        //printf("%s\n", array[k]);
-    //}
+    char** urlList = GetCollection(cardinality, length);
+    int k;
+    //GetGraph(urlList);
+    PageRankW(0.850000,0.000010,1000);
     return 0;
 }

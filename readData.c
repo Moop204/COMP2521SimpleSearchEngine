@@ -16,147 +16,83 @@ int LenCollection(void) {
     FILE* collection = fopen("Sample1/collection.txt", "r");
     if (collection != NULL) {
         while(fscanf(collection,"%s",tmp) != EOF) {
-            printf("%d:%s\n", i, tmp);
             i++;
         }
     }
     fclose(collection);
+    free(tmp);
     return i;
 }
 
 
-void GetCollection(int elements, int length) {
-    //char list[7][7];
+char** GetCollection(int elements, int length) {
     //initialising the char** list of strings
     char** list;
-    //int elements = 7;
-    //int length = SIZEOFURL;
-
     list = malloc(elements * length);
     int i;
     for (i = 0; i < elements; i++) {
         list[i] = malloc((SIZEOFURL) * sizeof(char));
     }
-
     i = 0;
     char* tmp;
-    tmp = (char*) malloc((7)*sizeof(char));
+    tmp = (char*) malloc((SIZEOFURL) * sizeof(char));
     FILE* collection;
     collection = fopen("Sample1/collection.txt", "r");
-    printf("%p\n", collection);
     if (collection != NULL) {
-        printf("if(collection) == TRUE\n");
-        fscanf(collection, "%s", tmp);
         while (fscanf(collection,"%s",tmp) != EOF) {
-            printf("%dth array list\n", i);
-            printf("%d: %s\n", i, tmp);
+            //printf("%d: %s\n", i, tmp);
+            strcat(tmp, "\0");
             strcpy(list[i],tmp);//list[i] = strdup(tmp);
             i++;
         }
     }
-    int k = 0;
-    for (k = 0; k < i; k++) {
-        printf("%s\n", list[k]);
-    }
     fclose(collection);
+    free(tmp);
+    return list;
 }
 
-
-/*
-void GetGraph(char *urlList){
+Graph GetGraph(char** urlList) {
     int graphSize = LenCollection();
-
     Graph g = newGraph(graphSize);
-
-    for(int i = 0; i < graphSize; i++){
-        for(int connection = 0; connection < graphSize; connection++){
-            char *file_name = strdup(urlList[i]);
-            FILE *open = fopen(file_name, "r");
-            char * tmp;
-            if( open != NULL){
-                while(fscanf(open,"%s", tmp) != EOF){
-                    for( int k = 0; k < graphSize; k++){
-                        if (strcmp(urlList[k], tmp){
-                            addEdge(g, urlList[i], urlList[k]);
-                            break;
-                        }
+    int i, k; //i is for each url.txt, k is for each link in url.
+    char * tmp;     //where fscanf reads the urlnames
+    char * hashtag; //where fscanf reads "#start" and "#end" 
+    char * section; //where fscanf reads "Section-1" and "Section-2"
+    for(i = 0; i < graphSize; i++){
+        //printf("@i=%d\n", i);
+        char file_name[8+SIZEOFURL+4] = "Sample1/";
+        strcat(strcat(file_name, urlList[i]),".txt");
+        //printf("filename: %s\n", file_name);
+        FILE *open = fopen(file_name, "r");
+        tmp = (char*) malloc((SIZEOFURL)*sizeof(char));
+        hashtag = (char*) malloc((SIZEOFURL)*sizeof(char));
+        section = (char*) malloc((10)*sizeof(char));
+        if(open != NULL){
+            if (!(fscanf(open,"%s %s",hashtag, section) == 2)) return NULL;//error
+            if (strcmp(hashtag,"#start")+strcmp(section,"Section-1") != 0) return NULL;//error
+            //printf("%s %s:\n",hashtag,section);
+            while((fscanf(open,"%s", tmp) != EOF) && strcmp(tmp,"#end") != 0) {
+                //printf("WHILE: tmp = %s\n", tmp);
+                for (k = 0; k < graphSize; k++){
+                    //printf("FOR k = %d\n", k);
+                    if (strcmp(urlList[k], tmp) == 0) {
+                        //printf("Adding an edge between %s and %s\n", urlList[i], urlList[k]);
+                        addEdge(g, urlList[i], urlList[k]);
+                        //break;
                     }
                 }
             }
+            //tmp == #end, make sure Section-1 is next and then close
+            if (!(fscanf(open,"%s",section) == 1 && strcmp(section,"Section-1") == 0)) return NULL;//error
+            //printf("%s %s. closing\n", tmp, section);
+            //done, close and break to next iteration of connection.
         }
+        fclose(open);
     }
-    showGraph(g);
+    showGraph(g,1);
+    showGraph(g,0);
+    return g;
 }
-*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/////////////////////////////////////////////////////////////////////////////////////////////////
-
-/*int GetCardinality(void);
-
-int GetCollection(int cardinality, int length, char array[cardinality][length]) {
-    int i = 0;
-    int len = LenCollection();
-    char** list = (char**) malloc(len);
-    for(int j = 0; j < len; j ++){
-        list[j] = (char*) malloc(7)
-    }
-    char* tmp;
-    FILE* collection = fopen("Sample1/collection.txt", "r");
-    if (collection == NULL) return 0;
-    else {
-        while(fscanf(collection,"%s",tmp) != EOF) {
-            printf("%d:%s\n", i, tmp);
-            strcpy(array[i],tmp);
-            //enterQueue(q,tmp);
-            i++;
-        }
-    }
-    //for (int k = 0; k < i; k++) {
-        //strcpy(array[k], leaveQueue(q));
-        //printf("%s\n", array[k]);
-    //}
-    return 1;
-
-            strcpy(list[i],tmp);
-            i++;
-        }
-    }
-    for (int k = 0; k < i; k++) {
-        printf("%s\n", array[k]);
-    }
-    fclose(collection)
-}
-
-int GetCardinality(void) {
-    int i = 0;
-    char* tmp;
-    FILE* collection = fopen("Sample1/collection.txt", "r");
-    if (collection == NULL) return 0;//error
-    else {
-        while(fscanf(collection,"%s",tmp) != EOF) {
-            printf("%d:%s\n", i, tmp);
-            i++;
-        }
-        return i;
-    }
-}*/
 
 /*justin
 pull wherever you want to merge
