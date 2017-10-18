@@ -12,85 +12,104 @@ char *RemoveSpecialCharacters(char *word);
 typedef struct IINode {
     IINode  *next;
     char    *word;
-    URLNode *next_url;
+    Queue   *urls;
 } IINode;
 
+typedef struct IIRep {
+    IINode  *front;
+    IINode  *end;
+} IIRep;
+
+
+/*
 typedef struct URLNode {
     char    *url;
     URLNode *next_url;
 } URLNode;
+*/
 
-IINode AppendIINode(char *word, IINode *prev){
+
+void AppendIINode(char *word, IIRep *rep){
     IINode newNode = malloc(sizeof(IINode));
     newNode->word = word;
     newNode->next = NULL;
-    newNode->next_url = NULL;
-    prev->next = newNode;
-    return newNode;
+    newNode->urls = newQueue();
+    if(rep->end == NULL){
+        rep->front = newNode;
+        rep->end = newNode;
+    }
+    else{
+        if(!isAlphaLess(word, rep->end->word)){
+            rep->end->next = newNode;
+            rep->end = newNode;
+        }
+        else{
+            newNode->next = rep->front;
+            rep->front = newNode;
+        }
+    }
 }
 
-IINode InitialiseNode(char *word){
-    IINode newNode = malloc(sizeof(IINode));
-    newNode->word = word;
-    newNode->next_url = NULL;
-    newNode->next = NULL;
-    return newNode;
+IIRep InitialiseRep(void){
+    IIRep  newRep = malloc(sizeof(IIRep));
+    newRep->front = NULL;
+    newRep->end = NULL;
+    return newRep;
 }
+
+Queue SearchIndex(char *word, IIRep *r){
+    for(IINode cur = r->front; cur != NULL; cur = cur->next){
+        if(strcmp(cur->word, word)){
+            return cur->urls;
+        }
+    } 
+    printf("YOU DONE MESSED UP MATE");
+    return NULL;
+}
+
 
 int InvertedIndex(char **urlList){
 
-    Queue q = newQueue();
-    Set   s = newSet();
+    Set sGlobal = newSet();                 // 
+    Set  sLocal = newSet();
     int len = LenCollection();
     char *tmp;
-    IINode headNode = NULL;
-    IINode currNode;
+    IIRep *r = InitialiseRep();
 
     for(int i = 0; i < len; i++){
-        FILE *fptext = fopen(urlList[i], "r");
-
-        while (fscanf(fptext,"%s",tmp) != EOF) {
-            tmp = RemoveSpecialCharacters(tmp);
-            NormalizeWord(tmp);
-            if(!isElem(s, tmp)){
-                insertInto(s, tmp);
-                enterQueue(q, tmp);
-                if(headNode == NULL){
-                    currNode = InitialiseNode(tmp);
-                    headNode = *currNode;
-                    addUrl(currNode, urlList[i]);
-                }
-                else{
-                    currNode = AppendIINode(tmp, currNode);
-                    addUrl(currNode, urlList[i]);
-                }
-
-
+        FILE *fptext = fopen(strcat(urlList[i],".txt"), "r");      // Opens up url
+        while (fscanf(fptext,"%s",tmp) != EOF) {    // Reads by character
+            tmp = RemoveSpecialCharacters(tmp);     // Removes special characters
+            NormalizeWord(tmp);                     // Converts words to lowercase
+            if(!isElem(sGlobal, tmp)){              // For words never seen before, create a head node that holds all urls containing it
+                insertInto(sGlobal, tmp);           
+                AppendIINode(tmp, r);
+            }
+            if(!isElem(sLocal, tmp)){
+                insertInto(sLocal, tmp);           
+                Queue url_list = SearchIndex(tmp,r);
+                enterQueue(url_list, tmp);
             }
         }
+        fclose(fptext);
+        disposeSet(sLocal);
     }
 
 
 
     FILE *fp = fopen("invertedIndex.txt", "w");
-    fwrite(invertedIdx, 1, sizeof(invertedIdx), fp);
+    for(IINode cur = r->front; cur != NULL; cur = cur->next){
+        fprintf(fp, "%s  ", word);
+        url_q = cur->urls;
+        
+        //fwrite(invertedIdx, 1, sizeof(invertedIdx), fp);
+        for(char *url = leavePriorQueue(url_q); !emptyQueue(url_q); url = leavePriorQueue(url_q)){
+            fprintf(fp, "%s ", word);            
+        }
+    }
     fclose(fp)
     return 0;
 
-}
-
-void writeInvertedIndex(IINode *head){
-
-    for(IINode *currNode = head; currNode != NULL; currNode = currNode->next){
-        fprint(//Output to file
-}
-
-void addUrl(IINode curr, char* url){
-    for(URLNode *tmp = curr->next_url; tmp != NULL; tmp = tmp->next_url){
-        //COMPARE STRINGS
-        if( /*TODO*/){
-        }
-    }
 }
 
 char *RemoveSpecialCharacters(char* str){
@@ -100,9 +119,11 @@ char *RemoveSpecialCharacters(char* str){
     for(int i = 0; i < len; i++){
         if(str[i] != '.' && str[i] != ';' && str[i] != '?'){
             standardStr[idx] = str[i];
+            idx++;
         }
 
     }
+    standardStr[idx] = "\0"
     return standardStr;
 }
 
