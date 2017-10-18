@@ -2,7 +2,12 @@
 // Implemented with BST where key is a string and value is in a list
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
+#include "readData.h"
+#include "queue.h"
+#include "set.h"
+
 
 void NormaliseWord(char* word);             // Taken from lab08 of COMP2521
 //void RemoveSpecialCharacters(char* word);   // Returns a string without special characters
@@ -10,9 +15,9 @@ char *RemoveSpecialCharacters(char *word);
 
 
 typedef struct IINode {
-    IINode  *next;
+    struct IINode  *next;
     char    *word;
-    Queue   *urls;
+    Queue   urls;
 } IINode;
 
 typedef struct IIRep {
@@ -29,8 +34,8 @@ typedef struct URLNode {
 */
 
 
-void AppendIINode(char *word, IIRep *rep){
-    IINode newNode = malloc(sizeof(IINode));
+void AppendIINode(char *word, IIRep *rep){      // Inserts node to word linked list in alphabetical order
+    IINode *newNode = malloc(sizeof(IINode));
     newNode->word = word;
     newNode->next = NULL;
     newNode->urls = newQueue();
@@ -39,26 +44,35 @@ void AppendIINode(char *word, IIRep *rep){
         rep->end = newNode;
     }
     else{
-        if(!isAlphaLess(word, rep->end->word)){
+        if(isAlphaLess(rep->end->word, word)){
             rep->end->next = newNode;
             rep->end = newNode;
         }
-        else{
+        else if(isAlphaLess(word, rep->front->word)){
             newNode->next = rep->front;
             rep->front = newNode;
+        }
+        else{
+            for(IINode *cur = rep->front; cur != NULL; cur = cur->next){
+                if(!isAlphaLess(cur->next->word, word)){
+                    newNode->next = cur->next;
+                    cur->next = newNode;
+                    break;
+                }
+            }
         }
     }
 }
 
-IIRep InitialiseRep(void){
-    IIRep  newRep = malloc(sizeof(IIRep));
+IIRep *InitialiseRep(void){
+    IIRep *newRep = malloc(sizeof(IIRep));
     newRep->front = NULL;
     newRep->end = NULL;
     return newRep;
 }
 
 Queue SearchIndex(char *word, IIRep *r){
-    for(IINode cur = r->front; cur != NULL; cur = cur->next){
+    for(IINode *cur = r->front; cur != NULL; cur = cur->next){
         if(strcmp(cur->word, word)){
             return cur->urls;
         }
@@ -80,7 +94,7 @@ int InvertedIndex(char **urlList){
         FILE *fptext = fopen(strcat(urlList[i],".txt"), "r");      // Opens up url
         while (fscanf(fptext,"%s",tmp) != EOF) {    // Reads by character
             tmp = RemoveSpecialCharacters(tmp);     // Removes special characters
-            NormalizeWord(tmp);                     // Converts words to lowercase
+            NormaliseWord(tmp);                     // Converts words to lowercase
             if(!isElem(sGlobal, tmp)){              // For words never seen before, create a head node that holds all urls containing it
                 insertInto(sGlobal, tmp);           
                 AppendIINode(tmp, r);
@@ -98,22 +112,22 @@ int InvertedIndex(char **urlList){
 
 
     FILE *fp = fopen("invertedIndex.txt", "w");
-    for(IINode cur = r->front; cur != NULL; cur = cur->next){
-        fprintf(fp, "%s  ", word);
-        url_q = cur->urls;
+    for(IINode *cur = r->front; cur != NULL; cur = cur->next){
+        fprintf(fp, "%s  ", cur->word);
+        Queue url_q = cur->urls;
         
         //fwrite(invertedIdx, 1, sizeof(invertedIdx), fp);
         for(char *url = leavePriorQueue(url_q); !emptyQueue(url_q); url = leavePriorQueue(url_q)){
-            fprintf(fp, "%s ", word);            
+            fprintf(fp, "%s ", url);            
         }
     }
-    fclose(fp)
+    fclose(fp);
     return 0;
 
 }
 
 char *RemoveSpecialCharacters(char* str){
-    char *standardStr;
+    char *standardStr = malloc(sizeof(str));
     int len = strlen(str);
     int idx = 0;
     for(int i = 0; i < len; i++){
@@ -123,7 +137,7 @@ char *RemoveSpecialCharacters(char* str){
         }
 
     }
-    standardStr[idx] = "\0"
+    standardStr[idx] = '\0';
     return standardStr;
 }
 
@@ -156,7 +170,7 @@ Input: input_url
 
 */
 
-void NormalizeWord(char* word)
+void NormaliseWord(char* word)
 {
   int i = 0;
   while (word[i]) {
@@ -167,5 +181,3 @@ void NormalizeWord(char* word)
     i++;
   }
 }
-
-/*

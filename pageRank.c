@@ -17,7 +17,8 @@ int PageRankW(double d, double diffPR, int maxIterations) {
     Graph g = GetGraph(urlList);
     double** urlPR;//[sizeUrl][maxIterations]
     urlPR = calloc(sizeUrl, sizeof(double *));
-    int i,j,k,l;
+    int i,j,k;
+    //l;
     for (i = 0; i < sizeUrl; i++) {
         urlPR[i] = calloc((maxIterations), sizeof(double));
     }
@@ -40,7 +41,7 @@ int PageRankW(double d, double diffPR, int maxIterations) {
     double* outLinks;//outlinks = # of links that this page j links to
     outLinks = calloc(sizeUrl, sizeof(double));
     double weightIn, weightOut;
-    double sumIn, sumOut;
+    double sumOut;//sumIn;
                           
     //calculate inlinks and outlinks of all links
     int src, dest;
@@ -109,11 +110,11 @@ int PageRankW(double d, double diffPR, int maxIterations) {
                 if (seen[j] == 0) {
                     maxurlPR = urlPR[j][noIter];
                     max = j;
-                    printf("    maxurlPR = %lf max = %d\n   urlPR[%d][%d] = %lf, yes thats right j = %d\n",maxurlPR,max,j,noIter,urlPR[j][noIter],j);
+                    printf("    maxurlPR = %d max = %d\n   urlPR[%d][%d] = %lf, yes thats right j = %d\n",maxurlPR,max,j,noIter,urlPR[j][noIter],j);
                 }
             }
         }
-        printf("    max = %d, maxPR = %lf\n", max, maxurlPR);
+        printf("    max = %d, maxPR = %d\n", max, maxurlPR);
         seen[max] = 1;
         printf("url:%s outgoing links:%.0f page rank: %.7f\n", urlList[max], outLinks[max], urlPR[max][noIter]);
         maxurlPR = 0;

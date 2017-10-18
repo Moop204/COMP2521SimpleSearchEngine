@@ -28,7 +28,7 @@ char *leaveQueue(Queue);
 int  emptyQueue(Queue);
 void showQueue(Queue q);
 char *leavePriorQueue(Queue);
-
+int isAlphaLess(char *str1, char *str2);
 
 static Link newNode(char *);
 static void disposeNode(Link);
@@ -91,20 +91,24 @@ char *leaveQueue(Queue q)
 char *leavePriorQueue(Queue q){
     assert (q->front != NULL);
     char *str = q->front->val;
-    Link *save;
-    Link *preSave;
-    Link *iterSave
-    for(Link *cur = q->front; cur != NULL; cur = cur->next){
+    Link save;
+    Link preSave;
+    Link iterSave;
+    for(Link cur = q->front; cur != NULL; cur = cur->next){
         if(isAlphaLess(cur->val, str)){
             preSave = iterSave;  
             str = cur->val;
             save = cur;
         }
-        itersave = cur;
+        iterSave = cur;
     }
-    Link *nextSave = save->next;
+    Link nextSave = save->next;
     preSave->next = nextSave;
     return str;
+}
+
+int max(int a1, int a2){
+    return (a1 > a2) ? a1 : a2;
 }
 
 // isAlphaLess(Str, Str)
@@ -116,17 +120,20 @@ int isAlphaLess(char *str1, char *str2){
         if ( str1[i] == '\0'){
             return 1;
         }
-        if ( str2[i] == '\0'){
+        else if ( str2[i] == '\0'){
             return 0;
         }
-        if (str1[i] < str2[i]){
+        else if (str1[i] < str2[i]){
             return 1;
         }
-        if (str1[i] > str2[i]){
+        else if (str1[i] > str2[i]){
             return 0;
         }
-
     }
+    printf("Error\n");
+    printf("%s\n", str1);
+    printf("%s\n", str2);
+    return 0;
 }
 
 // emptyQueue(Queue)

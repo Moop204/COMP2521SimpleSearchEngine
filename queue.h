@@ -14,5 +14,7 @@ void enterQueue(Queue,char *);
 char *leaveQueue(Queue);
 int  emptyQueue(Queue);
 void showQueue(Queue q);
+char *leavePriorQueue(Queue);
+int isAlphaLess(char *str1, char *str2);
 
 #endif
