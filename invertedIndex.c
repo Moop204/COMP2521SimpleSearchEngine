@@ -152,8 +152,9 @@ int InvertedIndex(char **urlList){
             while(!(fscanf(fptext,"%s",section) == 1 && strcmp(section,"Section-2") == 0)) printf("hi");
             while ((fscanf(fptext,"%s",tmp) != EOF) && strcmp(tmp,"#end") != 0 ) {    // Reads by character
                 printf("IVE ENTERED THE NEXT WHILE LOOP \n");
-
+                printf("initially %s\n", tmp);
                 tmp = RemoveSpecialCharacters(tmp);     // Removes special characters
+                printf("post special %s\n", tmp);
                 NormaliseWord(tmp);                     // Converts words to lowercase
                 printf("toptmp=%s\n",tmp);
 
@@ -234,12 +235,12 @@ int InvertedIndex(char **urlList){
 }
 
 char *RemoveSpecialCharacters(char* str){
-    char *standardStr = malloc(sizeof(str));
+    char *standardStr = malloc(sizeof(str)+1);
     int len = strlen(str);
     int idx = 0;
     int i;
     for(i = 0; i < len; i++){
-        if(str[i] != '.' && str[i] != ';' && str[i] != '?'){
+        if(str[i] != '.' && str[i] != ';' && str[i] != '?' && str[i] != '\n'){
             standardStr[idx] = str[i];
             idx++;
         }
