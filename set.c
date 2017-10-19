@@ -36,6 +36,7 @@ static void disposeNode(Link);
 static int  findNode(Link,char *,Link *,Link *);
 
 
+
 // newSet()
 // - create an initially empty Set
 Set newSet()
@@ -167,3 +168,5 @@ static int findNode(Link list, char *str, Link *cur, Link *pre)
 	*cur = curr; *pre = prev;
 	return (curr != NULL && strEQ(str,curr->val));
 }
+
+

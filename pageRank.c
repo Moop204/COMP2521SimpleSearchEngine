@@ -122,6 +122,7 @@ int PageRankW(double d, double diffPR, int maxIterations) {
             //calculate the pagerank
             urlPR[i][noIter] = (double)(1-d)/sizeUrl;
             ////printf("i = %d      PR of %s is %lf\n",i,urlList[i],urlPR[i][noIter]);
+
             for (j = 0; j < sizeUrl; j++) {//for each other url
                 urlPR[i][noIter] += d * (double)urlPR[j][noIter-1] * (double)weightIn[j][i] * (double)weightOut[j][i];
             }
@@ -140,6 +141,7 @@ int PageRankW(double d, double diffPR, int maxIterations) {
     int seen[7] = {0,0,0,0,0,0,0};
     double maxurlPR = 0;
     int max = 0;
+    FILE *fp = fopen("pagerankList.txt", "w");
     for (i = 0; i < sizeUrl; i++) {
         for (j = 0; j < sizeUrl; j++) {
             if ((urlPR[j][noIter] - maxurlPR) > 0) {
@@ -152,12 +154,14 @@ int PageRankW(double d, double diffPR, int maxIterations) {
         }
         //printf("    max = %d, maxPR = %lf\n", max, maxurlPR);
         seen[max] = 1;
-        printf("%s, %.0f, %.7f", urlList[max], outLinks[max], urlPR[max][noIter]);
+        printf("url:%s outgoing links:%.0f page rank: %.7f\n", urlList[max], outLinks[max], urlPR[max][noIter]);
+        fprintf(fp, "%s, %.0f, %.7f\n", urlList[max], outLinks[max], urlPR[max][noIter]);
         //for (k = 0; k < noIter; k++) printf("[%d]%lf", k,urlPR[max][k]);
         printf("\n");
         maxurlPR = 0;
         max = 0;
     }
+    fclose(fp);
     // Calculate Page Rank
     // Type? listUrlPageRank = calculatePageRank(g, d, diffPR, maxIterations);
     //char *orderedListUrlsPageRank = order(listUrlPageRank);
