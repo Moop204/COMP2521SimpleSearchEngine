@@ -66,6 +66,7 @@ void AppendIINode(char *newWord, IIRep *rep){      // Inserts node to word linke
             printf("THIRD COND\n");
             for(cur = rep->front; cur != NULL; cur = cur->next){
                 printf("is %s less than %s? %d\n",cur->next->word,newWord,isAlphaLess(cur->next->word, newWord));
+	//	printf("check %s",cur->next->word);
                 if(!isAlphaLess(cur->next->word, newWord)){
                     newNode->next = cur->next;
                     cur->next = newNode;
@@ -99,9 +100,17 @@ Queue SearchIndex(char *word, IIRep *r){
 
 int InvertedIndex(char **urlList){
 
-    Set sGlobal = newSet();                 // 
-    Set  sLocal = newSet();
     int len = LenCollection();
+
+    char ** dupList = malloc(sizeof(urlList));
+    int p;
+    for(p = 0; p < len; p++){
+        dupList[p] = malloc(sizeof(urlList[0]));
+    }
+    for(p = 0; p < len; p++){
+        dupList[p] = strdup(urlList[p]);
+    }
+
     char *tmp = calloc(MAXWORD, sizeof(char));
     IIRep *r = InitialiseRep();
     int i;
@@ -112,6 +121,8 @@ int InvertedIndex(char **urlList){
 
     for(i = 0; i < len; i++){
         char urlname[8+6+4+1] = "Sample1/";
+        Set sGlobal = newSet();                 // 
+        Set  sLocal = newSet();
         strcat(urlname,strcat(urlList[i],".txt"));
         printf("%s\n",urlname);
         FILE *fptext = fopen(urlname, "r");      // Opens up url
@@ -124,24 +135,26 @@ int InvertedIndex(char **urlList){
 
                 tmp = RemoveSpecialCharacters(tmp);     // Removes special characters
                 NormaliseWord(tmp);                     // Converts words to lowercase
-                printf("tmp=%s\n",tmp);
+                printf("toptmp=%s\n",tmp);
 
                 if(!isElem(sGlobal, tmp)){              // For words never seen before, create a head node that holds all urls containing it
+                    printf("PRE");
                     insertInto(sGlobal, tmp);
                     printf("is an element of sGlobal now 131 inv\n");           
                     AppendIINode(tmp, r);
                 }
+                printf("ASD\n");
                 if(!isElem(sLocal, tmp)){
                     insertInto(sLocal, tmp);
                     Queue url_list = SearchIndex(tmp,r);
-                    enterQueue(url_list, tmp);
-                    //showQueue(url_list);
-                    printf("show me");
+                    enterQueue(url_list, dupList[i]);
+                    showQueue(url_list);
+                    printf("show me\n");
                 }
                 printf("HELLO\n");
             }
             //check if next word is "Section-2", and finish
-            printf("tmp=%s\n",tmp);
+            printf("ghasdtmp=%s\n",tmp);
             if (!(fscanf(fptext,"%s",section) == 1 && strcmp(section,"Section-2") == 0)) {
                 printf("YOU FUCKED UP\n");                
                 return 1;//error
@@ -178,11 +191,13 @@ int InvertedIndex(char **urlList){
     IINode *cur;
     for(cur = r->front; cur != NULL; cur = cur->next){
         fprintf(fp, "%s  ", cur->word);
+        printf("%s WORD\n", cur->word);
         Queue url_q = cur->urls;
-        
+        printf("DA QUEUE\n");
+        showQueue(url_q);
         //fwrite(invertedIdx, 1, sizeof(invertedIdx), fp);
-        char* url;
-printf("dicks");
+        char* url = malloc(sizeof(urlList[0]));
+	printf("dicks\n");
         for(url = leavePriorQueue(url_q); !emptyQueue(url_q); url = leavePriorQueue(url_q)){
             printf("Look at me im mr meeseeks\n");
             fprintf(fp, "%s ", url);            

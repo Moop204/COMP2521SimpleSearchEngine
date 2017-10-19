@@ -91,20 +91,26 @@ char *leaveQueue(Queue q)
 char *leavePriorQueue(Queue q){
     assert (q->front != NULL);
     char *str = q->front->val;
-    Link save;
-    Link preSave;
-    Link iterSave;
-    Link cur;
+    Link save = NULL;
+    Link preSave = NULL;
+    Link iterSave = NULL;
+    Link cur = NULL;
     for(cur = q->front; cur != NULL; cur = cur->next){
         if(isAlphaLess(cur->val, str)){
-            preSave = iterSave;  
+            if(iterSave != NULL){
+                preSave = iterSave; 
+            } 
             str = cur->val;
             save = cur;
         }
         iterSave = cur;
     }
     Link nextSave = save->next;
-    preSave->next = nextSave;
+    if(preSave != NULL) preSave->next = nextSave;
+    if(strcmp(save->val, q->front->val)) q->front = nextSave;
+    if(strcmp(save->val, q->back->val)) q->back = preSave;
+
+    free(save);
     return str;
 }
 
@@ -134,7 +140,7 @@ int isAlphaLess(char *str1, char *str2){
     }
     //printf("Error\n");
 
-    return 0;
+    return 1;
 }
 
 // emptyQueue(Queue)
