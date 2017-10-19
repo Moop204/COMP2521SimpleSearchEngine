@@ -13,7 +13,7 @@ int LenCollection(void) {
     int i = 0;
     char* tmp;
     tmp = (char*) malloc((7)*sizeof(char));
-    FILE* collection = fopen("Sample1/collection.txt", "r");
+    FILE* collection = fopen("ex1/collection.txt", "r");//"Sample1/collection.txt", "r");
     if (collection != NULL) {
         while(fscanf(collection,"%s",tmp) != EOF) {
             i++;
@@ -37,7 +37,7 @@ char** GetCollection(int elements, int length) {
     char* tmp;
     tmp = (char*) malloc((SIZEOFURL) * sizeof(char));
     FILE* collection;
-    collection = fopen("Sample1/collection.txt", "r");
+    collection = fopen("ex1/collection.txt", "r");//"Sample1/collection.txt", "r");
     if (collection != NULL) {
         while (fscanf(collection,"%s",tmp) != EOF) {
             //printf("%d: %s\n", i, tmp);
@@ -54,6 +54,7 @@ char** GetCollection(int elements, int length) {
 Graph GetGraph(char** urlList) {
     int graphSize = LenCollection();
     Graph g = newGraph(graphSize);
+    //return g;
     int i, k; //i is for each url.txt, k is for each link in url.
     char * tmp;     //where fscanf reads the urlnames
     char * hashtag; //where fscanf reads "#start" and "#end" 
@@ -68,8 +69,8 @@ Graph GetGraph(char** urlList) {
         hashtag = (char*) malloc((SIZEOFURL)*sizeof(char));
         section = (char*) malloc((10)*sizeof(char));
         if(open != NULL){
-            if (!(fscanf(open,"%s %s",hashtag, section) == 2)) return NULL;//error
-            if (strcmp(hashtag,"#start")+strcmp(section,"Section-1") != 0) return NULL;//error
+            if (!(fscanf(open,"%s %s",hashtag, section) == 2)) return NULL;                 //error
+            if (strcmp(hashtag,"#start")+strcmp(section,"Section-1") != 0) return NULL;     //error
             //printf("%s %s:\n",hashtag,section);
             while((fscanf(open,"%s", tmp) != EOF) && strcmp(tmp,"#end") != 0) {
                 //printf("WHILE: tmp = %s\n", tmp);
@@ -89,8 +90,8 @@ Graph GetGraph(char** urlList) {
         }
         fclose(open);
     }
-    showGraph(g,1);
-    showGraph(g,0);
+    //showGraph(g,1);
+    //showGraph(g,0);
     return g;
 }
 

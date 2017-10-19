@@ -1,13 +1,13 @@
 // queue.c ... simple Queue of Strings
 // Written by John Shepherd, September 2015
-
+#include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <assert.h>
-#include <string.h>
 #include "queue.h"
 
 typedef struct Node *Link;
+
 
 typedef struct Node {
 	char *val;
@@ -163,6 +163,7 @@ void showQueue(Queue q)
 }
 
 // Helper functions
+
 
 static Link newNode(char *str)
 {
