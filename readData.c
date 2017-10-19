@@ -14,6 +14,7 @@ int LenCollection(void) {
     char* tmp;
     tmp = (char*) malloc((7)*sizeof(char));
     FILE* collection = fopen("ex1/collection.txt", "r");//"Sample1/collection.txt", "r");
+    //FILE* collection = fopen("Sample1/collection.txt", "r");
     if (collection != NULL) {
         while(fscanf(collection,"%s",tmp) != EOF) {
             i++;
@@ -61,7 +62,8 @@ Graph GetGraph(char** urlList) {
     char * section; //where fscanf reads "Section-1" and "Section-2"
     for(i = 0; i < graphSize; i++){
         //printf("@i=%d\n", i);
-        char file_name[8+SIZEOFURL+4] = "Sample1/";
+        //char file_name[8+SIZEOFURL+4] = "Sample1/";
+        char file_name[4+SIZEOFURL+4] = "ex3/";
         strcat(strcat(file_name, urlList[i]),".txt");
         //printf("filename: %s\n", file_name);
         FILE *open = fopen(file_name, "r");
