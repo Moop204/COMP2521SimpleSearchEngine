@@ -48,7 +48,7 @@ int PageRankW(double d, double diffPR, int maxIterations) {
         weightOut[i] = calloc(sizeUrl, sizeof(double));
     }
 
-    double sumIn, sumOut;
+    //double sumIn, sumOut;
                           
     //calculate inlinks and outlinks of all links
     int src, dest;
@@ -78,7 +78,8 @@ int PageRankW(double d, double diffPR, int maxIterations) {
             printf("%s and %s isConnected?:%d\n", urlList[j], urlList[i], isConnected(g,urlList[j],urlList[i]));
             //weightIn from j to i = (#inlinks of i)/(sum of inlinks of pages j links to);
             //weightOut from j to i = (#outlinks of i)/(sum of outlinks of pages j links to);
-            double sumIn = sumOut = 0;
+            double sumIn = 0;
+            double sumOut = 0;
             for (k = 0; k < sizeUrl; k++) {
                 //calculate the sumIn and sumOut;
                 if (isConnected(g,urlList[j],urlList[k]) == 1) {

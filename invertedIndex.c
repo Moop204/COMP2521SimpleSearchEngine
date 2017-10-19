@@ -36,6 +36,7 @@ typedef struct URLNode {
 
 void AppendIINode(char *word, IIRep *rep){      // Inserts node to word linked list in alphabetical order
     IINode *newNode = malloc(sizeof(IINode));
+    IINode *cur;
     newNode->word = word;
     newNode->next = NULL;
     newNode->urls = newQueue();
@@ -53,7 +54,7 @@ void AppendIINode(char *word, IIRep *rep){      // Inserts node to word linked l
             rep->front = newNode;
         }
         else{
-            for(IINode *cur = rep->front; cur != NULL; cur = cur->next){
+            for(cur = rep->front; cur != NULL; cur = cur->next){
                 if(!isAlphaLess(cur->next->word, word)){
                     newNode->next = cur->next;
                     cur->next = newNode;
@@ -72,7 +73,8 @@ IIRep *InitialiseRep(void){
 }
 
 Queue SearchIndex(char *word, IIRep *r){
-    for(IINode *cur = r->front; cur != NULL; cur = cur->next){
+    IINode *cur;
+    for(cur = r->front; cur != NULL; cur = cur->next){
         if(strcmp(cur->word, word)){
             return cur->urls;
         }
@@ -89,8 +91,8 @@ int InvertedIndex(char **urlList){
     int len = LenCollection();
     char *tmp;
     IIRep *r = InitialiseRep();
-
-    for(int i = 0; i < len; i++){
+    int i;
+    for(i = 0; i < len; i++){
         FILE *fptext = fopen(strcat(urlList[i],".txt"), "r");      // Opens up url
         while (fscanf(fptext,"%s",tmp) != EOF) {    // Reads by character
             tmp = RemoveSpecialCharacters(tmp);     // Removes special characters
@@ -112,12 +114,14 @@ int InvertedIndex(char **urlList){
 
 
     FILE *fp = fopen("invertedIndex.txt", "w");
-    for(IINode *cur = r->front; cur != NULL; cur = cur->next){
+    IINode *cur;
+    for(cur = r->front; cur != NULL; cur = cur->next){
         fprintf(fp, "%s  ", cur->word);
         Queue url_q = cur->urls;
         
         //fwrite(invertedIdx, 1, sizeof(invertedIdx), fp);
-        for(char *url = leavePriorQueue(url_q); !emptyQueue(url_q); url = leavePriorQueue(url_q)){
+        char* url;
+        for(url = leavePriorQueue(url_q); !emptyQueue(url_q); url = leavePriorQueue(url_q)){
             fprintf(fp, "%s ", url);            
         }
     }
@@ -130,7 +134,8 @@ char *RemoveSpecialCharacters(char* str){
     char *standardStr = malloc(sizeof(str));
     int len = strlen(str);
     int idx = 0;
-    for(int i = 0; i < len; i++){
+    int i;
+    for(i = 0; i < len; i++){
         if(str[i] != '.' && str[i] != ';' && str[i] != '?'){
             standardStr[idx] = str[i];
             idx++;

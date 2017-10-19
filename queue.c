@@ -94,7 +94,8 @@ char *leavePriorQueue(Queue q){
     Link save;
     Link preSave;
     Link iterSave;
-    for(Link cur = q->front; cur != NULL; cur = cur->next){
+    Link cur;
+    for(cur = q->front; cur != NULL; cur = cur->next){
         if(isAlphaLess(cur->val, str)){
             preSave = iterSave;  
             str = cur->val;
@@ -116,7 +117,8 @@ int max(int a1, int a2){
 // - return if str1 is less than str2 alphabetically
 int isAlphaLess(char *str1, char *str2){
     int strMax = max(strlen(str1), strlen(str2));
-    for(int i = 0; i < strMax; i++){
+    int i;
+    for(i = 0; i < strMax; i++){
         if ( str1[i] == '\0'){
             return 1;
         }

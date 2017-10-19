@@ -63,7 +63,7 @@ Graph GetGraph(char** urlList) {
     for(i = 0; i < graphSize; i++){
         //printf("@i=%d\n", i);
         //char file_name[8+SIZEOFURL+4] = "Sample1/";
-        char file_name[4+SIZEOFURL+4] = "ex3/";
+        char file_name[4+SIZEOFURL+4] = "ex1/";
         strcat(strcat(file_name, urlList[i]),".txt");
         //printf("filename: %s\n", file_name);
         FILE *open = fopen(file_name, "r");
@@ -80,6 +80,7 @@ Graph GetGraph(char** urlList) {
                     //printf("FOR k = %d\n", k);
                     if (strcmp(urlList[k], tmp) == 0) {
                         //printf("Adding an edge between %s and %s\n", urlList[i], urlList[k]);
+                        if (i == k) continue;
                         addEdge(g, urlList[i], urlList[k]);
                         //break;
                     }
@@ -92,8 +93,8 @@ Graph GetGraph(char** urlList) {
         }
         fclose(open);
     }
-    //showGraph(g,1);
-    //showGraph(g,0);
+    showGraph(g,1);
+    showGraph(g,0);
     return g;
 }
 
