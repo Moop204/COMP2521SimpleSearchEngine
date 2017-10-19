@@ -6,6 +6,7 @@
 #include <string.h>
 #include "readData.h"
 #include "queue.h"
+#include "invertedIndex.h"
 #include "set.h"
 
 
@@ -34,28 +35,38 @@ typedef struct URLNode {
 */
 
 
-void AppendIINode(char *word, IIRep *rep){      // Inserts node to word linked list in alphabetical order
+void AppendIINode(char *newWord, IIRep *rep){      // Inserts node to word linked list in alphabetical order
     IINode *newNode = malloc(sizeof(IINode));
     IINode *cur;
-    newNode->word = word;
+    newNode->word = strdup(newWord);
     newNode->next = NULL;
     newNode->urls = newQueue();
+    printf("ive done nothing\n");
     if(rep->end == NULL){
+        printf("it nulled?\n");
         rep->front = newNode;
         rep->end = newNode;
+        printf("True %d\n\n", (rep->front == NULL));
     }
     else{
-        if(isAlphaLess(rep->end->word, word)){
+        printf("%s\n",rep->front->word);
+        printf("invertedIndex.c 52\n");
+        if(isAlphaLess(rep->end->word, newWord) == 1){
+            printf("end:is %s less than %s? 1\n",rep->end->word,newWord);
             rep->end->next = newNode;
             rep->end = newNode;
         }
-        else if(isAlphaLess(word, rep->front->word)){
+        else if(isAlphaLess(newWord, rep->front->word) == 1){
+            printf("past the first loop\n");
+            printf("start:is %s less than %s? 1\n",rep->front->word,newWord);
             newNode->next = rep->front;
             rep->front = newNode;
         }
         else{
+            printf("THIRD COND\n");
             for(cur = rep->front; cur != NULL; cur = cur->next){
-                if(!isAlphaLess(cur->next->word, word)){
+                printf("is %s less than %s? %d\n",cur->next->word,newWord,isAlphaLess(cur->next->word, newWord));
+                if(!isAlphaLess(cur->next->word, newWord)){
                     newNode->next = cur->next;
                     cur->next = newNode;
                     break;
@@ -74,12 +85,14 @@ IIRep *InitialiseRep(void){
 
 Queue SearchIndex(char *word, IIRep *r){
     IINode *cur;
+    //printf("YOU DONE MESSED UP MATE1\n");
     for(cur = r->front; cur != NULL; cur = cur->next){
-        if(strcmp(cur->word, word)){
+            //printf("YOU DONE MESSED UP MAT\n");
+        if(strcmp(cur->word, word)==0){
             return cur->urls;
         }
     } 
-    printf("YOU DONE MESSED UP MATE");
+    //printf("YOU DONE MESSED UP MATE\n");
     return NULL;
 }
 
@@ -89,30 +102,78 @@ int InvertedIndex(char **urlList){
     Set sGlobal = newSet();                 // 
     Set  sLocal = newSet();
     int len = LenCollection();
-    char *tmp;
+    char *tmp = calloc(MAXWORD, sizeof(char));
     IIRep *r = InitialiseRep();
     int i;
+    char * hashtag; //where fscanf reads "#start" and "#end" 
+    char * section; //where fscanf reads "Section-1" and "Section-2"
+    hashtag = (char*) malloc((SIZEOFURL)*sizeof(char));
+    section = (char*) malloc((10)*sizeof(char));
+
     for(i = 0; i < len; i++){
-        FILE *fptext = fopen(strcat(urlList[i],".txt"), "r");      // Opens up url
-        while (fscanf(fptext,"%s",tmp) != EOF) {    // Reads by character
-            tmp = RemoveSpecialCharacters(tmp);     // Removes special characters
-            NormaliseWord(tmp);                     // Converts words to lowercase
-            if(!isElem(sGlobal, tmp)){              // For words never seen before, create a head node that holds all urls containing it
-                insertInto(sGlobal, tmp);           
-                AppendIINode(tmp, r);
+        char urlname[8+6+4+1] = "Sample1/";
+        strcat(urlname,strcat(urlList[i],".txt"));
+        printf("%s\n",urlname);
+        FILE *fptext = fopen(urlname, "r");      // Opens up url
+        if(fptext != NULL){
+            if (!(fscanf(fptext,"%s %s",hashtag, section) == 2)) return 1;                 //error
+            if (strcmp(hashtag,"#start")+strcmp(section,"Section-1") != 0) return 1;     //error
+            while(!(fscanf(fptext,"%s",section) == 1 && strcmp(section,"Section-2") == 0)) printf("hi");
+            while ((fscanf(fptext,"%s",tmp) != EOF) && strcmp(tmp,"#end") != 0 ) {    // Reads by character
+                printf("IVE ENTERED THE NEXT WHILE LOOP \n");
+
+                tmp = RemoveSpecialCharacters(tmp);     // Removes special characters
+                NormaliseWord(tmp);                     // Converts words to lowercase
+                printf("tmp=%s\n",tmp);
+
+                if(!isElem(sGlobal, tmp)){              // For words never seen before, create a head node that holds all urls containing it
+                    insertInto(sGlobal, tmp);
+                    printf("is an element of sGlobal now 131 inv\n");           
+                    AppendIINode(tmp, r);
+                }
+                if(!isElem(sLocal, tmp)){
+                    insertInto(sLocal, tmp);
+                    Queue url_list = SearchIndex(tmp,r);
+                    enterQueue(url_list, tmp);
+                    //showQueue(url_list);
+                    printf("show me");
+                }
+                printf("HELLO\n");
             }
-            if(!isElem(sLocal, tmp)){
-                insertInto(sLocal, tmp);           
-                Queue url_list = SearchIndex(tmp,r);
-                enterQueue(url_list, tmp);
+            //check if next word is "Section-2", and finish
+            printf("tmp=%s\n",tmp);
+            if (!(fscanf(fptext,"%s",section) == 1 && strcmp(section,"Section-2") == 0)) {
+                printf("YOU FUCKED UP\n");                
+                return 1;//error
             }
         }
         fclose(fptext);
         disposeSet(sLocal);
     }
+/*
+        if(open != NULL){
+            if (!(fscanf(open,"%s %s",hashtag, section) == 2)) return NULL;                 //error
+            if (strcmp(hashtag,"#start")+strcmp(section,"Section-1") != 0) return NULL;     //error
+            //printf("%s %s:\n",hashtag,section);
+            while((fscanf(open,"%s", tmp) != EOF) && strcmp(tmp,"#end") != 0) {
+                //printf("WHILE: tmp = %s\n", tmp);
+                for (k = 0; k < graphSize; k++){
+                    //printf("FOR k = %d\n", k);
+                    if (strcmp(urlList[k], tmp) == 0) {
+                        //printf("Adding an edge between %s and %s\n", urlList[i], urlList[k]);
+                        if (i == k) continue;
+                        addEdge(g, urlList[i], urlList[k]);
+                        //break;
+                    }
+                }
+            }
+            //tmp == #end, make sure Section-1 is next and then close
+            if (!(fscanf(open,"%s",section) == 1 && strcmp(section,"Section-1") == 0)) return NULL;//error
+            //printf("%s %s. closing\n", tmp, section);
+            //done, close and break to next iteration of connection.
+        }
 
-
-
+*/
     FILE *fp = fopen("invertedIndex.txt", "w");
     IINode *cur;
     for(cur = r->front; cur != NULL; cur = cur->next){
@@ -121,7 +182,9 @@ int InvertedIndex(char **urlList){
         
         //fwrite(invertedIdx, 1, sizeof(invertedIdx), fp);
         char* url;
+printf("dicks");
         for(url = leavePriorQueue(url_q); !emptyQueue(url_q); url = leavePriorQueue(url_q)){
+            printf("Look at me im mr meeseeks\n");
             fprintf(fp, "%s ", url);            
         }
     }

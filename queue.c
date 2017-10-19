@@ -132,9 +132,8 @@ int isAlphaLess(char *str1, char *str2){
             return 0;
         }
     }
-    printf("Error\n");
-    printf("%s\n", str1);
-    printf("%s\n", str2);
+    //printf("Error\n");
+
     return 0;
 }
 
