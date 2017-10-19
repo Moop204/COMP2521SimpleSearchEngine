@@ -163,12 +163,15 @@ int PageRankW(double d, double diffPR, int maxIterations) {
         max = 0;
     }
     fclose(fp);
-    // Calculate Page Rank
-    // Type? listUrlPageRank = calculatePageRank(g, d, diffPR, maxIterations);
-    //char *orderedListUrlsPageRank = order(listUrlPageRank);
-    //int size = strlen(orderedListUrlsPageRank);
-    //FILE *fp;
-    //fp = fopen("pagerankList.txt","w");
-    //fwrite(orderedListUrlsPageRank,1,  sizeof(orderedListUrlsPageRank), fp); 
+    // freeing used memory
+    disposeGraph(g);
+    for(i = 0; i < sizeUrl; i++) free(urlPR[i]);
+    free(urlPR);
+    free(inLinks);
+    free(outLinks);
+    for(i = 0; i < sizeUrl; i++) free(weightIn[i]);
+    free(weightIn);
+    for(i = 0; i < sizeUrl; i++) free(weightOut[i]);
+    free(weightOut);
     return 0;
 }

@@ -9,10 +9,11 @@
 #include "queue.h"
 #include "graph.h"
 
+
 int LenCollection(void) {
     int i = 0;
     char* tmp;
-    tmp = (char*) malloc((7)*sizeof(char));
+    tmp = (char*) malloc((SIZEOFURL)*sizeof(char));
     FILE* collection = fopen("ex1/collection.txt", "r");//"Sample1/collection.txt", "r");
     //FILE* collection = fopen("Sample1/collection.txt", "r");
     if (collection != NULL) {
@@ -93,6 +94,9 @@ Graph GetGraph(char** urlList) {
         }
         fclose(open);
     }
+    free(tmp);
+    free(hashtag);
+    free(section);
     showGraph(g,1);
     showGraph(g,0);
     return g;

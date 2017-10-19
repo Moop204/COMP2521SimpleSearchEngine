@@ -11,12 +11,14 @@
 #include "readData.h"
 #include "invertedIndex.h"
 #include "pageRank.h"
-#include "tfIdf.h"
+#include "searchTfIdf.h"
 #include "set.h"
 #include "queue.h"
 #include "graph.h"
 
 #define MAXCHAR 1000
+//(MAXWORD = 45)
+//(SIZEOFURL = 7)
 
 
 //TF = term frequency
@@ -27,37 +29,42 @@
 double tf(char* word, char* url) {
     int N = 0; //# of total words
     int f = 0; //f of the term
-
-    //open inverted index
-    char line[MAXCHAR];
-    char* file_name = "invertedIndex.txt";
+    
+    //open inverted index, find N
+    char file_name[8+SIZEOFURL+4] = "Sample1/";
+    strcat(strcat(file_name,url),".txt");
+    //printf("filename %s\n",file_name);
     FILE *open = fopen(file_name, "r");
+    char* tmp;
     tmp = (char*) malloc((SIZEOFURL)*sizeof(char));
+    char* hashtag;
     hashtag = (char*) malloc((SIZEOFURL)*sizeof(char));
-    section = (char*) malloc((10)*sizeof(char));
+    char* section;
+    section = (char*) malloc((MAXWORD)*sizeof(char));
     if(open != NULL){
-        if (!(fscanf(open,"%s %s",hashtag, section) == 2)) return NULL;//error
-        if (strcmp(hashtag,"#start")+strcmp(section,"Section-1") != 0) return NULL;//error
+        //scan through to Section-2
+        if (!(fscanf(open,"%s %s",hashtag, section) == 2)) return -1;                 //error
+        if (strcmp(hashtag,"#start")+strcmp(section,"Section-1") != 0) return -2;     //error
         //printf("%s %s:\n",hashtag,section);
-        while((fscanf(open,"%s", tmp) != EOF) && strcmp(tmp,"#end") != 0) {
-            //printf("WHILE: tmp = %s\n", tmp);
-            for (k = 0; k < graphSize; k++){
-                //printf("FOR k = %d\n", k);
-                if (strcmp(urlList[k], tmp) == 0) {
-                    //printf("Adding an edge between %s and %s\n", urlList[i], urlList[k]);
-                    addEdge(g, urlList[i], urlList[k]);
-                    //break;
-                }
-            }
-        }
+        while((fscanf(open,"%s", tmp) != EOF) && strcmp(tmp,"#end") != 0);
         //tmp == #end, make sure Section-1 is next and then close
-        if (!(fscanf(open,"%s",section) == 1 && strcmp(section,"Section-1") == 0)) return NULL;//error
-        //printf("%s %s. closing\n", tmp, section);
-        //done, close and break to next iteration of connection.
+        if (!(fscanf(open,"%s",section) == 1 && strcmp(section,"Section-1") == 0)) return -3;//error
+        //check if at Section-2
+        if (!(fscanf(open,"%s %s",hashtag, section) == 2)) return -4;                 //error
+        if (strcmp(hashtag,"#start")+strcmp(section,"Section-2") != 0) return -5;     //error
+        while((fscanf(open,"%s", tmp) != EOF) && strcmp(tmp,"#end") != 0) {
+            //printf("tmp = %s\n",tmp);
+            N++;
+            if (strcmp(word, tmp) == 0) f++;
+        }
+        //tmp == #end, make sure Section-2 is next and then close
+        if (!(fscanf(open,"%s",section) == 1 && strcmp(section,"Section-2") == 0)) return -6;//error
+        //done, close file
     }
     fclose(open);
-    
-    //calculating
+
+    //calculating f
+    printf("f = %d\nN = %d\n", f, N);
 
     return (double)(f)/(double)(N);
 }
@@ -68,10 +75,58 @@ double tf(char* word, char* url) {
 //         10  # of docs containing word
 
 double idf(char* word, char* url) {
-    int N = 0; //# of total words
+    int N = 0; //# of docs
     int f = 0; //# of docs containing word
-    
-    //calculating
 
+    N = LenCollection();
+    //open inverted index, find N
+    char line[MAXCHAR];
+    char* file_name = "invertedIndex.txt";
+    FILE *open = fopen(file_name, "r");
+    char* tokenWord = (char*) malloc((MAXWORD)*sizeof(char));
+    //char* tokenUrl = (char*) malloc((SIZEOFURL)*sizeof(char));
+    if(open != NULL){
+        while (fgets(line,sizeof(line),open)) {
+            //read the word
+            tokenWord = strtok(line," ");
+            //printf("tokenWord = %s\n", tokenWord);
+            f++;
+        }
+    }
+    if (tokenWord);
+    fclose(open);
+    //calculating
+    printf("N = %d\n f = %d\n", N, f);
     return log10((double)(N)/(double)(f));
 }
+
+double tfIdf(char*word, char*url) {
+    return tf(word,url) * idf(word,url);
+}
+
+
+/* UNUSED CODE THAT MAY BE USEFUL
+char line[MAXCHAR];
+    char* file_name = "invertedIndex.txt";
+    FILE *open = fopen(file_name, "r");
+    char* tokenWord = (char*) malloc((MAXWORD)*sizeof(char));
+    //char* tokenUrl = (char*) malloc((SIZEOFURL)*sizeof(char));
+    if(open != NULL){
+        while (fgets(line,sizeof(line),open)) {
+            //read the word
+            tokenWord = strtok(line," ");
+            //printf("tokenWord = %s\n", tokenWord);
+            f++;
+            if (strcmp(word,tokenWord) != 0) continue;
+            //read the urls
+            while (1) {
+                tokenUrl = strtok(NULL, " ");
+                if ((tokenUrl == NULL)) break;// || (strcmp(tokenUrl,"url") < 0)) break;
+                f++;
+                printf("tokenUrl = %s\n", tokenUrl);
+            }
+        }
+    }
+    if (tokenWord);
+    fclose(open);
+*/
