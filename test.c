@@ -12,17 +12,17 @@ int main (void) {
     char** urlList = GetCollection(cardinality, length);
     GetGraph(urlList);
     PageRankW(0.850000,0.000010,1000);
+    InvertedIndex(urlList);
+    double k = tf("mars", "url11");
+    printf("tf = %lf\n", k);
+    k = idf("mars", "url11");
+    printf("idf = %lf\n", k);
+    k = tfIdf("mars", "url11");
+    printf("tfidf = %lf\n", k);
     //for(int i = 0; i < cardinality; i++){
     //    printf("Line: %s\n", urlList[i]);
     //}
     //printf("%d", cardinality);
-    //InvertedIndex(urlList);
-    double k = tf("changes", "url11");
-    printf("tf = %lf\n", k);
-    k = idf("changes", "url11");
-    printf("idf = %lf\n", k);
-    k = tfIdf("changes", "url11");
-    printf("tfidf = %lf\n", k);
     return 0;
 
 }

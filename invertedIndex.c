@@ -26,7 +26,6 @@ typedef struct IIRep {
     IINode  *end;
 } IIRep;
 
-
 /*
 typedef struct URLNode {
     char    *url;
@@ -57,7 +56,7 @@ void AppendIINode(char *newWord, IIRep *rep){      // Inserts node to word linke
             rep->end = newNode;
         }
         else if(isAlphaLess(newWord, rep->front->word) == 1){
-            printf("past the first loop\n");
+            printf("past the first COND\n");
             printf("start:is %s less than %s? 1\n",rep->front->word,newWord);
             newNode->next = rep->front;
             rep->front = newNode;
@@ -74,6 +73,27 @@ void AppendIINode(char *newWord, IIRep *rep){      // Inserts node to word linke
                 }
             }
         }
+    }
+}
+
+/*void showIIRep(IIRep *rep){      // Inserts node to word linked list in alphabetical order
+    IINode *newNode = malloc(sizeof(IINode));
+    IINode *cur;
+    if(rep->end == NULL){
+        printf("it nulled?\n");
+        rep->front = newNode;
+        rep->end = newNode;
+        printf("True %d\n\n", (rep->front == NULL));
+    }
+}*/
+void showIIRep(IIRep *rep) {
+    if (rep == NULL) return;
+    if (rep->front == NULL || rep->end == NULL) return;
+    IINode *cur;
+    for (cur = rep->front; ; cur = cur->next) {
+        printf("<<%s>>",cur->word);
+        showQueue(cur->urls);
+        if (cur == rep->end) break;
     }
 }
 
@@ -119,10 +139,10 @@ int InvertedIndex(char **urlList){
     hashtag = (char*) malloc((SIZEOFURL)*sizeof(char));
     section = (char*) malloc((10)*sizeof(char));
 
+    Set sGlobal = newSet();                 // 
     for(i = 0; i < len; i++){
         char urlname[8+6+4+1] = "Sample1/";
-        Set sGlobal = newSet();                 // 
-        Set  sLocal = newSet();
+        Set sLocal = newSet();
         strcat(urlname,strcat(urlList[i],".txt"));
         printf("%s\n",urlname);
         FILE *fptext = fopen(urlname, "r");      // Opens up url
@@ -144,11 +164,14 @@ int InvertedIndex(char **urlList){
                     AppendIINode(tmp, r);
                 }
                 printf("ASD\n");
-                if(!isElem(sLocal, tmp)){
-                    insertInto(sLocal, tmp);
+                printf("%d\n", isElem(sGlobal,tmp));
+                printf("%d\n", isElem(sLocal,tmp));
+                if(!isElem(sLocal, tmp)) {
+                    insertInto(sLocal, tmp);               // For words not seen before, insert url into the word node
                     Queue url_list = SearchIndex(tmp,r);
                     enterQueue(url_list, dupList[i]);
                     showQueue(url_list);
+                    showIIRep(r);
                     printf("show me\n");
                 }
                 printf("HELLO\n");
@@ -197,11 +220,13 @@ int InvertedIndex(char **urlList){
         showQueue(url_q);
         //fwrite(invertedIdx, 1, sizeof(invertedIdx), fp);
         char* url = malloc(sizeof(urlList[0]));
-	printf("dicks\n");
-        for(url = leavePriorQueue(url_q); !emptyQueue(url_q); url = leavePriorQueue(url_q)){
+	    printf("dicks\n");
+        for(url = leavePriorQueue(url_q); ; url = leavePriorQueue(url_q)){
             printf("Look at me im mr meeseeks\n");
-            fprintf(fp, "%s ", url);            
+            fprintf(fp, "%s ", url);   
+            if (emptyQueue(url_q)) break;         
         }
+        fprintf(fp,"\n");
     }
     fclose(fp);
     return 0;

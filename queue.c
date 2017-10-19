@@ -91,7 +91,64 @@ char *leaveQueue(Queue q)
 char *leavePriorQueue(Queue q){
     assert (q->front != NULL);
     char *str = q->front->val;
-    Link save = NULL;
+    printf("front: %s\n",str);
+    Link cur = NULL;
+    Link nxt = NULL;
+    Link prev = NULL;
+    Link lowest = newNode("url999");
+    for (cur = q->front; cur != NULL; cur = cur->next) {
+        printf("cur val: %s\n", cur->val);
+        if (isAlphaLess(cur->val,lowest->val)) {
+            lowest = cur; 
+            printf("    lowest: %s\n",lowest->val);
+        }
+    }
+    printf("lowest: %s\n",lowest->val);
+    //dequeue lowest
+    if ((q->front == lowest) && (q->back == lowest)) {
+        //delete the only thing
+        strcpy(str,q->front->val);
+        free(q->front);
+        q->back = q->front = NULL;
+        return str;
+    } else if (lowest == q->front) {
+        //delete from the front
+        Link newfront = q->front->next;
+        strcpy(str, q->front->val);
+        q->front->next = NULL;
+        free(q->front);
+        q->front = newfront;
+    } else if (lowest == q->back) {
+        //delete from the back
+        //fine prev to back
+        Link tmp = NULL;
+        for (tmp = q->front; tmp != NULL; tmp = tmp->next) {
+            if (tmp->next == q->back) {
+                prev = tmp;
+            }
+        }
+        Link newEnd = prev;
+        strcpy(str, q->back->val);
+        newEnd->next = NULL;
+        free(q->back);
+        q->back = newEnd;
+    } else {
+        //neither in the front or the end
+        //fine prev to cur
+        Link tmp = NULL;
+        for (tmp = q->front; tmp != NULL; tmp = tmp->next) {
+            if (tmp->next == cur) {
+                prev = tmp;
+            }
+        }
+        nxt = lowest->next;
+        strcpy(str, lowest->val);
+        prev->next = nxt;
+        lowest->next = NULL;
+        free(lowest);
+    }
+    return str;
+    /*Link save = NULL;
     Link preSave = NULL;
     Link iterSave = NULL;
     Link cur = NULL;
@@ -111,7 +168,8 @@ char *leavePriorQueue(Queue q){
     if(strcmp(save->val, q->back->val)) q->back = preSave;
 
     free(save);
-    return str;
+    return str;*/
+    
 }
 
 int max(int a1, int a2){
@@ -126,15 +184,19 @@ int isAlphaLess(char *str1, char *str2){
     int i;
     for(i = 0; i < strMax; i++){
         if ( str1[i] == '\0'){
+            printf("%s goes b4 %s\n",str1,str2);
             return 1;
         }
         else if ( str2[i] == '\0'){
+            printf("%s goes b4 %s(swapped)\n",str2,str1);
             return 0;
         }
         else if (str1[i] < str2[i]){
+            printf("%s goes b4 %s\n",str1,str2);
             return 1;
         }
         else if (str1[i] > str2[i]){
+            printf("%s goes b4 %s(swapped)\n",str2,str1);
             return 0;
         }
     }
@@ -158,14 +220,16 @@ void showQueue(Queue q)
 	if (q->front == NULL)
 		printf("Queue is empty\n");
 	else {
-		printf("Queue (front-to-back):\n");
+		//printf("Queue (front-to-back):");
 		int id = 0;
 		curr = q->front;
 		while (curr != NULL) {
-			printf("[%03d] %s\n", id, curr->val);
+            printf("%s ", curr->val);
+			//printf("[%03d] %s\n", id, curr->val);
 			id++;
 			curr = curr->next;
 		}
+        printf("\n");
 	}
 }
 
