@@ -17,7 +17,8 @@ int PageRankW(double d, double diffPR, int maxIterations) {
     Graph g = GetGraph(urlList);
     double** urlPR;//[sizeUrl][maxIterations]
     urlPR = calloc(sizeUrl, sizeof(double *));
-    int i,j,k,l;
+    int i,j,k;
+    //l;
     for (i = 0; i < sizeUrl; i++) {
         urlPR[i] = calloc((maxIterations), sizeof(double));
     }
