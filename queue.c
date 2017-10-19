@@ -104,6 +104,7 @@ char *leavePriorQueue(Queue q){
         }
     }
     printf("lowest: %s\n",lowest->val);
+    //if (strcmp(lowest->val,"url999") == 0) return "whoops";//error 
     //dequeue lowest
     if ((q->front == lowest) && (q->back == lowest)) {
         //delete the only thing
