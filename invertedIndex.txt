@@ -1,6 +1,5 @@
-    design  url2 url25 url31 url61
-    mars  url25 url31 url101
-    vegetation  url31 url61
-    designed  url2 url25 url31 url61
-    marsed  url25 url31 url101
-    vege  url31 url61
+mars url11 url21 url22
+has url11
+long url11
+changes url11 url21
+seasonal url11 url21 url22 

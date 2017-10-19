@@ -163,8 +163,8 @@ static int findNode(Link list, char *str, Link *cur, Link *pre)
 	Link curr = list, prev = NULL;
     //printf("findNode set.c 164 curr->val = %s, str = %s\n",curr->val, str);
 	while (curr != NULL && strLT(curr->val,str)) {
-        printf("findNode set.c 164 curr->val = %s, str = %s\n",curr->val, str);		
-        prev = curr;
+        	//printf("findNode set.c 164 curr->val = %s, str = %s\n",curr->val, str);		
+        	prev = curr;
 		curr = curr->next;
 	}
 	*cur = curr; *pre = prev;

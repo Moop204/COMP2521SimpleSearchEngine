@@ -17,11 +17,11 @@ int main (void) {
     //}
     //printf("%d", cardinality);
     //InvertedIndex(urlList);
-    double k = tf("apparent", "url11");
+    double k = tf("changes", "url11");
     printf("tf = %lf\n", k);
-    k = idf("apparent", "url11");
+    k = idf("changes", "url11");
     printf("idf = %lf\n", k);
-    k = tfIdf("apparent", "url11");
+    k = tfIdf("changes", "url11");
     printf("tfidf = %lf\n", k);
     return 0;
 
