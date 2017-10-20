@@ -258,20 +258,11 @@ void searchTfIdf(char **argv, int argc){
         else continue;
     }
 
-url32 0
-url34 2
-url22 2
-url21 1
-url23 2
-url11 1
-url31 1
-
-
     for(i = 0; i < MAXOUTPUT; i++){
         if(listPrint[i] == -1)
             break;
         else
-            printf("%s %d\n", collection[listPrint[ ]], listFreq[i]);
+            printf("%s %d\n", collection[listPrint[i]], listFreq[i]);
     }
 
 }

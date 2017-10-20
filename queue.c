@@ -241,6 +241,7 @@ static Link newNode(char *str)
 {
 	Link new = malloc(sizeof(Node));
 	assert(new != NULL);
+printf("New Node STRDUPIN A NEW STRING %s \n", str);
 	new->val = strdup(str);
 	new->next = NULL;
 	return new;

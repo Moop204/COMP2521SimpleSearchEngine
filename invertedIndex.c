@@ -121,9 +121,10 @@ int InvertedIndex(char **urlList){
 
     char ** dupList = malloc(sizeof(urlList));
     int p;
-    for(p = 0; p < len; p++){
+/*    for(p = 0; p < len; p++){
         dupList[p] = malloc(sizeof(urlList[0]));
     }
+*/
     for(p = 0; p < len; p++){
         dupList[p] = strdup(urlList[p]);
     }
@@ -149,7 +150,7 @@ int InvertedIndex(char **urlList){
             while(!(fscanf(fptext,"%s",section) == 1 && strcmp(section,"Section-2") == 0)) printf("hi");
             while ((fscanf(fptext,"%s",tmp) != EOF) && strcmp(tmp,"#end") != 0 ) {    // Reads by character
                 printf("IVE ENTERED THE NEXT WHILE LOOP \n");
-
+                printf("bug %s\n", tmp);
                 tmp = RemoveSpecialCharacters(tmp);     // Removes special characters
                 NormaliseWord(tmp);                     // Converts words to lowercase
                 printf("toptmp=%s\n",tmp);
@@ -233,25 +234,17 @@ int InvertedIndex(char **urlList){
 }
 
 char *RemoveSpecialCharacters(char* str){
-    char *standardStr = calloc(sizeof(str),sizeof(char));
-    int p;
-    for(p = 0; p < sizeof(str);p++){
-        standardStr[p] = '\0';
-    }
     int len = strlen(str);
-    int idx = 0;
     int i;
     for(i = 0; i < len; i++){
-        printf("str[%d] = %c, stridx = %s\n", i, str[i], standardStr);
-        if((str[i]<='z' && str[i]>='a') || (str[i]<='Z' && str[i]>='A')){
-            standardStr[idx] = str[i];
-            idx++;
+        printf("str[%d] = %c\n", i, str[i]);
+        if(str[i] == '.' || str[i] == ';' || str[i] == '?'){
+            str[i] = '\0';
         }
 
     }
-    printf("stridx = %s\n", standardStr);
-    standardStr[idx] = '\0';
-    return standardStr;
+    printf("stridx = %s\n", str);
+    return str;
 }
 
 

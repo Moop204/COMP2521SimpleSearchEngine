@@ -10,13 +10,14 @@
 #define DEBUGNELEM     1
 
 int main (void) {
-/*    int cardinality = LenCollection();
+    int cardinality = LenCollection();
     int length = SIZEOFURL;
+
     char** urlList = GetCollection(cardinality, length);
     GetGraph(urlList);
-    PageRankW(0.850000,0.000010,1000);
+//    PageRankW(0.850000,0.000010,1000);
     InvertedIndex(urlList);
-*/
+
 //    double k = tf("mars", "url11");
 //    double l = idf("mars", "url11");
 //    double m = tfIdf("mars", "url11");
@@ -24,7 +25,7 @@ int main (void) {
 //    printf("idf = %lf\n", l);
 //    printf("tfidf = %lf\n", m);
     
-    char** list;
+/*    char** list;
     list = malloc(DEBUGNELEM * DEBUGWORDSIZE);
     int i;
     for (i = 0; i < DEBUGNELEM; i++) {
@@ -32,7 +33,7 @@ int main (void) {
     }
     list[0] = "mars";
     searchTfIdf(list, DEBUGNELEM);
-
+*/
     //for(int i = 0; i < cardinality; i++){
     //    printf("Line: %s\n", urlList[i]);
     //}
