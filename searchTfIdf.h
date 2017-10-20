@@ -6,3 +6,4 @@
 double tf(char* word, char* url);
 double idf(char* word, char* url);
 double tfIdf(char* word, char* url);
+void searchTfIdf(char **argv, int argc);
