@@ -227,6 +227,15 @@ void searchTfIdf(char **argv, int argc){
             listFreq[nUrls] += word_frequency(arg, collection[nUrls]); 
         }
     }
+
+
+        int debug;
+
+
+    for(debug = 0; debug < length; debug++){
+        printf("%d ", listFreq[debug]);
+    }
+        printf("\n");
     
 
     int *listPrint = calloc(MAXOUTPUT, sizeof(int));        // order of printing, refers to INITIAL ORDER in order
@@ -237,8 +246,7 @@ void searchTfIdf(char **argv, int argc){
 
     for(i = 0; i < length; i++){    // Iterates INITIAL ORDER
         int val = listFreq[i];
-
-        int debug;
+printf("%d has %d freq\n", i, val);
         for(debug = 0; debug < MAXOUTPUT; debug++){
             printf("%d ", listPrint[debug]);
         }
@@ -250,15 +258,12 @@ void searchTfIdf(char **argv, int argc){
                 int printRef = listPrint[e];
                 if(printRef == -1){
                     listPrint[e] = i;
-printf("ADDED %d \n", i);
                     break;
                 }
                 else{
                     if(val > listFreq[printRef]){
                         shiftRight(listPrint, e, MAXOUTPUT);
                         listPrint[e] = i;
-printf("ADDED %d \n", i);
-
                         break;
                     }
                 }
