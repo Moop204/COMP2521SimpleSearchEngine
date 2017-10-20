@@ -215,8 +215,8 @@ int word_frequency(char* word, char* url) {
 void searchTfIdf(char **argv, int argc){
 
     int length = LenCollection();
-    char **collection = GetCollection(length, SIZEOFURL); 
-    int *listFreq = calloc(length, sizeof(int));
+    char **collection = GetCollection(length, SIZEOFURL);   // INITIAL ORDER reference
+    int *listFreq = calloc(length, sizeof(int));            // INITIAL ORDER of frequency
 //    int *listTfIdf = calloc(length, sizeof(int));
 
     int idx;
@@ -229,27 +229,36 @@ void searchTfIdf(char **argv, int argc){
     }
     
 
-    int *listPrint = calloc(MAXOUTPUT, sizeof(int));
+    int *listPrint = calloc(MAXOUTPUT, sizeof(int));        // order of printing, refers to INITIAL ORDER in order
     int i;
-    for(i = 0; i < length; i++){
+    for(i = 0; i < MAXOUTPUT; i++){
         listPrint[i] = -1;
     }
 
-    for(i = 0; i < length; i++){
+    for(i = 0; i < length; i++){    // Iterates INITIAL ORDER
         int val = listFreq[i];
+
+        int debug;
+        for(debug = 0; debug < MAXOUTPUT; debug++){
+            printf("%d ", listPrint[debug]);
+        }
+            printf("\n");
 
         int e;
         if(val != 0){
-            for(e = 0; e < MAXOUTPUT; e++){
+            for(e = 0; e < MAXOUTPUT; e++){ // Iterates printing order until it finds a new place or finds a lower val
                 int printRef = listPrint[e];
                 if(printRef == -1){
                     listPrint[e] = i;
+printf("ADDED %d \n", i);
                     break;
                 }
                 else{
                     if(val > listFreq[printRef]){
                         shiftRight(listPrint, e, MAXOUTPUT);
                         listPrint[e] = i;
+printf("ADDED %d \n", i);
+
                         break;
                     }
                 }
@@ -269,7 +278,7 @@ void searchTfIdf(char **argv, int argc){
 
 void shiftRight(int *list, int pos, int max){
     int cur;
-    for(cur = max-1; cur > pos; cur --){
+    for(cur = max-1; cur >= pos; cur --){
         list[cur] = list[cur-1];
     }
 }
