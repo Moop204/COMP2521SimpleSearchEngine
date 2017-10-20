@@ -63,8 +63,8 @@ int PageRankW(double d, double diffPR, int maxIterations) {
     }
     for (i = 0; i < sizeUrl; i++) {
         if (outLinks[i] == 0) outLinks[i] = 0.5;
-        printf("for %d aka %s: ", i, urlList[i]);
-        printf("in: %d out: %1f\n", inLinks[i], outLinks[i]);
+//        printf("for %d aka %s: ", i, urlList[i]);
+//        printf("in: %d out: %1f\n", inLinks[i], outLinks[i]);
     }
 
     //calculate weight in and weight out of all links
@@ -75,7 +75,7 @@ int PageRankW(double d, double diffPR, int maxIterations) {
             if (j == i || 
                 isConnected(g,urlList[j],urlList[i]) == 0 || 
                 !"is a selfloop/parallel edge") continue;//HELP how do i find if its a selfloop/parallel edge?
-            printf("%s and %s isConnected?:%d\n", urlList[j], urlList[i], isConnected(g,urlList[j],urlList[i]));
+//            printf("%s and %s isConnected?:%d\n", urlList[j], urlList[i], isConnected(g,urlList[j],urlList[i]));
             //weightIn from j to i = (#inlinks of i)/(sum of inlinks of pages j links to);
             //weightOut from j to i = (#outlinks of i)/(sum of outlinks of pages j links to);
             double sumIn = 0;
@@ -89,36 +89,36 @@ int PageRankW(double d, double diffPR, int maxIterations) {
             }
             weightIn[j][i] = (double)(inLinks[i])/(double)(sumIn);    //j->i
             weightOut[j][i] = (double)(outLinks[i])/(double)(sumOut); //j->i
-            printf("i = %d j = %d\nsumIn: %lf\nsumOut: %lf\nweight in: %lf\nweight out: %lf\n\n",i,j,sumIn,sumOut,weightIn[j][i],weightOut[j][i]);
+//            printf("i = %d j = %d\nsumIn: %lf\nsumOut: %lf\nweight in: %lf\nweight out: %lf\n\n",i,j,sumIn,sumOut,weightIn[j][i],weightOut[j][i]);
         }
     }
-    printf("Weight In (j,i)\n");
+//    printf("Weight In (j,i)\n");
     for (j = 0; j < sizeUrl; j++) {
         for(i = 0; i < sizeUrl; i++) {
             if (weightIn[j][i] == 0) {
-                printf("                ");
+//                printf("                ");
                 continue;
             }  
-            printf("[%d][%d]%.7f ", j,i,weightIn[j][i]);
+//            printf("[%d][%d]%.7f ", j,i,weightIn[j][i]);
         }
-        printf("\n");
+//        printf("\n");
     }
 
-    printf("Weight Out (j,i)\n");
+//    printf("Weight Out (j,i)\n");
     for (j = 0; j < sizeUrl; j++) {
         for(i = 0; i < sizeUrl; i++) {
             if (weightOut[j][i] == 0) {
                 printf("                ");
                 continue;
             }   
-            printf("[%d][%d]%.7f ", j,i,weightOut[j][i]);
+//            printf("[%d][%d]%.7f ", j,i,weightOut[j][i]);
         }
-        printf("\n");
+//        printf("\n");
     }
     //PageRankWeighted algorithm
     while ((noIter < maxIterations-1 && diff >= diffPR) || noIter == 0) {
         noIter++;
-        printf("ITERATION: %d\n", noIter);
+//        printf("ITERATION: %d\n", noIter);
         for(i = 0; i < sizeUrl; i++) {//for url i:
             //calculate the pagerank
             urlPR[i][noIter] = (double)(1-d)/sizeUrl;
@@ -155,10 +155,10 @@ int PageRankW(double d, double diffPR, int maxIterations) {
         }
         //printf("    max = %d, maxPR = %lf\n", max, maxurlPR);
         seen[max] = 1;
-        printf("url:%s outgoing links:%.0f page rank: %.7f\n", urlList[max], outLinks[max], urlPR[max][noIter]);
-        fprintf(fp, "%s, %.0f, %.7f\n", urlList[max], outLinks[max], urlPR[max][noIter]);
+//        printf("url:%s outgoing links:%.0f page rank: %.7f\n", urlList[max], outLinks[max], urlPR[max][noIter]);
+//        fprintf(fp, "%s, %.0f, %.7f\n", urlList[max], outLinks[max], urlPR[max][noIter]);
         //for (k = 0; k < noIter; k++) printf("[%d]%lf", k,urlPR[max][k]);
-        printf("\n");
+//        printf("\n");
         maxurlPR = 0;
         max = 0;
     }
