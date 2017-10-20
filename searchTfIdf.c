@@ -55,6 +55,9 @@ double tf(char* word, char* url) {
         while((fscanf(open,"%s", tmp) != EOF) && strcmp(tmp,"#end") != 0) {
             //printf("tmp = %s\n",tmp);
             N++;
+            //normalise the word 
+            tmp = RemoveSpecialCharacters(tmp);     // Removes special characters
+            NormaliseWord(tmp); 
             if (strcmp(word, tmp) == 0) f++;
         }
         //tmp == #end, make sure Section-2 is next and then close
@@ -70,7 +73,7 @@ double tf(char* word, char* url) {
 }
 
 //IDF = Inverse document frequency
-//                   total words
+//                   total docs
 //    = log  (---------------------------)
 //         10  # of docs containing word
 
@@ -84,16 +87,25 @@ double idf(char* word, char* url) {
     char* file_name = "invertedIndex.txt";
     FILE *open = fopen(file_name, "r");
     char* tokenWord = (char*) malloc((MAXWORD)*sizeof(char));
-    //char* tokenUrl = (char*) malloc((SIZEOFURL)*sizeof(char));
+    char* tokenUrl = (char*) malloc((SIZEOFURL)*sizeof(char));
     if(open != NULL){
         while (fgets(line,sizeof(line),open)) {
             //read the word
             tokenWord = strtok(line," ");
-            //printf("tokenWord = %s\n", tokenWord);
+            printf("tokenWord = %s\n", tokenWord);
+            NormaliseWord(tokenWord); 
+            if (strcmp(word,tokenWord) != 0) continue;
+            //read the urls
+            while (1) {
+                tokenUrl = strtok(NULL, " ");
+                if ((tokenUrl == NULL)) break;// || (strcmp(tokenUrl,"url") < 0)) break;
+                f++;
+                printf("tokenUrl = %s\n", tokenUrl);
+            }
             f++;
         }
     }
-    if (tokenWord);
+    if (tokenWord) printf(" ");;
     fclose(open);
     //calculating
     printf("N = %d\n f = %d\n", N, f);

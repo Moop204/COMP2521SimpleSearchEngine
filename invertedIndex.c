@@ -9,10 +9,7 @@
 #include "invertedIndex.h"
 #include "set.h"
 
-
-void NormaliseWord(char* word);             // Taken from lab08 of COMP2521
-//void RemoveSpecialCharacters(char* word);   // Returns a string without special characters
-char *RemoveSpecialCharacters(char *word);
+//prototypes in .h file
 
 
 typedef struct IINode {
@@ -186,6 +183,8 @@ int InvertedIndex(char **urlList){
         fclose(fptext);
         disposeSet(sLocal);
     }
+    disposeSet(sGlobal);
+
 /*
         if(open != NULL){
             if (!(fscanf(open,"%s %s",hashtag, section) == 2)) return NULL;                 //error
@@ -234,17 +233,23 @@ int InvertedIndex(char **urlList){
 }
 
 char *RemoveSpecialCharacters(char* str){
-    char *standardStr = malloc(sizeof(str));
+    char *standardStr = calloc(sizeof(str),sizeof(char));
+    int p;
+    for(p = 0; p < sizeof(str);p++){
+        standardStr[p] = '\0';
+    }
     int len = strlen(str);
     int idx = 0;
     int i;
     for(i = 0; i < len; i++){
-        if(str[i] != '.' && str[i] != ';' && str[i] != '?'){
+        printf("str[%d] = %c, stridx = %s\n", i, str[i], standardStr);
+        if((str[i]<='z' && str[i]>='a') || (str[i]<='Z' && str[i]>='A')){
             standardStr[idx] = str[i];
             idx++;
         }
 
     }
+    printf("stridx = %s\n", standardStr);
     standardStr[idx] = '\0';
     return standardStr;
 }
