@@ -10,13 +10,19 @@
 #include <assert.h>
 #include "pageRank.h"
 #include "readData.h"
+#include "invertedIndex.h"
 
 #define MAXPRINT 30
 
 double readPageRank(char* url);
 
 int main(int argc, char **argv){
+    int cardinality = LenCollection();
+    int length = SIZEOFURL;
+    char** urlList = GetCollection(cardinality, length);
 
+    InvertedIndex(urlList);
+/*
     assert(argc > 1);
 
     int length = LenCollection();
@@ -94,7 +100,7 @@ int main(int argc, char **argv){
     for(idx = 0; idx < length; idx++)free(collection[idx]);
     free(collection);
     free(listFreq);
-
+*/
     return 0;
 }
 

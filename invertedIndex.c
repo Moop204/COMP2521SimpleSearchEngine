@@ -142,7 +142,7 @@ int InvertedIndex(char **urlList){
     for(i = 0; i < len; i++){
         char urlname[sizeof("Sample1/") + SIZEOFURL + sizeof(".txt")] = "Sample1/";
         Set sLocal = newSet();
-        strcat(urlname,strcat(urlList[i],".txt"));
+        strcat(urlname,strcat(dupList[i],".txt"));
         printf("%s\n",urlname);
         FILE *fptext = fopen(urlname, "r");      // Opens up url
         if(fptext != NULL){
@@ -164,12 +164,12 @@ int InvertedIndex(char **urlList){
 //                printf("%d\n", isElem(sGlobal,tmp));
 //                printf("%d\n", isElem(sLocal,tmp));
                 if(!isElem(sLocal, tmp)) {
-                    printf("%s   ", dupList[i]   );
+                    printf("%s   ", urlList[i]   );
                     printf("%s\n", tmp);
 
                     insertInto(sLocal, tmp);               // For words not seen before, insert url into the word node
-                    Queue urlList = SearchIndex(tmp,r);
-                    enterQueue(urlList, dupList[i]);
+                    Queue urlQ = SearchIndex(tmp,r);
+                    enterQueue(urlQ, urlList[i]);
                     //showQueue(urlList);
                     //showIIRep(r);
                     //printf("show me\n");
