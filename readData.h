@@ -8,5 +8,6 @@
 char** GetCollection(int elements, int length);
 int LenCollection(void);
 Graph GetGraph(char** urlList);
-int wordFrequency(char* word, char* url);
 void shiftRight(int *list, int pos, int max);
+int wordFrequency(char* word, char* url);
+int wordTotal( char* url);

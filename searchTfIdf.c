@@ -17,6 +17,9 @@
 #include "graph.h"
 
 #define MAXCHAR   1000
+#define SIZEOFDIR 10
+#define SIZEOFEXT 4
+#define TERMINATING 1
 //(MAXWORD = 45)
 //(SIZEOFURL = 7)
 
@@ -31,11 +34,13 @@ double tf(char* word, char* url) {
     int N = 0; //# of total words
     int f = 0; //f of the term
     
+
+/*
     //open inverted index, find N
-    char file_name[8+SIZEOFURL+4] = "Sample1/";
+    char file_name[SIZEOFDIR+SIZEOFURL+SIZEOFEXT+TERMINATING] = "Sample1/";
     strcat(strcat(file_name,url),".txt");
     //printf("filename %s\n",file_name);
-
+    printf("FILE %s\n", file_name);
     FILE *open = fopen(file_name, "r");
     char* tmp;
     tmp = (char *) malloc((SIZEOFURL)*sizeof(char));
@@ -44,8 +49,8 @@ double tf(char* word, char* url) {
     char* section;
     section = (char *) malloc((MAXWORD)*sizeof(char));
 
-    char* ftmp = tmp;
-    char* fhashtag = hashtag;
+    //char* ftmp = tmp;
+    //char* fhashtag = hashtag;
     char* fsection = section;  
 
     if(open != NULL){
@@ -53,14 +58,14 @@ double tf(char* word, char* url) {
         if (!(fscanf(open,"%s %s", hashtag, section) == 2)) return -1;                 //error
         if (strcmp(hashtag,"#start")+strcmp(section,"Section-1") != 0) return -2;     //error
         //printf("%s %s:\n",hashtag,section);
-        while((fscanf(open,"%s", &tmp[0]) != EOF) && strcmp(tmp,"#end") != 0);
+        while((fscanf(open,"%s", tmp) != EOF) && strcmp(tmp,"#end") != 0);
         //tmp == #end, make sure Section-1 is next and then close
         if (!(fscanf(open,"%s", section) == 1 && strcmp(section,"Section-1") == 0)) return -3;//error
         //check if at Section-2
         if (!(fscanf(open,"%s %s", hashtag, section) == 2)) return -4;                 //error
         if (strcmp(hashtag,"#start")+strcmp(section,"Section-2") != 0) return -5;     //error
 
-        while((fscanf(open,"%s", &tmp[0]) != EOF) && strcmp(tmp,"#end") != 0) {
+        while((fscanf(open,"%s", tmp) != EOF) && strcmp(tmp,"#end") != 0) {
             //printf("tmp = %s\n",tmp);
             N++;
             //normalise the word 
@@ -73,9 +78,12 @@ double tf(char* word, char* url) {
         //done, close file
     }
     fclose(open);
-    free(ftmp);
-    free(fhashtag);
+    //free(ftmp);
+    //free(fhashtag);
     free(fsection);
+*/
+    f = wordFrequency(word, url);
+    N = wordTotal(url);
     //calculating f
     printf("f = %d\nN = %d\n", f, N);
 
@@ -173,7 +181,12 @@ char line[MAXCHAR];
 
 
 
-void searchTfIdf(char **argv, int argc){
+int main(int argc, char **argv){
+
+    if(!(argc > 1)){
+        perror("Please select one or more words to search");
+        return 1;
+    }
 
     int length = LenCollection();
     char **collection = GetCollection(length, SIZEOFURL);   // INITIAL ORDER reference
@@ -253,6 +266,13 @@ void searchTfIdf(char **argv, int argc){
                         listPrint[e] = i;
                         break;
                     }
+                    else if(val == listFreq[printRef]){
+                        if(listTfIdf[i] > listTfIdf[printRef]){
+                            shiftRight(listPrint, e, MAXOUTPUT);
+                            listPrint[e] = i; 
+                            break;
+                        }
+                    }
                 }
             }
         }
@@ -270,6 +290,7 @@ void searchTfIdf(char **argv, int argc){
     free(collection);
     free(listFreq);
     //free(listTfIdf);
+    return 0;
 }
 
 void shiftRight(int *list, int pos, int max){

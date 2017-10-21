@@ -106,6 +106,58 @@ int wordFrequency(char* word, char* url) {
     int f = 0; //f of the term
     
     //open inverted index, find N
+    printf("%s\n", url);
+    char file_name[8+SIZEOFURL+4+100] = "Sample1/";
+    strcat(strcat(file_name,url),".txt");
+    printf("filename %s\n",file_name);
+    FILE *open;
+    if( (open = fopen(file_name, "r")) == NULL ) return -10;
+    char* tmp;
+    tmp = (char*) malloc((MAXWORD)*sizeof(char));
+    char* hashtag;
+    hashtag = (char*) malloc((SIZEOFURL)*sizeof(char));
+    char* section;
+    section = (char*) malloc((MAXWORD)*sizeof(char));
+
+    char *ftmp = tmp;
+    char *fhashtag = hashtag;
+    char *fsection = section;
+
+    if(open != NULL){
+        //scan through to Section-2
+        if (!(fscanf(open,"%s %s",hashtag, section) == 2)) return -1;                 //error
+        if (strcmp(hashtag,"#start")+strcmp(section,"Section-1") != 0) return -2;     //error
+        //printf("%s %s:\n",hashtag,section);
+        while((fscanf(open,"%s", tmp) != EOF) && strcmp(tmp,"#end") != 0);
+        //tmp == #end, make sure Section-1 is next and then close
+        if (!(fscanf(open,"%s",section) == 1 && strcmp(section,"Section-1") == 0)) return -3;//error
+        //check if at Section-2
+        if (!(fscanf(open,"%s %s",hashtag, section) == 2)) return -4;                 //error
+        if (strcmp(hashtag,"#start")+strcmp(section,"Section-2") != 0) return -5;     //error
+
+        while((fscanf(open,"%s", tmp) != EOF) && strcmp(tmp,"#end") != 0) {
+            //printf("tmp = %s\n",tmp);
+            //normalise the word 
+            tmp = RemoveSpecialCharacters(tmp);     // Removes special characters
+            NormaliseWord(tmp); 
+            if (strcmp(word, tmp) == 0) f++;
+        }
+        //tmp == #end, make sure Section-2 is next and then close
+        if (!(fscanf(open,"%s",section) == 1 && strcmp(section,"Section-2") == 0)) return -6;//error
+        //done, close file
+    }
+    fclose(open);
+    free(ftmp);
+    free(fhashtag);
+    free(fsection);
+
+    return (f);
+}
+
+int wordTotal( char* url) {
+    int f = 0; //f of the term
+    
+    //open inverted index, find N
     char file_name[8+SIZEOFURL+4] = "Sample1/";
     strcat(strcat(file_name,url),".txt");
     //printf("filename %s\n",file_name);
@@ -139,7 +191,7 @@ int wordFrequency(char* word, char* url) {
             //normalise the word 
             tmp = RemoveSpecialCharacters(tmp);     // Removes special characters
             NormaliseWord(tmp); 
-            if (strcmp(word, tmp) == 0) f++;
+            f++;
         }
         //tmp == #end, make sure Section-2 is next and then close
         if (!(fscanf(open,"%s",section) == 1 && strcmp(section,"Section-2") == 0)) return -6;//error

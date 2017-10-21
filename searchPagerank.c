@@ -15,14 +15,9 @@
 #define MAXPRINT 30
 
 double readPageRank(char* url);
-
-int main(int argc, char **argv){
-    int cardinality = LenCollection();
-    int length = SIZEOFURL;
-    char** urlList = GetCollection(cardinality, length);
-
-    InvertedIndex(urlList);
 /*
+int main(int argc, char **argv){
+
     assert(argc > 1);
 
     int length = LenCollection();
@@ -100,10 +95,9 @@ int main(int argc, char **argv){
     for(idx = 0; idx < length; idx++)free(collection[idx]);
     free(collection);
     free(listFreq);
-*/
     return 0;
 }
-
+*/
 
 double readPageRank(char* url){
     char* tmp = calloc(MAXWORD, sizeof(char));
@@ -120,9 +114,13 @@ double readPageRank(char* url){
             return result;
         }
         else{
+            free(tmp);
+            free(comparison);
             printf("%s\n", tmp);
             return -1.0; // Error
         }
     }
+    free(tmp);
+    free(comparison);
     return -1.0; // Error     
 }
