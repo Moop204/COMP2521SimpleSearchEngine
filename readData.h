@@ -9,10 +9,9 @@
 char** GetCollection(char* file, int elements, int length);
 int LenCollection(char *filename);
 Graph GetGraph(char** urlList);
-
-int wordFrequency(char* word, char* url);
 void shiftRight(int *list, int pos, int max);
-
+int wordFrequency(char* word, char* url);
+int wordTotal( char* url);
 char *RemoveSpecialCharacters(char* str);
 void NormaliseWord(char* word);
 
