@@ -13,7 +13,7 @@
 #include "invertedIndex.h"
 
 #define MAXPRINT 30
-
+/*
 double readPageRank(char* url);
 int main(int argc, char **argv){
 
@@ -98,7 +98,7 @@ int main(int argc, char **argv){
     free(listPgRank);
     return 0;
 }
-
+*/
 double readPageRank(char* url){
     char* tmp = calloc(MAXWORD, sizeof(char));
 

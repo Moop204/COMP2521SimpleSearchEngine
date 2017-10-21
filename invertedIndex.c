@@ -257,13 +257,11 @@ Input: input_url
 void NormaliseWord(char* word)
 {
   int i = 0;
-  printf("FIRST %s\n", word);
   while (word[i] != '\0') {
       // NEW
     if (word[i] <= 'Z' && word[i] >= 'A') // Bounded below so this funct. can run on all urls
       // /NEW
       word[i] += 'a' - 'A';
-    printf("NEXT%s\n", word);
     i++;
     if(word[i] == '\0') break;
   }

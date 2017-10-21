@@ -148,8 +148,8 @@ double idf(char* word) {
 }
 
 double tfIdf(char*word, char*url) {
-    //printf("tf %.7lf \nidf %.7lf\n",tf(word,url), idf(word,url));
-    return tf(word,url);// * idf(word,url);
+    //printf("tf %.7lf \nidf %.7lf\n",tf(word,url), idf(word));
+    return tf(word,url); //* idf(word);
 }
 
 
@@ -180,7 +180,7 @@ char line[MAXCHAR];
 */
 
 
-/*
+
 int main(int argc, char **argv){
 
     if(!(argc > 1)){
@@ -197,7 +197,7 @@ int main(int argc, char **argv){
     
     int debug;    
 
-    for(idx = 0; idx < argc; idx++){
+    for(idx = 1; idx < argc; idx++){
         char *arg = argv[idx];
         int nUrls;
         for(nUrls = 0; nUrls < length; nUrls++){
@@ -278,7 +278,7 @@ int main(int argc, char **argv){
     free(listPrint);
     return 0;
 }
-*/
+
 void shiftRight(int *list, int pos, int max){
     int cur;
     for(cur = max-1; cur > pos; cur --){
