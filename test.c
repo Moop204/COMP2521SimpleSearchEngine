@@ -15,7 +15,6 @@ int main (void) {
     char** urlList = GetCollection(cardinality, length);
     Graph g = GetGraph(urlList);
     PageRankW(0.850000,0.000010,1000);
-    
     InvertedIndex(urlList);
     //double k = tf("mars", "url11");
     //printf("tf = %lf\n", k);

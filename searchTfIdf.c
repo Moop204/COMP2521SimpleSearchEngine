@@ -16,8 +16,7 @@
 #include "queue.h"
 #include "graph.h"
 
-#define MAXCHAR 1000
-#define MAXOUTPUT 30
+#define MAXCHAR   1000
 //(MAXWORD = 45)
 //(SIZEOFURL = 7)
 
@@ -45,56 +44,38 @@ double tf(char* word, char* url) {
     char* section;
     section = (char *) malloc((MAXWORD)*sizeof(char));
 
-    if(tmp == NULL || hashtag == NULL || section == NULL) return 0.0;
-
-    //char* ftmp = tmp;
-    //char* fhashtag = hashtag;
-    //char* fsection = section;  
+    //if(tmp == NULL || hashtag == NULL || section == NULL) return 0.0;
+    char* ftmp = tmp;
+    char* fhashtag = hashtag;
+    char* fsection = section;  
 
     if(open != NULL){
         //scan through to Section-2
         if (!(fscanf(open,"%s %s", hashtag, section) == 2)) return -1;                 //error
         if (strcmp(hashtag,"#start")+strcmp(section,"Section-1") != 0) return -2;     //error
         //printf("%s %s:\n",hashtag,section);
-        while((fscanf(open,"%s", hashtag) != EOF) && strcmp(hashtag,"#end") != 0);
+        while((fscanf(open,"%s", &tmp[0]) != EOF) && strcmp(tmp,"#end") != 0);
         //tmp == #end, make sure Section-1 is next and then close
         if (!(fscanf(open,"%s", section) == 1 && strcmp(section,"Section-1") == 0)) return -3;//error
         //check if at Section-2
         if (!(fscanf(open,"%s %s", hashtag, section) == 2)) return -4;                 //error
         if (strcmp(hashtag,"#start")+strcmp(section,"Section-2") != 0) return -5;     //error
-//<<<<<<< HEAD
-        int i = 0;
-        while (fscanf(open,"%s", tmp)!= EOF) {
-            i++;
-            tmp = RemoveSpecialCharacters(tmp);
-            NormaliseWord(tmp);
-            printf("tmp = %s\n",tmp);
-            if (i == 33) break;
-            if (strcmp(tmp,"#end")==0) {
-                printf("breaking\n");                
-                break;
-            }
-        }
-        //while((fscanf(open,"%s", tmp) != EOF) && strcmp(tmp,"#end") != 0) {
-//=======
-
-        //while((fscanf(open,"%s", &tmp[0]) != EOF) && strcmp(tmp,"#end") != 0) {
-//>>>>>>> 814a94b86bad56ef3eaaeb2bfb1be77ae0149d87
+        while((fscanf(open,"%s", &tmp[0]) != EOF) && strcmp(tmp,"#end") != 0) {
             //printf("tmp = %s\n",tmp);
-            //N++;
+            N++;
             //normalise the word 
-            //tmp = RemoveSpecialCharacters(tmp);     // Removes special characters
-            //NormaliseWord(tmp); 
-            //if (strcmp(word, tmp) == 0) f++;
-        //}
+            tmp = RemoveSpecialCharacters(tmp);     // Removes special characters
+            NormaliseWord(tmp); 
+            if (strcmp(word, tmp) == 0) f++;
+        }
         //tmp == #end, make sure Section-2 is next and then close
         if (!(fscanf(open,"%s",section) == 1 && strcmp(section,"Section-2") == 0)) return -6;//error
         //done, close file
     }
     fclose(open);
-    free(tmp);
-    free(hashtag);
-    free(section);
+    free(ftmp);
+    free(fhashtag);
+    free(fsection);
     //calculating f
     printf("f = %d\nN = %d\n", f, N);
 
@@ -119,10 +100,9 @@ double idf(char* word) {
     //char* tokenUrl = (char*) malloc((SIZEOFURL)*sizeof(char));
     char* tmp = calloc(MAXWORD, sizeof(char));
     char* ftmp = tmp;
-    printf("%s", ftmp);
+    //printf("%s", ftmp);
     if(open != NULL){
-        while(fscanf(open, "%s", tmp) != EOF && strcmp(tmp, word) == 0);
-        // 
+        while(fscanf(open, "%s", tmp) != EOF && strcmp(tmp, word) != 0);
         while(fscanf(open, "%s", tmp) != EOF 
               && (tmp[0] == 'u' 
               &&  tmp[1] == 'r' 
@@ -140,7 +120,7 @@ double idf(char* word) {
             //read the urls
             while (1) {
                 tokenUrl = strtok(NULL, " ");
-                if ((tokenUrl == NULL) || (strcmp(tokenUrl,"url") < 0)) break;
+                if ((tokenUrl == NULL)) break;// || (strcmp(tokenUrl,"url") < 0)) break;
                 f++;
  //               printf("tokenUrl = %s\n", tokenUrl);
             }
@@ -148,9 +128,10 @@ double idf(char* word) {
         }
 
     }
-    if (tokenWord) printf(" ");;
-    free(ftmp);
+    if (tokenWord) printf(" ");
 */
+    free(ftmp);
+
     fclose(open);
     //calculating
     printf("N = %d\n f = %d\n", N, f);
@@ -161,7 +142,7 @@ double idf(char* word) {
 
 double tfIdf(char*word, char*url) {
     //printf("tf %.7lf \nidf %.7lf\n",tf(word,url), idf(word,url));
-    return tf(word,url) * idf(word);
+    return tf(word,url);// * idf(word);
 }
 
 
@@ -191,57 +172,7 @@ char line[MAXCHAR];
     fclose(open);
 */
 
-int word_frequency(char* word, char* url) {
-    int f = 0; //f of the term
-    
-    //open inverted index, find N
-    char file_name[8+SIZEOFURL+4] = "Sample1/";
-    strcat(strcat(file_name,url),".txt");
-    //printf("filename %s\n",file_name);
 
-    FILE *open = fopen(file_name, "r");
-    char* tmp;
-    tmp = (char*) malloc((MAXWORD)*sizeof(char));
-    char* hashtag;
-    hashtag = (char*) malloc((SIZEOFURL)*sizeof(char));
-    char* section;
-    section = (char*) malloc((MAXWORD)*sizeof(char));
-
-    char *ftmp = tmp;
-    char *fhashtag = hashtag;
-    char *fsection = section;
-    printf("%s,%s,%s\n", ftmp,fhashtag,fsection);
-    if(open != NULL){
-        //scan through to Section-2
-        if (!(fscanf(open,"%s %s",hashtag, section) == 2)) return -1;                 //error
-        if (strcmp(hashtag,"#start")+strcmp(section,"Section-1") != 0) return -2;     //error
-        //printf("%s %s:\n",hashtag,section);
-        while((fscanf(open,"%s", tmp) != EOF) && strcmp(tmp,"#end") != 0);
-        //tmp == #end, make sure Section-1 is next and then close
-        if (!(fscanf(open,"%s",section) == 1 && strcmp(section,"Section-1") == 0)) return -3;//error
-        //check if at Section-2
-        if (!(fscanf(open,"%s %s",hashtag, section) == 2)) return -4;                 //error
-        if (strcmp(hashtag,"#start")+strcmp(section,"Section-2") != 0) return -5;     //error
-
-        while((fscanf(open,"%s", tmp) != EOF) && strcmp(tmp,"#end") != 0) {
-            //printf("tmp = %s\n",tmp);
-            //normalise the word 
-            tmp = RemoveSpecialCharacters(tmp);     // Removes special characters
-            NormaliseWord(tmp); 
-printf("%s", tmp);
-            if (strcmp(word, tmp) == 0) f++;
-        }
-        //tmp == #end, make sure Section-2 is next and then close
-        if (!(fscanf(open,"%s",section) == 1 && strcmp(section,"Section-2") == 0)) return -6;//error
-        //done, close file
-    }
-    fclose(open);
-    free(ftmp);
-    free(fhashtag);
-    free(fsection);
-
-    return (f);
-}
 
 void searchTfIdf(char **argv, int argc){
 
@@ -253,14 +184,14 @@ void searchTfIdf(char **argv, int argc){
     int idx;
 
     
-    //int debug;    
+    int debug;    
 
     for(idx = 0; idx < argc; idx++){
         char *arg = argv[idx];
         int nUrls;
         for(nUrls = 0; nUrls < length; nUrls++){
-            listFreq[nUrls] += word_frequency(arg, collection[nUrls]); 
-//            printf("%s  %d\n", collection[nUrls], listFreq[nUrls]);
+            listFreq[nUrls] += wordFrequency(arg, collection[nUrls]); 
+            printf("%s  %d\n", collection[nUrls], listFreq[nUrls]);
         }
     }
 
@@ -269,16 +200,15 @@ void searchTfIdf(char **argv, int argc){
         int nUrls;
         for(nUrls = 0; nUrls < length; nUrls++){
             listTfIdf[nUrls] += tfIdf(arg, collection[nUrls]); 
-//            printf("%s  %.7lf\n", collection[nUrls], listTfIdf[nUrls]);
+            printf("%s  %.7lf\n", collection[nUrls], listTfIdf[nUrls]);
         }
     }
 
-/*
+
     for(debug = 0; debug < length; debug++){
         printf("%d ", listFreq[debug]);
     }
         printf("\n");
-*/    
 
     int *listPrint = calloc(MAXOUTPUT, sizeof(int));        // order of printing, refers to INITIAL ORDER in order
     int i;
