@@ -6,7 +6,7 @@
 #include "graph.h"
 #include "invertedIndex.h"
 
-char** GetCollection(int elements, int length);
+char** GetCollection(char* file, int elements, int length);
 int LenCollection(char *filename);
 Graph GetGraph(char** urlList);
 

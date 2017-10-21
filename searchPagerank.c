@@ -19,14 +19,14 @@ double readPageRank(char* url);
 /*int main(int argc, char **argv){
     int cardinality = LenCollection("Sample1/collection.txt");
     int length = SIZEOFURL;
-    char** urlList = GetCollection(cardinality, length);
+    char** urlList = GetCollection("Sample1/collection.txt",cardinality, length);
 
     InvertedIndex(urlList);
 *//*
     assert(argc > 1);
 
     int length = LenCollection();
-    char **collection = GetCollection(length, SIZEOFURL);   // INITIAL ORDER reference
+    char **collection = GetCollection("Sample1/collection.txt",length, SIZEOFURL);   // INITIAL ORDER reference
     int *listFreq = calloc(length, sizeof(int));            // INITIAL ORDER of frequency
     double *listPgRank = calloc(length, sizeof(int));
 

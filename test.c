@@ -12,7 +12,7 @@
 int main (void) {
     int cardinality = LenCollection("Sample1/collection.txt");
     int length = SIZEOFURL;
-    char** urlList = GetCollection(cardinality, length);
+    char** urlList = GetCollection("Sample1/collection.txt",cardinality, length);
     Graph g = GetGraph(urlList);
     PageRankW(0.850000,0.000010,1000);
     //InvertedIndex(urlList);

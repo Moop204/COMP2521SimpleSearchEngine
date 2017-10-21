@@ -195,7 +195,7 @@ int main(int argc, char* argv[]) {
     //MALLOC - array of arrays of char lists: urlList[argc][maxLength][SIZEOFURL]
     char*** list =(char***) malloc((argc-1)*maxLength*SIZEOFURL);
     for (i = 0; i < argc-1; i++) {
-        list[i] = (char**) GetCollection(maxLength,SIZEOFURL);
+        list[i] = (char**) GetCollection(argv[i+1],maxLength,SIZEOFURL);
     }
     printf("malloc for lists is ok\n");
 

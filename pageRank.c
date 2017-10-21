@@ -13,7 +13,7 @@
 int PageRankW(double d, double diffPR, int maxIterations) {
     //initialising
     int sizeUrl = LenCollection("Sample1/collection.txt");
-    char** urlList = GetCollection(sizeUrl,SIZEOFURL);
+    char** urlList = GetCollection("Sample1/collection.txt",sizeUrl,SIZEOFURL);
     Graph g = GetGraph(urlList);
     double** urlPR;//[sizeUrl][maxIterations]
     urlPR = calloc(sizeUrl, sizeof(double *));

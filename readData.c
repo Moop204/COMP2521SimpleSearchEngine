@@ -26,7 +26,7 @@ int LenCollection(char* file) {
 }
 
 
-char** GetCollection(int elements, int length) {
+char** GetCollection(char* file, int elements, int length) {
     //initialising the char** list of strings
     char** list;
     list = malloc(elements * length);
@@ -38,7 +38,7 @@ char** GetCollection(int elements, int length) {
     char* tmp;
     tmp = (char*) malloc((SIZEOFURL) * sizeof(char));
     FILE* collection;
-    collection = fopen("Sample1/collection.txt", "r");//"Sample1/collection.txt", "r");
+    collection = fopen(file, "r");//"Sample1/collection.txt", "r");
     if (collection != NULL) {
         while (fscanf(collection,"%s",tmp) != EOF) {
             //printf("%d: %s\n", i, tmp);

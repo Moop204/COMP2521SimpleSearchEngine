@@ -177,7 +177,7 @@ char line[MAXCHAR];
 void searchTfIdf(char **argv, int argc){
 
     int length = LenCollection("Sample1/collection.txt");
-    char **collection = GetCollection(length, SIZEOFURL);   // INITIAL ORDER reference
+    char **collection = GetCollection("Sample1/collection.txt",length, SIZEOFURL);   // INITIAL ORDER reference
     int *listFreq = calloc(length, sizeof(int));            // INITIAL ORDER of frequency
 //    int *listTfIdf = calloc(length, sizeof(int));
     double *listTfIdf = calloc(length, sizeof(int));
