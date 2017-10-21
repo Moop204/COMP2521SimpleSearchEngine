@@ -139,7 +139,6 @@ int wordFrequency(char* word, char* url) {
             //normalise the word 
             tmp = RemoveSpecialCharacters(tmp);     // Removes special characters
             NormaliseWord(tmp); 
-printf("%s", tmp);
             if (strcmp(word, tmp) == 0) f++;
         }
         //tmp == #end, make sure Section-2 is next and then close
