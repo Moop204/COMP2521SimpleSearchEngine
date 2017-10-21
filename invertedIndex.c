@@ -37,31 +37,27 @@ void AppendIINode(char *newWord, IIRep *rep){      // Inserts node to word linke
     newNode->word = strdup(newWord);
     newNode->next = NULL;
     newNode->urls = newQueue();
-    printf("ive done nothing\n");
     if(rep->end == NULL){
-        printf("it nulled?\n");
+//        printf("it nulled?\n");
         rep->front = newNode;
         rep->end = newNode;
-        printf("True %d\n\n", (rep->front == NULL));
+//        printf("True %d\n\n", (rep->front == NULL));
     }
     else{
-        printf("%s\n",rep->front->word);
-        printf("invertedIndex.c 52\n");
+        //printf("%s\n",rep->front->word);
         if(isAlphaLess(rep->end->word, newWord) == 1){
-            printf("end:is %s less than %s? 1\n",rep->end->word,newWord);
+//            printf("end:is %s less than %s? 1\n",rep->end->word,newWord);
             rep->end->next = newNode;
             rep->end = newNode;
         }
         else if(isAlphaLess(newWord, rep->front->word) == 1){
-            printf("past the first COND\n");
-            printf("start:is %s less than %s? 1\n",rep->front->word,newWord);
+//            printf("start:is %s less than %s? 1\n",rep->front->word,newWord);
             newNode->next = rep->front;
             rep->front = newNode;
         }
         else{
-            printf("THIRD COND\n");
             for(cur = rep->front; cur != NULL; cur = cur->next){
-                printf("is %s less than %s? %d\n",cur->next->word,newWord,isAlphaLess(cur->next->word, newWord));
+//                printf("is %s less than %s? %d\n",cur->next->word,newWord,isAlphaLess(cur->next->word, newWord));
 	//	printf("check %s",cur->next->word);
                 if(!isAlphaLess(cur->next->word, newWord)){
                     newNode->next = cur->next;
@@ -89,7 +85,7 @@ void showIIRep(IIRep *rep) {
     IINode *cur;
     for (cur = rep->front; ; cur = cur->next) {
         printf("<<%s>>",cur->word);
-        showQueue(cur->urls);
+        //showQueue(cur->urls);
         if (cur == rep->end) break;
     }
 }
@@ -124,6 +120,7 @@ int InvertedIndex(char **urlList){
     for(p = 0; p < len; p++){
         dupList[p] = malloc(sizeof(urlList[0]));
     }
+
     for(p = 0; p < len; p++){
         dupList[p] = strdup(urlList[p]);
     }
@@ -138,7 +135,7 @@ int InvertedIndex(char **urlList){
 
     Set sGlobal = newSet();                 // 
     for(i = 0; i < len; i++){
-        char urlname[8+6+4+1] = "Sample1/";
+        char urlname[sizeof("Sample1/") + SIZEOFURL + sizeof(".txt")] = "Sample1/";
         Set sLocal = newSet();
         strcat(urlname,strcat(urlList[i],".txt"));
         printf("%s\n",urlname);
@@ -146,37 +143,37 @@ int InvertedIndex(char **urlList){
         if(fptext != NULL){
             if (!(fscanf(fptext,"%s %s",hashtag, section) == 2)) return 1;                 //error
             if (strcmp(hashtag,"#start")+strcmp(section,"Section-1") != 0) return 1;     //error
-            while(!(fscanf(fptext,"%s",section) == 1 && strcmp(section,"Section-2") == 0)) printf("hi");
+            while(!(fscanf(fptext,"%s",section) == 1 && strcmp(section,"Section-2") == 0));
             while ((fscanf(fptext,"%s",tmp) != EOF) && strcmp(tmp,"#end") != 0 ) {    // Reads by character
-                printf("IVE ENTERED THE NEXT WHILE LOOP \n");
-
+                //printf("IVE ENTERED THE NEXT WHILE LOOP \n");
                 tmp = RemoveSpecialCharacters(tmp);     // Removes special characters
                 NormaliseWord(tmp);                     // Converts words to lowercase
-                printf("toptmp=%s\n",tmp);
+                //printf("toptmp=%s\n",tmp);
 
                 if(!isElem(sGlobal, tmp)){              // For words never seen before, create a head node that holds all urls containing it
-                    printf("PRE");
+                    //printf("PRE");
                     insertInto(sGlobal, tmp);
-                    printf("is an element of sGlobal now 131 inv\n");           
+                    //printf("is an element of sGlobal now 131 inv\n");           
                     AppendIINode(tmp, r);
                 }
-                printf("ASD\n");
-                printf("%d\n", isElem(sGlobal,tmp));
-                printf("%d\n", isElem(sLocal,tmp));
+//                printf("%d\n", isElem(sGlobal,tmp));
+//                printf("%d\n", isElem(sLocal,tmp));
                 if(!isElem(sLocal, tmp)) {
+                    printf("%s   ", dupList[i]   );
+                    printf("%s\n", tmp);
+
                     insertInto(sLocal, tmp);               // For words not seen before, insert url into the word node
-                    Queue url_list = SearchIndex(tmp,r);
-                    enterQueue(url_list, dupList[i]);
-                    showQueue(url_list);
-                    showIIRep(r);
-                    printf("show me\n");
+                    Queue urlList = SearchIndex(tmp,r);
+                    enterQueue(urlList, dupList[i]);
+                    //showQueue(urlList);
+                    //showIIRep(r);
+                    //printf("show me\n");
                 }
-                printf("HELLO\n");
             }
             //check if next word is "Section-2", and finish
-            printf("ghasdtmp=%s\n",tmp);
+            //printf("bottmp=%s\n",tmp);
             if (!(fscanf(fptext,"%s",section) == 1 && strcmp(section,"Section-2") == 0)) {
-                printf("YOU FUCKED UP\n");                
+                printf("YOU SCREWED UP\n");                
                 return 1;//error
             }
         }
@@ -184,6 +181,9 @@ int InvertedIndex(char **urlList){
         disposeSet(sLocal);
     }
     disposeSet(sGlobal);
+    free(hashtag);
+    free(section);
+    free(tmp);
 
 /*
         if(open != NULL){
@@ -207,22 +207,19 @@ int InvertedIndex(char **urlList){
             //printf("%s %s. closing\n", tmp, section);
             //done, close and break to next iteration of connection.
         }
-
 */
     FILE *fp = fopen("invertedIndex.txt", "w");
     IINode *cur;
     for(cur = r->front; cur != NULL; cur = cur->next){
         fprintf(fp, "%s  ", cur->word);
-        printf("%s WORD\n", cur->word);
+        //printf("for %s:\n", cur->word);
         Queue url_q = cur->urls;
-        printf("DA QUEUE\n");
-        showQueue(url_q);
+        //showQueue(url_q);
         //fwrite(invertedIdx, 1, sizeof(invertedIdx), fp);
         char* url = malloc(sizeof(urlList[0]));
-	    printf("dicks\n");
         for(url = leavePriorQueue(url_q); ; url = leavePriorQueue(url_q)){
-            printf("Look at me im mr meeseeks\n");
-            fprintf(fp, "%s ", url);   
+            fprintf(fp, "%s ", url);    
+            //showQueue(url_q);   
             if (emptyQueue(url_q)) break;         
         }
         fprintf(fp,"\n");
@@ -233,34 +230,23 @@ int InvertedIndex(char **urlList){
 }
 
 char *RemoveSpecialCharacters(char* str){
-    char *standardStr = calloc(sizeof(str),sizeof(char));
-    int p;
-    for(p = 0; p < sizeof(str);p++){
-        standardStr[p] = '\0';
-    }
     int len = strlen(str);
-    int idx = 0;
     int i;
     for(i = 0; i < len; i++){
-        printf("str[%d] = %c, stridx = %s\n", i, str[i], standardStr);
-        if((str[i]<='z' && str[i]>='a') || (str[i]<='Z' && str[i]>='A')){
-            standardStr[idx] = str[i];
-            idx++;
+//        printf("str[%d] = %c\n", i, str[i]);
+        if(str[i] == '.' || str[i] == ';' || str[i] == '?'){
+            str[i] = '\0';
         }
 
     }
-    printf("stridx = %s\n", standardStr);
-    standardStr[idx] = '\0';
-    return standardStr;
+    return str;
 }
 
 
 /*
 // Code obtained from lab08 of COMP2521 course provided by UNSW CSE Faculty
-
 *NormalizeWord*
 ---------------
-
 Description: Make sure all the Roman letters in the URL are
 of lower cases, for ease of carrying out string comparison in
 the future when trying to decide if two URL are the same or not.
@@ -268,19 +254,14 @@ Basically a linear scan, starting from the beginning of the URL,
 is performed. Whenever a capital letter character is encountered
 (by checking its ASCII code value), it is replaced by the
 corresponding lower case letter.
-
 Input: input_url
-
 ** Pseudo Code **
-
 (1) FOR (every character in the input string) DO
       IF (this character is a capital letter) DO
         Change this letter to lower case
       END
     DONE
-
 *****
-
 */
 
 void NormaliseWord(char* word)

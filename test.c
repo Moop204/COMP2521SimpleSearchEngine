@@ -15,10 +15,10 @@ int main (void) {
     InvertedIndex(urlList);
     double k = tf("mars", "url11");
     printf("tf = %lf\n", k);
-    k = idf("mars", "url11");
-    printf("idf = %lf\n", k);
-    k = tfIdf("mars", "url11");
-    printf("tfidf = %lf\n", k);
+    //k = idf("mars");
+    //printf("idf = %lf\n", k);
+    //k = tfIdf("mars", "url11");
+    //printf("tfidf = %lf\n", k);
     //for(int i = 0; i < cardinality; i++){
     //    printf("Line: %s\n", urlList[i]);
     //}
