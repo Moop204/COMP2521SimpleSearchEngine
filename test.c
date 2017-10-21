@@ -1,4 +1,4 @@
-#include <stdio.h>
+/*#include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include "readData.h"
@@ -12,6 +12,7 @@ int main (void) {
     char** urlList = GetCollection(cardinality, length);
     GetGraph(urlList);
     PageRankW(0.850000,0.000010,1000);
+
     InvertedIndex(urlList);
     double k = tf("mars", "url11");
     printf("tf = %lf\n", k);
@@ -25,4 +26,4 @@ int main (void) {
     //printf("%d", cardinality);
     return 0;
 
-}
+}*/

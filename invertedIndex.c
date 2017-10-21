@@ -23,13 +23,24 @@ typedef struct IIRep {
     IINode  *end;
 } IIRep;
 
-/*
-typedef struct URLNode {
-    char    *url;
-    URLNode *next_url;
-} URLNode;
-*/
 
+void freeII (IIRep *r){
+    IINode *cur;
+    for(cur = r->front; cur != NULL; cur = cur->next){
+        free(cur->word);
+        disposeQueue(cur->urls);
+        free(cur->urls); 
+    }
+    while(cur != NULL){
+        IINode *tmp = cur;
+        cur = cur->next;
+        free(tmp->next);
+        free(tmp);
+    }
+    free(r->front);
+    free(r->end);
+    free(r);
+}
 
 void AppendIINode(char *newWord, IIRep *rep){      // Inserts node to word linked list in alphabetical order
     IINode *newNode = malloc(sizeof(IINode));
@@ -69,16 +80,6 @@ void AppendIINode(char *newWord, IIRep *rep){      // Inserts node to word linke
     }
 }
 
-/*void showIIRep(IIRep *rep){      // Inserts node to word linked list in alphabetical order
-    IINode *newNode = malloc(sizeof(IINode));
-    IINode *cur;
-    if(rep->end == NULL){
-        printf("it nulled?\n");
-        rep->front = newNode;
-        rep->end = newNode;
-        printf("True %d\n\n", (rep->front == NULL));
-    }
-}*/
 void showIIRep(IIRep *rep) {
     if (rep == NULL) return;
     if (rep->front == NULL || rep->end == NULL) return;
@@ -98,8 +99,7 @@ IIRep *InitialiseRep(void){
 }
 
 Queue SearchIndex(char *word, IIRep *r){
-    IINode *cur;
-    //printf("YOU DONE MESSED UP MATE1\n");
+    IINode *cur; 
     for(cur = r->front; cur != NULL; cur = cur->next){
             //printf("YOU DONE MESSED UP MAT\n");
         if(strcmp(cur->word, word)==0){
@@ -125,6 +125,7 @@ int InvertedIndex(char **urlList){
         dupList[p] = strdup(urlList[p]);
     }
 
+
     char *tmp = calloc(MAXWORD, sizeof(char));
     IIRep *r = InitialiseRep();
     int i;
@@ -132,6 +133,10 @@ int InvertedIndex(char **urlList){
     char * section; //where fscanf reads "Section-1" and "Section-2"
     hashtag = (char*) malloc((SIZEOFURL)*sizeof(char));
     section = (char*) malloc((10)*sizeof(char));
+
+    char* ftmp = tmp;
+    char* fhashtag = hashtag;
+    char* fsection = section;
 
     Set sGlobal = newSet();                 // 
     for(i = 0; i < len; i++){
@@ -181,33 +186,13 @@ int InvertedIndex(char **urlList){
         disposeSet(sLocal);
     }
     disposeSet(sGlobal);
+    free(fhashtag);
+    free(fsection);
+    free(ftmp);
     free(hashtag);
     free(section);
-    free(tmp);
-
-/*
-        if(open != NULL){
-            if (!(fscanf(open,"%s %s",hashtag, section) == 2)) return NULL;                 //error
-            if (strcmp(hashtag,"#start")+strcmp(section,"Section-1") != 0) return NULL;     //error
-            //printf("%s %s:\n",hashtag,section);
-            while((fscanf(open,"%s", tmp) != EOF) && strcmp(tmp,"#end") != 0) {
-                //printf("WHILE: tmp = %s\n", tmp);
-                for (k = 0; k < graphSize; k++){
-                    //printf("FOR k = %d\n", k);
-                    if (strcmp(urlList[k], tmp) == 0) {
-                        //printf("Adding an edge between %s and %s\n", urlList[i], urlList[k]);
-                        if (i == k) continue;
-                        addEdge(g, urlList[i], urlList[k]);
-                        //break;
-                    }
-                }
-            }
-            //tmp == #end, make sure Section-1 is next and then close
-            if (!(fscanf(open,"%s",section) == 1 && strcmp(section,"Section-1") == 0)) return NULL;//error
-            //printf("%s %s. closing\n", tmp, section);
-            //done, close and break to next iteration of connection.
-        }
-*/
+    //free(tmp); 
+    
     FILE *fp = fopen("invertedIndex.txt", "w");
     IINode *cur;
     for(cur = r->front; cur != NULL; cur = cur->next){
@@ -217,14 +202,19 @@ int InvertedIndex(char **urlList){
         //showQueue(url_q);
         //fwrite(invertedIdx, 1, sizeof(invertedIdx), fp);
         char* url = malloc(sizeof(urlList[0]));
+        char* furl = url;
         for(url = leavePriorQueue(url_q); ; url = leavePriorQueue(url_q)){
             fprintf(fp, "%s ", url);    
             //showQueue(url_q);   
             if (emptyQueue(url_q)) break;         
         }
+        free(furl);
         fprintf(fp,"\n");
     }
     fclose(fp);
+    freeII(r);
+
+    for(p = 0; p < len; p++) free(dupList[p]);
     return 0;
 
 }
