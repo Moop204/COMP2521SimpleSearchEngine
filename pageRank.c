@@ -12,7 +12,7 @@
 
 int PageRankW(double d, double diffPR, int maxIterations) {
     //initialising
-    int sizeUrl = LenCollection();//sizeof(listOfUrls[0]);
+    int sizeUrl = LenCollection("Sample1/collection.txt");
     char** urlList = GetCollection(sizeUrl,SIZEOFURL);
     Graph g = GetGraph(urlList);
     double** urlPR;//[sizeUrl][maxIterations]
@@ -96,7 +96,7 @@ int PageRankW(double d, double diffPR, int maxIterations) {
     for (j = 0; j < sizeUrl; j++) {
         for(i = 0; i < sizeUrl; i++) {
             if (weightIn[j][i] == 0) {
-                printf("                ");
+//                printf("                ");
                 continue;
             }  
             //printf("[%d][%d]%.7f ", j,i,weightIn[j][i]);
@@ -118,7 +118,7 @@ int PageRankW(double d, double diffPR, int maxIterations) {
     //PageRankWeighted algorithm
     while ((noIter < maxIterations-1 && diff >= diffPR) || noIter == 0) {
         noIter++;
-        printf("ITERATION: %d\n", noIter);
+//        printf("ITERATION: %d\n", noIter);
         for(i = 0; i < sizeUrl; i++) {//for url i:
             //calculate the pagerank
             urlPR[i][noIter] = (double)(1-d)/sizeUrl;

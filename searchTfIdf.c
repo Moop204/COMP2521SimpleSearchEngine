@@ -64,7 +64,6 @@ double tf(char* word, char* url) {
         //check if at Section-2
         if (!(fscanf(open,"%s %s", hashtag, section) == 2)) return -4;                 //error
         if (strcmp(hashtag,"#start")+strcmp(section,"Section-2") != 0) return -5;     //error
-
         while((fscanf(open,"%s", tmp) != EOF) && strcmp(tmp,"#end") != 0) {
             //printf("tmp = %s\n",tmp);
             N++;
@@ -99,7 +98,7 @@ double idf(char* word) {
     int N = 0; //# of docs
     int f = 0; //# of docs containing word
 
-    N = LenCollection();
+    N = LenCollection("Sample1/collection.txt");
     //open inverted index, find N
     //char line[MAXCHAR];
     char* file_name = "invertedIndex.txt";
@@ -111,7 +110,6 @@ double idf(char* word) {
     //printf("%s", ftmp);
     if(open != NULL){
         while(fscanf(open, "%s", tmp) != EOF && strcmp(tmp, word) != 0);
-        // 
         while(fscanf(open, "%s", tmp) != EOF 
               && (tmp[0] == 'u' 
               &&  tmp[1] == 'r' 
@@ -137,19 +135,21 @@ double idf(char* word) {
         }
 
     }
-    if (tokenWord) printf(" ");;
+    if (tokenWord) printf(" ");
 */
     free(ftmp);
 
     fclose(open);
     //calculating
     printf("N = %d\n f = %d\n", N, f);
+    //free(tokenWord);
+    //free(tokenUrl);
     return log10((double)(N)/(double)(f));
 }
 
 double tfIdf(char*word, char*url) {
-    //printf("tf %.7lf \nidf %.7lf\n",tf(word,url), idf(word));
-    return tf(word,url); //* idf(word);
+    //printf("tf %.7lf \nidf %.7lf\n",tf(word,url), idf(word,url));
+    return tf(word,url);// * idf(word);
 }
 
 
@@ -188,7 +188,7 @@ int main(int argc, char **argv){
         return 1;
     }
 
-    int length = LenCollection();
+    int length = LenCollection("Sample1/collection.txt");
     char **collection = GetCollection(length, SIZEOFURL);   // INITIAL ORDER reference
     int *listFreq = calloc(length, sizeof(int));            // INITIAL ORDER of frequency
     double *listTfIdf = calloc(length, sizeof(int));
@@ -220,7 +220,6 @@ int main(int argc, char **argv){
         printf("%d ", listFreq[debug]);
     }
         printf("\n");
-    
 
     int *listPrint = calloc(MAXOUTPUT, sizeof(int));        // order of printing, refers to INITIAL ORDER in order
     int i;

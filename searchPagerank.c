@@ -15,6 +15,7 @@
 #define MAXPRINT 30
 /*
 double readPageRank(char* url);
+
 int main(int argc, char **argv){
 
     assert(argc > 1);
@@ -99,6 +100,7 @@ int main(int argc, char **argv){
     return 0;
 }
 */
+
 double readPageRank(char* url){
     char* tmp = calloc(MAXWORD, sizeof(char));
 
