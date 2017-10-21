@@ -14,7 +14,7 @@
 //#define URL(i,j,k) (urlLists[dim2*dim3*i + dim3*j + k])
 //const int dim1, dim2, dim3;   Global variables, dimension
 //double * array = (double *)malloc(dim1*dim2*dim3*sizeof(double));
-//^found from https://stackoverflow.com/questions/2438142/dynamic-memory-allocation-for-3d-array
+//found from https://stackoverflow.com/questions/2438142/dynamic-memory-allocation-for-3d-array
 
 int main(int argc, char* argv[]) {
     if (argc == 1) return -1;
@@ -172,9 +172,9 @@ int* swap(int* array, int a, int b) {
 #include "queue.h"
 #include "graph.h"
 
-
+/*
 //#define URL(i,j,k) (urlLists[dim2*dim3*i + dim3*j + k])
-//const int dim1, dim2, dim3;  /* Global variables, dimension*/
+//const int dim1, dim2, dim3;  // Global variables, dimension
 //double * array = (double *)malloc(dim1*dim2*dim3*sizeof(double));
 //^found from https://stackoverflow.com/questions/2438142/dynamic-memory-allocation-for-3d-array
 
@@ -375,4 +375,4 @@ int* swap(int* array, int a, int b) {
     array[a] = array[b];
     array[b] = tmp;
     return array;
-}
+}*/
