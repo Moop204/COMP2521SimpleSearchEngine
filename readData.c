@@ -10,11 +10,11 @@
 #include "graph.h"
 
 
-int LenCollection(void) {
+int LenCollection(char* file) {
     int i = 0;
     char* tmp;
     tmp = (char*) malloc((SIZEOFURL)*sizeof(char));
-    FILE* collection = fopen("Sample1/collection.txt", "r");//"Sample1/collection.txt", "r");
+    FILE* collection = fopen(file, "r");//"Sample1/collection.txt", "r");
     //FILE* collection = fopen("Sample1/collection.txt", "r");
     if (collection != NULL) {
         while(fscanf(collection,"%s",tmp) != EOF) {
@@ -54,7 +54,7 @@ char** GetCollection(int elements, int length) {
 }
 
 Graph GetGraph(char** urlList) {
-    int graphSize = LenCollection();
+    int graphSize = LenCollection("Sample1/collection.txt");
     Graph g = newGraph(graphSize);
     //return g;
     int i, k; //i is for each url.txt, k is for each link in url.
@@ -93,10 +93,11 @@ Graph GetGraph(char** urlList) {
             //done, close and break to next iteration of connection.
         }
         fclose(open);
+        free(tmp);
+        free(hashtag);
+        free(section);
+
     }
-    free(tmp);
-    free(hashtag);
-    free(section);
     showGraph(g,1);
     showGraph(g,0);
     return g;

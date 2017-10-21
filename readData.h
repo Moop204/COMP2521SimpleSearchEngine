@@ -3,5 +3,5 @@
 #include "graph.h"
 
 char** GetCollection(int elements, int length);
-int LenCollection(void);
+int LenCollection(char *filename);
 Graph GetGraph(char** urlList);

@@ -113,7 +113,7 @@ Queue SearchIndex(char *word, IIRep *r){
 
 int InvertedIndex(char **urlList){
 
-    int len = LenCollection();
+    int len = LenCollection("Sample1/collection.txt");
 
     char ** dupList = malloc(sizeof(urlList));
     int p;
