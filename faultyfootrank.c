@@ -3,17 +3,22 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 #include "readData.h"
 #include "invertedIndex.h"
 #include "pageRank.h"
+#include "scaledFootrule.h"
 #include "set.h"
 #include "queue.h"
 #include "graph.h"
+
 
 //#define URL(i,j,k) (urlLists[dim2*dim3*i + dim3*j + k])
 //const int dim1, dim2, dim3;  /* Global variables, dimension*/
 //double * array = (double *)malloc(dim1*dim2*dim3*sizeof(double));
 //^found from https://stackoverflow.com/questions/2438142/dynamic-memory-allocation-for-3d-array
+
+#define MAXVALUE 2000000000
 
 int main(int argc, char* argv[]) {
     if (argc == 1) return -1;
@@ -67,8 +72,8 @@ int main(int argc, char* argv[]) {
     for (i = 0; i < u; i++) Prank[i] = i+1;
     //CALLOC - c array for use in Heap's Algorithm for permutations.
     int* c = calloc(u, sizeof(int));
-    //CALLOC - localRank list [i][j] (in ith list, the jth term in urlunion list
-    //         has the value of its local rank.
+    //CALLOC - localRank list [i][j] (in ith list, the jth term in this list
+    //         has the value of its urlList union ranking (index+1).
     int** localRank = malloc((argc-1)*u);
     for (i = 0; i < argc-1; i++) {
         localRank[i] = calloc(u,sizeof(int));
@@ -83,11 +88,11 @@ int main(int argc, char* argv[]) {
                     printf("urlList[%d]. %s\n",k,list[i][j]);
                     insertInto(new,list[i][j]);
                     urlList[k] = list[i][j];
-                    localRank[i][k] = j+1;
+                    localRank[i][j] = k+1;
                     k++;
                 } else {
                     for (l = 0; l < u; l++) {
-                        if (strcmp(urlList[l],list[i][j])==0) localRank[i][l] = j+1;
+                        if (strcmp(urlList[l],list[i][j])==0) localRank[i][j] = l+1;
                     } 
                 }
             }
@@ -103,17 +108,63 @@ int main(int argc, char* argv[]) {
 
 
     //starting "brute force" method with smart algorithm techniques (early exit)
+    double W = 0;
+    double Wmin = MAXVALUE;
+    //CALLOC - saves the best ranking yet
+    //int* save = calloc(u, sizeof(int));
     //using Prank list
+    //Heap's Algorithm (https://en.wikipedia.org/wiki/Heap%27s_algorithm)
+
     //Test Prank
+    W = 0;
+    for (j = 0; j < argc-1; j++) {//for each list
+        for (k = 0; k < maxLength; k++) {//for every url
+            if (k >= length[j]) continue;//ignore (outside of jth list)
+            //find urlList index for this url
+            W = W + fabs((double)(k+1)/(double)length[j] - (double)Prank[localRank[j][k]]/(double)u);
+            if (W > Wmin) {//EARLY EXIT
+                //break;
+                k = maxLength;
+                j = argc-1;
+            }
+        }
+    }
+    if (W < Wmin) {
+        //save this list
+        Wmin = W;
+        //for (i = 0; i < u; i++) save[i] = Prank[i];
+    }
+    printf("Wmin = %lf\nW = %lf\n", Wmin,W);
+    //end test
     i = 0;
     while (i < u) {
         if (c[i] < i) {
             if (i%2 ==0) {
-                //swap(Pr[0], Pr[i])
+                swap(Prank, Prank[0], Prank[i]);
             } else {
-                //swap(Pr[c[i]],Pr[i])
+                swap(Prank, Prank[c[i]],Prank[i]);
             }
             //Test Prank
+            W = 0;
+            for (j = 0; j < argc-1; j++) {//for each list
+                for (k = 0; k < maxLength; k++) {//for every url
+                    if (k >= length[j]) continue;//ignore (outside of jth list)
+                    //find urlList index for this url
+                    W = W + fabs((double)(k+1)/(double)length[j] - (double)Prank[localRank[j][k]-1]/(double)u);
+                    if (W > Wmin) {//EARLY EXIT
+                        //break;
+                        k = maxLength;
+                        j = argc-1;
+                    }
+                }
+            }
+            if (W < Wmin) {
+                Wmin = W;
+                //save this list
+                //for (i = 0; i < u; i++) save[i] = Prank[i];
+            }
+            printf("Wmin = %lf\n                W = %lf\n", Wmin,W);
+            //end test
             c[i]++;
             i = 0;
         } else {
@@ -122,7 +173,12 @@ int main(int argc, char* argv[]) {
         }
     }
     //finished with all arrangments
+    printf("Best Arrangement:\n");
+    for (i = 0; i < u; i++) {
+        //printf("%d,",save[i]);
+    }
     //free
+    //free(save);
     free(Prank);
     free(c);
     for (i = 0; i < argc-1; i++) free(localRank[i]);

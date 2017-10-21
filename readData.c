@@ -14,8 +14,7 @@ int LenCollection(char* file) {
     int i = 0;
     char* tmp;
     tmp = (char*) malloc((SIZEOFURL)*sizeof(char));
-    FILE* collection = fopen(file, "r");//"Sample1/collection.txt", "r");
-    //FILE* collection = fopen("Sample1/collection.txt", "r");
+    FILE* collection = fopen(file, "r");
     if (collection != NULL) {
         while(fscanf(collection,"%s",tmp) != EOF) {
             i++;
@@ -56,17 +55,13 @@ char** GetCollection(int elements, int length) {
 Graph GetGraph(char** urlList) {
     int graphSize = LenCollection("Sample1/collection.txt");
     Graph g = newGraph(graphSize);
-    //return g;
     int i, k; //i is for each url.txt, k is for each link in url.
     char * tmp;     //where fscanf reads the urlnames
     char * hashtag; //where fscanf reads "#start" and "#end" 
     char * section; //where fscanf reads "Section-1" and "Section-2"
     for(i = 0; i < graphSize; i++){
-        //printf("@i=%d\n", i);
-        //char file_name[8+SIZEOFURL+4] = "Sample1/";
         char file_name[8+SIZEOFURL+4] = "Sample1/";
         strcat(strcat(file_name, urlList[i]),".txt");
-        //printf("filename: %s\n", file_name);
         FILE *open = fopen(file_name, "r");
         tmp = (char*) malloc((SIZEOFURL)*sizeof(char));
         hashtag = (char*) malloc((SIZEOFURL)*sizeof(char));
@@ -140,7 +135,6 @@ int wordFrequency(char* word, char* url) {
             //normalise the word 
             tmp = RemoveSpecialCharacters(tmp);     // Removes special characters
             NormaliseWord(tmp); 
-printf("%s", tmp);
             if (strcmp(word, tmp) == 0) f++;
         }
         //tmp == #end, make sure Section-2 is next and then close
@@ -156,6 +150,52 @@ printf("%s", tmp);
 }
 
 
+char *RemoveSpecialCharacters(char* str){
+    int len = strlen(str);
+    int i;
+    for(i = 0; i < len; i++){
+//        printf("str[%d] = %c\n", i, str[i]);
+        if(str[i] == '.' || str[i] == ';' || str[i] == '?'){
+            str[i] = '\0';
+        }
+
+    }
+    return str;
+}
+
+
+/*
+// Code obtained from lab08 of COMP2521 course provided by UNSW CSE Faculty
+*NormalizeWord*
+---------------
+Description: Make sure all the Roman letters in the URL are
+of lower cases, for ease of carrying out string comparison in
+the future when trying to decide if two URL are the same or not.
+Basically a linear scan, starting from the beginning of the URL,
+is performed. Whenever a capital letter character is encountered
+(by checking its ASCII code value), it is replaced by the
+corresponding lower case letter.
+Input: input_url
+** Pseudo Code **
+(1) FOR (every character in the input string) DO
+      IF (this character is a capital letter) DO
+        Change this letter to lower case
+      END
+    DONE
+*****
+*/
+
+void NormaliseWord(char* word)
+{
+  int i = 0;
+  while (word[i]) {
+      // NEW
+    if (word[i] < 91 && word[i] > 64) // Bounded below so this funct. can run on all urls
+      // /NEW
+      word[i] += 32;
+    i++;
+  }
+}
 /*justin
 pull wherever you want to merge
 checkout where you want ot merge

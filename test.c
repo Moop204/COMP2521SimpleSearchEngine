@@ -1,4 +1,4 @@
-#include <stdio.h>
+/*#include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include "readData.h"
@@ -15,7 +15,7 @@ int main (void) {
     char** urlList = GetCollection(cardinality, length);
     Graph g = GetGraph(urlList);
     PageRankW(0.850000,0.000010,1000);
-    InvertedIndex(urlList);
+    //InvertedIndex(urlList);
     //double k = tf("mars", "url11");
     //printf("tf = %lf\n", k);
     //k = idf("mars");
@@ -37,18 +37,25 @@ int main (void) {
         list[i] = malloc((DEBUGWORDSIZE) * sizeof(char));
     }
     list[0] = "mars";
-    searchTfIdf(list, DEBUGNELEM);
+    //searchTfIdf(list, DEBUGNELEM);
+    
 
     //for(int i = 0; i < cardinality; i++){
     //    printf("Line: %s\n", urlList[i]);
     //}
     //printf("%d", cardinality);
-    disposeGraph(g);
+    disposeGraph(g);//FREE GRAPH
+    //FREE URLLIST
     i = 0;
-    for (;i < cardinality;i++) {
+    for (i = 0;i < cardinality;i++) {
         free(urlList[i]);
     }
     free(urlList);
+    //FREE LIST
+    for (i = 0;i < DEBUGNELEM; i++) {
+        free(list[i]);
+    }
+    free(list);
     return 0;
 
-}
+}*/

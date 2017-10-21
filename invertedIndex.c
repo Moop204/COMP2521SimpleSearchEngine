@@ -117,9 +117,9 @@ int InvertedIndex(char **urlList){
 
     char ** dupList = malloc(sizeof(urlList));
     int p;
-    for(p = 0; p < len; p++){
+    /*for(p = 0; p < len; p++){
         dupList[p] = malloc(sizeof(urlList[0]));
-    }
+    }*/
 
     for(p = 0; p < len; p++){
         dupList[p] = strdup(urlList[p]);
@@ -142,7 +142,7 @@ int InvertedIndex(char **urlList){
     for(i = 0; i < len; i++){
         char urlname[sizeof("Sample1/") + SIZEOFURL + sizeof(".txt")] = "Sample1/";
         Set sLocal = newSet();
-        strcat(urlname,strcat(urlList[i],".txt"));
+        strcat(urlname,strcat(dupList[i],".txt"));
         printf("%s\n",urlname);
         FILE *fptext = fopen(urlname, "r");      // Opens up url
         if(fptext != NULL){
@@ -164,12 +164,12 @@ int InvertedIndex(char **urlList){
 //                printf("%d\n", isElem(sGlobal,tmp));
 //                printf("%d\n", isElem(sLocal,tmp));
                 if(!isElem(sLocal, tmp)) {
-                    printf("%s   ", dupList[i]   );
+                    printf("%s   ", urlList[i]   );
                     printf("%s\n", tmp);
 
                     insertInto(sLocal, tmp);               // For words not seen before, insert url into the word node
-                    Queue urlList = SearchIndex(tmp,r);
-                    enterQueue(urlList, dupList[i]);
+                    Queue urlQ = SearchIndex(tmp,r);
+                    enterQueue(urlQ, urlList[i]);
                     //showQueue(urlList);
                     //showIIRep(r);
                     //printf("show me\n");
@@ -219,49 +219,3 @@ int InvertedIndex(char **urlList){
 
 }
 
-char *RemoveSpecialCharacters(char* str){
-    int len = strlen(str);
-    int i;
-    for(i = 0; i < len; i++){
-//        printf("str[%d] = %c\n", i, str[i]);
-        if(str[i] == '.' || str[i] == ';' || str[i] == '?'){
-            str[i] = '\0';
-        }
-
-    }
-    return str;
-}
-
-
-/*
-// Code obtained from lab08 of COMP2521 course provided by UNSW CSE Faculty
-*NormalizeWord*
----------------
-Description: Make sure all the Roman letters in the URL are
-of lower cases, for ease of carrying out string comparison in
-the future when trying to decide if two URL are the same or not.
-Basically a linear scan, starting from the beginning of the URL,
-is performed. Whenever a capital letter character is encountered
-(by checking its ASCII code value), it is replaced by the
-corresponding lower case letter.
-Input: input_url
-** Pseudo Code **
-(1) FOR (every character in the input string) DO
-      IF (this character is a capital letter) DO
-        Change this letter to lower case
-      END
-    DONE
-*****
-*/
-
-void NormaliseWord(char* word)
-{
-  int i = 0;
-  while (word[i]) {
-      // NEW
-    if (word[i] < 91 && word[i] > 64) // Bounded below so this funct. can run on all urls
-      // /NEW
-      word[i] += 32;
-    i++;
-  }
-}

@@ -10,13 +10,19 @@
 #include <assert.h>
 #include "pageRank.h"
 #include "readData.h"
+#include "invertedIndex.h"
 
 #define MAXPRINT 30
 
 double readPageRank(char* url);
 
-int main(int argc, char **argv){
+/*int main(int argc, char **argv){
+    int cardinality = LenCollection("Sample1/collection.txt");
+    int length = SIZEOFURL;
+    char** urlList = GetCollection(cardinality, length);
 
+    InvertedIndex(urlList);
+*//*
     assert(argc > 1);
 
     int length = LenCollection();
@@ -32,15 +38,13 @@ int main(int argc, char **argv){
         int nUrls;
         for(nUrls = 0; nUrls < length; nUrls++){
             listFreq[nUrls] += wordFrequency(arg, collection[nUrls]); 
-            printf("%s  %d\n", collection[nUrls], listFreq[nUrls]);
         }
     }
 
     // Inserts page rank of all pages
     int nUrls;
     for(nUrls = 0; nUrls < length; nUrls++){
-        listPgRank[nUrls] += readPageRank(collection[nUrls]); 
-        printf("%s  %.7lf\n", collection[nUrls], listPgRank[nUrls]);
+        listPgRank[nUrls] = readPageRank(collection[nUrls]); 
     }
 
     int *listPrint = calloc(MAXOUTPUT, sizeof(int));        // order of printing, refers to INITIAL ORDER in order
@@ -52,34 +56,37 @@ int main(int argc, char **argv){
     }
 
     // Selects order of printing
-    for(i = 0; i < length; i++){    // Iterates INITIAL ORDER
+    for(i = 0; i < length; i++){                    // Iterates INITIAL ORDER
         int val = listFreq[i];
-        printf("%s has %d freq\n", collection[i], val);
         int e;
+        // Iterates printing order until it finds a new place or finds a lower val
         if(val != 0){
-            for(e = 0; e < MAXOUTPUT; e++){ // Iterates printing order until it finds a new place or finds a lower val
+            for(e = 0; e < MAXOUTPUT; e++){         
                 int printRef = listPrint[e];
-                if(printRef == -1){
+                if(printRef == -1){                 // Top 30 has free spot
                     listPrint[e] = i;
                     break;
                 }
                 else{
-                    if(val > listFreq[printRef]){
+                    // Compares ONLY frequency of term
+                    if(val > listFreq[printRef]){ 
                         shiftRight(listPrint, e, MAXOUTPUT);
                         listPrint[e] = i;
                         break;
                     }
+                    // Compares pagerank of those with equal frequency
                     else if(val == listFreq[printRef]){
                         if(listPgRank[i] > listPgRank[printRef]){
                             shiftRight(listPrint, e, MAXOUTPUT);
                             listPrint[e] = i; 
+                            break;
                         }
                     }
                 }
             }
         }
         else continue;
-    }
+    }   
 
     for(i = 0; i < MAXOUTPUT; i++){
         if(listPrint[i] == -1)
@@ -93,9 +100,9 @@ int main(int argc, char **argv){
     for(idx = 0; idx < length; idx++)free(collection[idx]);
     free(collection);
     free(listFreq);
-
-    return 0;
-}
+*/
+  /*  return 0;
+}*/
 
 
 double readPageRank(char* url){
