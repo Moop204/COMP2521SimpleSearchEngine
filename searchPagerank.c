@@ -15,7 +15,6 @@
 #define MAXPRINT 30
 
 double readPageRank(char* url);
-/*
 int main(int argc, char **argv){
 
     assert(argc > 1);
@@ -23,7 +22,7 @@ int main(int argc, char **argv){
     int length = LenCollection();
     char **collection = GetCollection(length, SIZEOFURL);   // INITIAL ORDER reference
     int *listFreq = calloc(length, sizeof(int));            // INITIAL ORDER of frequency
-    double *listPgRank = calloc(length, sizeof(int));
+    double *listPgRank = calloc(length, sizeof(double));
 
     PageRankW(0.850000, 0.000010, 1000);
  
@@ -95,32 +94,36 @@ int main(int argc, char **argv){
     for(idx = 0; idx < length; idx++)free(collection[idx]);
     free(collection);
     free(listFreq);
+    free(listPrint);
+    free(listPgRank);
     return 0;
 }
-*/
 
 double readPageRank(char* url){
     char* tmp = calloc(MAXWORD, sizeof(char));
-    char* comparison = malloc(sizeof(url) + 1);
-    comparison = strcat(strdup(url),",");
+
+
+
     FILE *open = fopen("pagerankList.txt", "r");    
     double result;
     if(open != NULL){
-        while(fscanf(open, "%s", tmp) != EOF && strcmp(tmp, comparison) != 0){};
+        while(fscanf(open, "%s", tmp) != EOF){
+            RemoveSpecialCharacters(tmp);
+            printf("Tut %s  %s\n", tmp, url);
+            if(strcmp(tmp, url) == 0) break;
+            
+        }
      	fscanf(open, "%s", tmp); //Passes output count
         if(fscanf(open, "%lf", &result) != EOF){
             free(tmp);
-            free(comparison);
             return result;
         }
         else{
             free(tmp);
-            free(comparison);
             printf("%s\n", tmp);
             return -1.0; // Error
         }
     }
     free(tmp);
-    free(comparison);
     return -1.0; // Error     
 }

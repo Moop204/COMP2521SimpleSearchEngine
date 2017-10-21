@@ -93,10 +93,10 @@ Graph GetGraph(char** urlList) {
             //done, close and break to next iteration of connection.
         }
         fclose(open);
+        free(tmp);
+        free(hashtag);
+        free(section);
     }
-    free(tmp);
-    free(hashtag);
-    free(section);
     showGraph(g,1);
     showGraph(g,0);
     return g;
@@ -115,7 +115,7 @@ int wordFrequency(char* word, char* url) {
     char* tmp;
     tmp = (char*) malloc((MAXWORD)*sizeof(char));
     char* hashtag;
-    hashtag = (char*) malloc((SIZEOFURL)*sizeof(char));
+    hashtag = (char*) malloc((MAXWORD)*sizeof(char));
     char* section;
     section = (char*) malloc((MAXWORD)*sizeof(char));
 
@@ -124,17 +124,27 @@ int wordFrequency(char* word, char* url) {
     char *fsection = section;
 
     if(open != NULL){
+
         //scan through to Section-2
         if (!(fscanf(open,"%s %s",hashtag, section) == 2)) return -1;                 //error
         if (strcmp(hashtag,"#start")+strcmp(section,"Section-1") != 0) return -2;     //error
         //printf("%s %s:\n",hashtag,section);
-        while((fscanf(open,"%s", tmp) != EOF) && strcmp(tmp,"#end") != 0);
+        while((fscanf(open,"%s", hashtag) != EOF) && strcmp(hashtag,"#end") != 0);
         //tmp == #end, make sure Section-1 is next and then close
         if (!(fscanf(open,"%s",section) == 1 && strcmp(section,"Section-1") == 0)) return -3;//error
         //check if at Section-2
+
         if (!(fscanf(open,"%s %s",hashtag, section) == 2)) return -4;                 //error
         if (strcmp(hashtag,"#start")+strcmp(section,"Section-2") != 0) return -5;     //error
+        while((fscanf(open,"%s", tmp) != EOF) && strcmp(tmp,"#end") != 0){
+            RemoveSpecialCharacters(tmp);     // Removes special characters
+            NormaliseWord(tmp); 
+            printf("BUTT %s %s\n", tmp, word);
 
+            if (strcmp(word, tmp) == 0) f++;            
+        }
+
+/*
         while((fscanf(open,"%s", tmp) != EOF) && strcmp(tmp,"#end") != 0) {
             //printf("tmp = %s\n",tmp);
             //normalise the word 
@@ -142,9 +152,20 @@ int wordFrequency(char* word, char* url) {
             NormaliseWord(tmp); 
             if (strcmp(word, tmp) == 0) f++;
         }
+
+        for(fscanf(open, "%s", tmp); strcmp(tmp, "#end"); fscanf(open, "%s", tmp)){
+            RemoveSpecialCharacters(tmp);     // Removes special characters
+            NormaliseWord(tmp); 
+            if (strcmp(word, tmp) == 0) f++;
+        }
+*/
+
+
+        printf("TMP BEFORE FAIL%s \n", tmp);
         //tmp == #end, make sure Section-2 is next and then close
-        if (!(fscanf(open,"%s",section) == 1 && strcmp(section,"Section-2") == 0)) return -6;//error
+        if (!(fscanf(open,"%s",section) == 1 && strcmp(section,"Section-2") == 0)) { printf("%s \n", section); return -6;}//error
         //done, close file
+
     }
     fclose(open);
     free(ftmp);

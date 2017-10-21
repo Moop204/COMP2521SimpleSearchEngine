@@ -224,7 +224,7 @@ char *RemoveSpecialCharacters(char* str){
     int i;
     for(i = 0; i < len; i++){
 //        printf("str[%d] = %c\n", i, str[i]);
-        if(str[i] == '.' || str[i] == ';' || str[i] == '?'){
+        if(str[i] == '.' || str[i] == ';' || str[i] == '?' || str[i] == ','){
             str[i] = '\0';
         }
 
@@ -257,11 +257,14 @@ Input: input_url
 void NormaliseWord(char* word)
 {
   int i = 0;
-  while (word[i]) {
+  printf("FIRST %s\n", word);
+  while (word[i] != '\0') {
       // NEW
-    if (word[i] < 91 && word[i] > 64) // Bounded below so this funct. can run on all urls
+    if (word[i] <= 'Z' && word[i] >= 'A') // Bounded below so this funct. can run on all urls
       // /NEW
-      word[i] += 32;
+      word[i] += 'a' - 'A';
+    printf("NEXT%s\n", word);
     i++;
+    if(word[i] == '\0') break;
   }
 }

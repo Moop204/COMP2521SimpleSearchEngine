@@ -173,5 +173,8 @@ int PageRankW(double d, double diffPR, int maxIterations) {
     free(weightIn);
     for(i = 0; i < sizeUrl; i++) free(weightOut[i]);
     free(weightOut);
+    for(i = 0; i < sizeUrl; i++) free(urlList[i]);
+    free(urlList);
+
     return 0;
 }

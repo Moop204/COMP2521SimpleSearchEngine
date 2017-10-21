@@ -180,7 +180,7 @@ char line[MAXCHAR];
 */
 
 
-
+/*
 int main(int argc, char **argv){
 
     if(!(argc > 1)){
@@ -191,7 +191,6 @@ int main(int argc, char **argv){
     int length = LenCollection();
     char **collection = GetCollection(length, SIZEOFURL);   // INITIAL ORDER reference
     int *listFreq = calloc(length, sizeof(int));            // INITIAL ORDER of frequency
-//    int *listTfIdf = calloc(length, sizeof(int));
     double *listTfIdf = calloc(length, sizeof(int));
     int idx;
 
@@ -241,20 +240,6 @@ int main(int argc, char **argv){
         int e;
         if(val != 0){
             for(e = 0; e < MAXOUTPUT; e++){ // Iterates printing order until it finds a new place or finds a lower val
-
-/*
-                    for(debug = 0; debug < MAXOUTPUT; debug++){
-                        printf("%d ", listPrint[debug]);
-                    }
-                        printf("\n");
-
-
-                    for(debug = 0; debug < length; debug++){
-                        printf("%d ", listFreq[debug]);
-                    }
-                        printf("\n");
-*/
-
                 int printRef = listPrint[e];
                 if(printRef == -1){
                     listPrint[e] = i;
@@ -289,13 +274,14 @@ int main(int argc, char **argv){
     for(idx = 0; idx < length; idx++)free(collection[idx]);
     free(collection);
     free(listFreq);
-    //free(listTfIdf);
+    free(listTfIdf);
+    free(listPrint);
     return 0;
 }
-
+*/
 void shiftRight(int *list, int pos, int max){
     int cur;
-    for(cur = max-1; cur >= pos; cur --){
+    for(cur = max-1; cur > pos; cur --){
         list[cur] = list[cur-1];
     }
 }
