@@ -45,7 +45,9 @@ double tf(char* word, char* url) {
     char* section;
     section = (char *) malloc((MAXWORD)*sizeof(char));
 
-    char* ftmp = tmp;
+    if(tmp == NULL || hashtag == NULL || section == NULL) return 0.0;
+
+    //char* ftmp = tmp;
     char* fhashtag = hashtag;
     char* fsection = section;  
 
@@ -54,7 +56,7 @@ double tf(char* word, char* url) {
         if (!(fscanf(open,"%s %s", hashtag, section) == 2)) return -1;                 //error
         if (strcmp(hashtag,"#start")+strcmp(section,"Section-1") != 0) return -2;     //error
         //printf("%s %s:\n",hashtag,section);
-        while((fscanf(open,"%s", &tmp[0]) != EOF) && strcmp(tmp,"#end") != 0);
+        while((fscanf(open,"%s", hashtag) != EOF) && strcmp(hashtag,"#end") != 0);
         //tmp == #end, make sure Section-1 is next and then close
         if (!(fscanf(open,"%s", section) == 1 && strcmp(section,"Section-1") == 0)) return -3;//error
         //check if at Section-2
@@ -73,8 +75,8 @@ double tf(char* word, char* url) {
         if (!(fscanf(open,"%s",section) == 1 && strcmp(section,"Section-2") == 0)) return -6;//error
         //done, close file
     }
-    fclose(open);
-    free(ftmp);
+    //fclose(open);
+    //free(ftmp);
     free(fhashtag);
     free(fsection);
     //calculating f
@@ -141,7 +143,7 @@ double idf(char* word, char* url) {
 
 double tfIdf(char*word, char*url) {
     //printf("tf %.7lf \nidf %.7lf\n",tf(word,url), idf(word,url));
-    return tf(word,url);// * idf(word,url);
+    return tf(word,url) * idf(word,url);
 }
 
 
@@ -234,14 +236,14 @@ void searchTfIdf(char **argv, int argc){
     int idx;
 
     
-    int debug;    
+    //int debug;    
 
     for(idx = 0; idx < argc; idx++){
         char *arg = argv[idx];
         int nUrls;
         for(nUrls = 0; nUrls < length; nUrls++){
             listFreq[nUrls] += word_frequency(arg, collection[nUrls]); 
-            printf("%s  %d\n", collection[nUrls], listFreq[nUrls]);
+//            printf("%s  %d\n", collection[nUrls], listFreq[nUrls]);
         }
     }
 
@@ -250,16 +252,16 @@ void searchTfIdf(char **argv, int argc){
         int nUrls;
         for(nUrls = 0; nUrls < length; nUrls++){
             listTfIdf[nUrls] += tfIdf(arg, collection[nUrls]); 
-            printf("%s  %.7lf\n", collection[nUrls], listTfIdf[nUrls]);
+//            printf("%s  %.7lf\n", collection[nUrls], listTfIdf[nUrls]);
         }
     }
 
-
+/*
     for(debug = 0; debug < length; debug++){
         printf("%d ", listFreq[debug]);
     }
         printf("\n");
-    
+*/    
 
     int *listPrint = calloc(MAXOUTPUT, sizeof(int));        // order of printing, refers to INITIAL ORDER in order
     int i;
@@ -280,7 +282,7 @@ void searchTfIdf(char **argv, int argc){
         if(val != 0){
             for(e = 0; e < MAXOUTPUT; e++){ // Iterates printing order until it finds a new place or finds a lower val
 
-
+/*
                     for(debug = 0; debug < MAXOUTPUT; debug++){
                         printf("%d ", listPrint[debug]);
                     }
@@ -291,7 +293,7 @@ void searchTfIdf(char **argv, int argc){
                         printf("%d ", listFreq[debug]);
                     }
                         printf("\n");
-
+*/
 
                 int printRef = listPrint[e];
                 if(printRef == -1){

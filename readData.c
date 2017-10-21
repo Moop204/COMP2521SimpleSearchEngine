@@ -93,10 +93,11 @@ Graph GetGraph(char** urlList) {
             //done, close and break to next iteration of connection.
         }
         fclose(open);
+        free(tmp);
+        free(hashtag);
+        free(section);
+
     }
-    free(tmp);
-    free(hashtag);
-    free(section);
     showGraph(g,1);
     showGraph(g,0);
     return g;
