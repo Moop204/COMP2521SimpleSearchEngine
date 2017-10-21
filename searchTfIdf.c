@@ -134,6 +134,8 @@ double idf(char* word) {
     fclose(open);
     //calculating
     printf("N = %d\n f = %d\n", N, f);
+    free(tokenWord);
+    free(tokenUrl);
     return log10((double)(N)/(double)(f));
 }
 

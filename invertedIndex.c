@@ -217,11 +217,13 @@ int InvertedIndex(char **urlList){
         //showQueue(url_q);
         //fwrite(invertedIdx, 1, sizeof(invertedIdx), fp);
         char* url = malloc(sizeof(urlList[0]));
+        char* furl = url;
         for(url = leavePriorQueue(url_q); ; url = leavePriorQueue(url_q)){
             fprintf(fp, "%s ", url);    
             //showQueue(url_q);   
             if (emptyQueue(url_q)) break;         
         }
+        free(furl);
         fprintf(fp,"\n");
     }
     fclose(fp);

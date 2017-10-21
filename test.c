@@ -10,8 +10,9 @@ int main (void) {
     int cardinality = LenCollection();
     int length = SIZEOFURL;
     char** urlList = GetCollection(cardinality, length);
-    GetGraph(urlList);
+    Graph g = GetGraph(urlList);
     PageRankW(0.850000,0.000010,1000);
+    
     InvertedIndex(urlList);
     double k = tf("mars", "url11");
     printf("tf = %lf\n", k);
@@ -23,6 +24,12 @@ int main (void) {
     //    printf("Line: %s\n", urlList[i]);
     //}
     //printf("%d", cardinality);
+    disposeGraph(g);
+    int i = 0;
+    for (;i < cardinality;i++) {
+        free(urlList[i]);
+    }
+    free(urlList);
     return 0;
 
 }

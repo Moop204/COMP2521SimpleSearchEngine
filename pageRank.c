@@ -12,7 +12,7 @@
 
 int PageRankW(double d, double diffPR, int maxIterations) {
     //initialising
-    int sizeUrl = LenCollection();//sizeof(listOfUrls[0]);
+    int sizeUrl = LenCollection();
     char** urlList = GetCollection(sizeUrl,SIZEOFURL);
     Graph g = GetGraph(urlList);
     double** urlPR;//[sizeUrl][maxIterations]
@@ -173,5 +173,7 @@ int PageRankW(double d, double diffPR, int maxIterations) {
     free(weightIn);
     for(i = 0; i < sizeUrl; i++) free(weightOut[i]);
     free(weightOut);
+    for (i = 0; i < sizeUrl; i++) free(urlList[i]);
+    free(urlList);
     return 0;
 }
