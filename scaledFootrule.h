@@ -3,4 +3,4 @@
 #define MAXWORD 50
 #define MAXOUTPUT 30
 
-void swap(int* array, int a, int b);
+int* swap(int* array, int a, int b);
