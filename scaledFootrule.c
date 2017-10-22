@@ -1,4 +1,4 @@
-// Completed by Andrew Phuoc Nguyen and Justin Chun-Sang Or
+//By Andrew Phuoc Nguyen and Justin Chun-Sang Or
 // scales ranks from different sources
 #include <stdio.h>
 #include <stdlib.h>
@@ -12,13 +12,15 @@
 #include "queue.h"
 #include "graph.h"
 
-/*
+
 //#define URL(i,j,k) (urlLists[dim2*dim3*i + dim3*j + k])
 //const int dim1, dim2, dim3;  // Global variables, dimension
 //double * array = (double *)malloc(dim1*dim2*dim3*sizeof(double));
 //^found from https://stackoverflow.com/questions/2438142/dynamic-memory-allocation-for-3d-array
 
 #define MAXVALUE 2000000000
+//for WCP smart algo
+#define W(x,y) WCP[(u-1)*x + y]
 
 int main(int argc, char* argv[]) {
     if (argc == 1) return -1;
@@ -86,6 +88,7 @@ int main(int argc, char* argv[]) {
             if (j < length[i]) {
                 if(!isElem(new,list[i][j])) {
                     printf("urlList[%d]. %s\n",k,list[i][j]);
+                    insertInto(seen,list[i][j]);
                     insertInto(new,list[i][j]);
                     urlList[k] = list[i][j];
                     localRank[i][j] = k+1;
@@ -114,7 +117,6 @@ int main(int argc, char* argv[]) {
     int* save = calloc(u, sizeof(int));
     //using Prank list
     //Heap's Algorithm (https://en.wikipedia.org/wiki/Heap%27s_algorithm)
-
     //Test Prank
     W = 0;
     for (j = 0; j < argc-1; j++) {//for each list
@@ -134,7 +136,7 @@ int main(int argc, char* argv[]) {
         Wmin = W;
         //for (i = 0; i < u; i++) save[i] = Prank[i];
     }
-    printf("Wmin = %lf\nW = %lf\n", Wmin,W);
+    //printf("Wmin = %lf\nW = %lf\n", Wmin,W);
     //end test
     int tmp = 0;
     i = 0;
@@ -172,7 +174,7 @@ int main(int argc, char* argv[]) {
                     save[l] = Prank[l];
                 }
             }
-            printf("Wmin = %lf\n                W = %lf\n", Wmin,W);
+            //printf("Wmin = %lf\n                W = %lf\n", Wmin,W);
             //end test
             c[i]++;
             i = 0;
@@ -187,7 +189,67 @@ int main(int argc, char* argv[]) {
         printf(",%d",save[i]);
     }
     printf("\n");
+
+
+    //Smart Algorithm
+    //Based of Kruskal's Algorithm for graphs, the same idea made for PQueue
+    //1. start with empty list
+    //2. consider all single permutations of order in increasing W order
+    //3. add the smallest ones, can only add one of each so ignore if the thing 
+    //   has been added
+    //4. stop when u elements have been added. 
+
+    //1. 
+    //CALLOC - the W table that stores the W for putting elem C at rank P
+    double* WCP = (double*) calloc(u*u, sizeof(double));
+    //use save that was used earlier;
+    for (i = 0; i < u; i++) save[i] = 0;
+    Queue q = newQueue();
+    //2.a record all permutations for W in a u*u matrix.
+    for (j = 0; j < argc-1; j++) {//for each list
+        for (k = 0; k < maxLength; k++) {//for every url
+            if (k >= length[j]) continue;//ignore (outside of jth list)
+            //find urlList index for this url
+            for (l = 0; l < u; l++) {//for each Possible final rank
+                W((localRank[j][k]-1),l) += fabs(((double)(k+1)/(double)length[j])-((double)(l+1)/(double)u));
+                //printf("@%dth urlList index, at place %d, WCP = %d/%d - %d/%d = %lf\n", 
+                //        localRank[j][k]-1,l+1,
+                //        (k+1),length[j],(l+1),u,
+                //        fabs(((double)(k+1)/(double)length[j])-((double)(l+1)/(double)u)));
+            }
+        }
+    }
+    //show table
+    printf("WCP:\n");
+    for (i = 0; i < u; i++) {//for every url in urllist 
+        for (j = 0; j < u; j++) {//for every place P
+            printf("[%d][%d].%lf ",i,j+1,W(i,j));
+        }
+        printf("\n");
+    }
+    //2.b order all permutations for W in increasing order.
+    //CALLOC - records the permutations for W in order
+    int* orderW = calloc(u*u, sizeof(int));
+    /*int bestW = MAXVALUE;
+    //int best = 0;
+    for (i = 0; i < u*u; i++) {
+        
+        for (j = 0; j < u; j++) {//for every url
+            for (k = 0; k < u; k++) {//for every arrangement in place P
+                if ((W(j,k) == 0) || (W(j,k) <= bestW)) { //(W(j,k) == 0) is early exit to get the 0s
+                    if (j
+                    bestW = W(j,k);
+                    //best = j*(u-1)+k;
+                }
+            }
+        //append best to list
+        //Worder[best] = 
+        }
+    }*/
     //free
+    free(orderW);
+    free(WCP);
+    disposeQueue(q);
     free(save);
     free(Prank);
     free(c);
@@ -215,4 +277,4 @@ int* swap(int* array, int a, int b) {
     array[a] = array[b];
     array[b] = tmp;
     return array;
-}*/
+}
