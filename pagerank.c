@@ -10,15 +10,16 @@
 #include "queue.h"
 #include "graph.h"
 
-int main(int argc, char* arg[]){
+int main(int argc, char* argv[]){
     if(argc != 4){
         printf("Needs four inputs.");
     }
     else{
-        double d = (double)argv[1];
-        double diffPR = (double) argv[2];
-        int maxIterations = (int)argv[3]; 
+        double d = (double) (argv[1]);
+        double diffPR = (double) (argv[2]);
+        int maxIterations = (int) (argv[3]); 
         PageRankW(d, diffPR, maxIterations);
+    }
 }
 
 int PageRankW(double d, double diffPR, int maxIterations) {
