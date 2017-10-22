@@ -20,8 +20,6 @@
 #define SIZEOFDIR 10
 #define SIZEOFEXT 4
 #define TERMINATING 1
-//(MAXWORD = 45)
-//(SIZEOFURL = 7)
 
 void shiftRight(int *list, int pos, int max);
 
@@ -37,9 +35,6 @@ double tf(char* word, char* url) {
     // obtain values
     f = wordFrequency(word, url);
     N = wordTotal(url);
-    // calculating f
-    printf("f = %d\nN = %d\n", f, N);
-
     return (double)(f)/(double)(N);
 }
 
@@ -52,16 +47,11 @@ double idf(char* word) {
     int N = 0; //# of docs
     int f = 0; //# of docs containing word
 
-    N = LenCollection("Sample1/collection.txt");
-    //open inverted index, find N
-    //char line[MAXCHAR];
+    N = LenCollection("collection.txt");
     char* file_name = "invertedIndex.txt";
     FILE *open = fopen(file_name, "r");
-    //char* tokenWord = (char*) malloc((MAXWORD)*sizeof(char));
-    //char* tokenUrl = (char*) malloc((SIZEOFURL)*sizeof(char));
     char* tmp = calloc(MAXWORD, sizeof(char));
     char* ftmp = tmp;
-    //printf("%s", ftmp);
     if(open != NULL){
         while(fscanf(open, "%s", tmp) != EOF && strcmp(tmp, word) != 0);
         while(fscanf(open, "%s", tmp) != EOF 
@@ -70,18 +60,14 @@ double idf(char* word) {
               &&  tmp[2] == 'l')){
             f++;
         }
-   }     
+    }     
     free(ftmp);
     fclose(open);
     //calculating
-    printf("N = %d\n f = %d\n", N, f);
-    //free(tokenWord);
-    //free(tokenUrl);
     return log10((double)(N)/(double)(f));
 }
 
 double tfIdf(char*word, char*url) {
-    //printf("tf %.7lf \nidf %.7lf\n",tf(word,url), idf(word,url));
     return tf(word,url) * idf(word);
 }
 
@@ -93,10 +79,12 @@ int main(int argc, char **argv){
         return 1;
     }
 
-    int length = LenCollection("Sample1/collection.txt");
-    char **collection = GetCollection("Sample1/collection.txt",length, SIZEOFURL);   // INITIAL ORDER reference
+
+    int length = LenCollection("collection.txt");
+    char **collection = GetCollection("collection.txt",length, SIZEOFURL);   // INITIAL ORDER reference
     int *listFreq = calloc(length, sizeof(int));            // INITIAL ORDER of frequency
     double *listTfIdf = malloc(length * sizeof(double));
+    InvertedIndex(collection);
 
     int idx;
     int nUrls;
@@ -105,14 +93,11 @@ int main(int argc, char **argv){
         listTfIdf[nUrls] = 0.0;         
     }
     
-    int debug;    
-
     for(idx = 1; idx < argc; idx++){
         char *arg = argv[idx];
         int nUrls;
         for(nUrls = 0; nUrls < length; nUrls++){
             listFreq[nUrls] += wordFrequency(arg, collection[nUrls]); 
-            printf("%s  %d\n", collection[nUrls], listFreq[nUrls]);
         }
     }
 
@@ -120,25 +105,15 @@ int main(int argc, char **argv){
         char *arg = argv[idx];
         for(nUrls = 0; nUrls < length; nUrls++){
             double value = tfIdf(arg, collection[nUrls]);
-            listTfIdf[nUrls] += value; 
-            
-            printf("%s  %.7lf\n", collection[nUrls], listTfIdf[nUrls]);
+            listTfIdf[nUrls] += value;             
         }
     }
-
-
-    for(debug = 0; debug < length; debug++){
-        printf("%d ", listFreq[debug]);
-    }
-        printf("\n");
 
     int *listPrint = calloc(MAXOUTPUT, sizeof(int));        // order of printing, refers to INITIAL ORDER in order
     int i;
     for(i = 0; i < MAXOUTPUT; i++){
         listPrint[i] = -1;
     }
-
-
 
     for(i = 0; i < length; i++){    // Iterates INITIAL ORDER
         int val = listFreq[i];
@@ -173,9 +148,9 @@ int main(int argc, char **argv){
         if(listPrint[i] == -1)
             break;
         else
-            printf("%s %d %.7lf\n", collection[listPrint[i]], listFreq[listPrint[i]], listTfIdf[listPrint[i]]);
+            printf("%s  %.6lf\n", collection[listPrint[i]], listTfIdf[listPrint[i]]);
     }
- 
+
     for(idx = 0; idx < length; idx++)free(collection[idx]);
     free(collection);
     free(listFreq);

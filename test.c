@@ -1,4 +1,4 @@
-/*#include <stdio.h>
+#include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include "readData.h"
@@ -36,7 +36,7 @@ int main (void) {
 //    printf("idf = %lf\n", l);
 //    printf("tfidf = %lf\n", m);
     
-    char** list;
+    /*char** list;
     list = malloc(DEBUGNELEM * DEBUGWORDSIZE);
     int i;
     for (i = 0; i < DEBUGNELEM; i++) {
@@ -49,7 +49,7 @@ int main (void) {
     //for(int i = 0; i < cardinality; i++){
     //    printf("Line: %s\n", urlList[i]);
     //}
-    //printf("%d", cardinality);
+    //printf("%d", cardinality);*/
     disposeGraph(g);//FREE GRAPH
     //FREE URLLIST
     i = 0;
@@ -59,10 +59,10 @@ int main (void) {
     free(urlList);
     //FREE LIST
     
-    for (i = 0;i < DEBUGNELEM; i++) {
-        free(list[i]);
-    }
-    free(list);
+    //for (i = 0;i < DEBUGNELEM; i++) {
+    //    free(list[i]);
+    //}
+    //free(list);
     return 0;
 
-}*/
+}

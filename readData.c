@@ -53,7 +53,7 @@ char** GetCollection(char* file, int elements, int length) {
 
 Graph GetGraph(char** urlList) {
     // initialising variables
-    int graphSize = LenCollection("Sample1/collection.txt");
+    int graphSize = LenCollection("collection.txt");
     Graph g = newGraph(graphSize);
     int i, k;   // i is for each url.txt, k is for each link in url.
     char * tmp;     // where fscanf reads the urlnames
@@ -100,10 +100,8 @@ int wordFrequency(char* word, char* url) {
     // initialise variables
     int f = 0; // frequency of the term
     // open inverted index, find N
-    printf("%s\n", url);
-    char file_name[8+SIZEOFURL+4+100] = "Sample1/";
+    char file_name[sizeof("")+SIZEOFURL+sizeof(".txt")] = "";
     strcat(strcat(file_name,url),".txt");
-    printf("filename %s\n",file_name);
     FILE *open;
     if( (open = fopen(file_name, "r")) == NULL ) return -10;
     char* tmp;
@@ -140,8 +138,7 @@ int wordFrequency(char* word, char* url) {
         }
 
         // tmp == #end, make sure Section-2 is next and then close
-        if (!(fscanf(open,"%s",section) == 1 && strcmp(section,"Section-2") == 0)) { printf("%s \n", section); 
-            return -6;}     //error
+        if (!(fscanf(open,"%s",section) == 1 && strcmp(section,"Section-2") == 0)) return -6;    //error
         // done, close file
 
     }
@@ -156,7 +153,7 @@ int wordFrequency(char* word, char* url) {
 int wordTotal( char* url) {
     int f = 0; // frequency of the term    
     // open inverted index, find N
-    char file_name[8+SIZEOFURL+4] = "Sample1/";
+    char file_name[sizeof("")+SIZEOFURL+sizeof(".txt")] = "";
     strcat(strcat(file_name,url),".txt");
     FILE *open = fopen(file_name, "r");
     char* tmp;
@@ -194,7 +191,7 @@ int wordTotal( char* url) {
         }
 
         // tmp == #end, make sure Section-2 is next and then close
-        if (!(fscanf(open,"%s",section) == 1 && strcmp(section,"Section-2") == 0)) { printf("%s \n", section); return -6;}//error
+        if (!(fscanf(open,"%s",section) == 1 && strcmp(section,"Section-2") == 0)) return -6;//error
         // done, close file
 
     }
@@ -210,20 +207,12 @@ int wordTotal( char* url) {
 
 char *RemoveSpecialCharacters(char* str){
     int len = strlen(str);
-    int i,j;
+    int i;
     for(i = 0; i < len; i++){
-        if ((str[i] < 'A') || (str[i] > 'Z' && str[i] < 'a') || (str[i] > 'z')) {//for str[i] not an alphabetical letter
-            for (j = i; j < len-1; j++) {//for the letter after
-                //move it back one
-                str[j] = str[j+1];
-            }
-            str[j] = '\0';
-            len--;
-        }
         //printf("str[%d] = %c\n", i, str[i]);
-        //if(str[i] == '.' || str[i] == ';' || str[i] == '?' || str[i] == ','){
-        //    str[i] = '\0';
-        //}
+        if(str[i] == '.' || str[i] == ';' || str[i] == '?' || str[i] == ','){
+            str[i] = '\0';
+        }
 
     }
     return str;

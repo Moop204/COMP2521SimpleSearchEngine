@@ -1,3 +1,4 @@
+/*
 //By Andrew Phuoc Nguyen and Justin Chun-Sang Or
 // scales ranks from different sources
 #include <stdio.h>
@@ -230,22 +231,8 @@ int main(int argc, char* argv[]) {
     //2.b order all permutations for W in increasing order.
     //CALLOC - records the permutations for W in order
     int* orderW = calloc(u*u, sizeof(int));
-    /*int bestW = MAXVALUE;
-    //int best = 0;
-    for (i = 0; i < u*u; i++) {
-        
-        for (j = 0; j < u; j++) {//for every url
-            for (k = 0; k < u; k++) {//for every arrangement in place P
-                if ((W(j,k) == 0) || (W(j,k) <= bestW)) { //(W(j,k) == 0) is early exit to get the 0s
-                    if (j
-                    bestW = W(j,k);
-                    //best = j*(u-1)+k;
-                }
-            }
-        //append best to list
-        //Worder[best] = 
-        }
-    }*/
+
+
     //free
     free(orderW);
     free(WCP);
@@ -278,3 +265,4 @@ int* swap(int* array, int a, int b) {
     array[b] = tmp;
     return array;
 }
+*/

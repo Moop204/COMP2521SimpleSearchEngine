@@ -86,29 +86,6 @@ int PageRankW(double d, double diffPR, int maxIterations) {
             weightOut[j][i] = (double)(outLinks[i])/(double)(sumOut);   // j->i
         }
     }
-    //printing the weightIn and weightOut tables:
-    /*for (j = 0; j < sizeUrl; j++) {
-        for(i = 0; i < sizeUrl; i++) {
-            if (weightIn[j][i] == 0) {
-                printf("               ");
-                continue;
-            } else {
-                printf("[%d][%d]%lf ",j,i,weightIn[j][i]);
-            }
-        }
-        printf("\n");
-    }
-    for (j = 0; j < sizeUrl; j++) {
-        for(i = 0; i < sizeUrl; i++) {
-            if (weightOut[j][i] == 0) {
-                printf("               ");
-                continue;
-            } else {
-                printf("[%d][%d]%lf ",j,i,weightOut[j][i]);
-            }
-        }
-        printf("\n");
-    }*/
 
     // PageRankWeighted algorithm
     while ((noIter < maxIterations-1 && diff >= diffPR) || noIter == 0) {
