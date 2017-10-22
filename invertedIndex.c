@@ -21,6 +21,7 @@ typedef struct IIRep {
     IINode  *front;
     IINode  *end;
 } IIRep;
+
 //Function Signatures
 void freeII (IIRep *r);
 void AppendIINode(char *newWord, IIRep *rep);// Inserts node to word linked list in alphabetical order
@@ -34,17 +35,13 @@ void freeII (IIRep *r){         // Frees all memory associated with the Inverted
     for(cur = r->front; cur != NULL; cur = cur->next){
         free(cur->word);
         disposeQueue(cur->urls);
-        free(cur->urls); 
     }
     // Remove memory of IINodes themselves
     while(cur != NULL){
         IINode *tmp = cur;
         cur = cur->next;
-        free(tmp->next);
         free(tmp);
     }
-    free(r->front);
-    free(r->end);
     free(r);
 }
 
@@ -119,7 +116,7 @@ Queue SearchIndex(char *word, IIRep *r){
 int InvertedIndex(char **urlList){
     int len = LenCollection("collection.txt");
     // Strings used for editing (strcat)
-    char ** dupList = malloc(len * (SIZEOFURL + sizeof(".txt"));
+    char ** dupList = malloc(len * (SIZEOFURL + sizeof(".txt")));
     int p;
     for(p = 0; p < len; p++)
         dupList[p] = strdup(urlList[p]);
@@ -146,8 +143,7 @@ int InvertedIndex(char **urlList){
         char urlname[sizeof("Sample1/") + SIZEOFURL + sizeof(".txt")] = "Sample1/";
         Set sLocal = newSet();
         strcat(urlname,strcat(dupList[i],".txt"));
-        printf("%s\n",urlname);
-        FILE *fptext = fopen(urlname, "r");      // Opens up url
+        FILE *fptext = fopen(urlname, "r");                                                 // Opens up url
         if(fptext != NULL){
             if (!(fscanf(fptext,"%s %s",hashtag, section) == 2)) return 1;                  //error
             if (strcmp(hashtag,"#start")+strcmp(section,"Section-1") != 0) return 1;        //error
@@ -187,11 +183,11 @@ int InvertedIndex(char **urlList){
     FILE *fp = fopen("invertedIndex.txt", "w");
     IINode *cur;
     for(cur = r->front; cur != NULL; cur = cur->next){
-        fprintf(fp, "%s  ", cur->word);             // Writes word
+        fprintf(fp, "%s  ", cur->word);                 // Writes word
         Queue url_q = cur->urls;
         char* url = malloc(sizeof(urlList[0]));
         char* furl = url;
-        if (!emptyQueue(url_q)) {//DEBUGGING///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        if (!emptyQueue(url_q)) {
             for(url = leavePriorQueue(url_q); ; url = leavePriorQueue(url_q)){
                 fprintf(fp, "%s ", url);                // Writes urls
                 if (emptyQueue(url_q)) break;         
@@ -204,6 +200,5 @@ int InvertedIndex(char **urlList){
     freeII(r);
     for(p = 0; p < len; p++) free(dupList[p]);
     free(dupList);
-    printf("II done.\n");
     return 0;
 }

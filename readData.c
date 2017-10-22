@@ -53,7 +53,7 @@ char** GetCollection(char* file, int elements, int length) {
 
 Graph GetGraph(char** urlList) {
     // initialising variables
-    int graphSize = LenCollection("Sample1/collection.txt");
+    int graphSize = LenCollection("collection.txt");
     Graph g = newGraph(graphSize);
     int i, k;   // i is for each url.txt, k is for each link in url.
     char * tmp;     // where fscanf reads the urlnames
@@ -100,10 +100,8 @@ int wordFrequency(char* word, char* url) {
     // initialise variables
     int f = 0; // frequency of the term
     // open inverted index, find N
-    printf("%s\n", url);
-    char file_name[8+SIZEOFURL+4+100] = "Sample1/";
+    char file_name[sizeof("")+SIZEOFURL+sizeof(".txt")] = "";
     strcat(strcat(file_name,url),".txt");
-    printf("filename %s\n",file_name);
     FILE *open;
     if( (open = fopen(file_name, "r")) == NULL ) return -10;
     char* tmp;
@@ -156,7 +154,7 @@ int wordFrequency(char* word, char* url) {
 int wordTotal( char* url) {
     int f = 0; // frequency of the term    
     // open inverted index, find N
-    char file_name[8+SIZEOFURL+4] = "Sample1/";
+    char file_name[sizeof("")+SIZEOFURL+sizeof(".txt")] = "";
     strcat(strcat(file_name,url),".txt");
     FILE *open = fopen(file_name, "r");
     char* tmp;

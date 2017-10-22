@@ -21,7 +21,6 @@
 #define MAXVALUE 2000000000
 //for WCP smart algo
 #define W(x,y) WCP[(u-1)*x + y]
-
 /*
 int main(int argc, char* argv[]) {
     if (argc == 1) return -1;
@@ -306,3 +305,4 @@ int* swap(int* array, int a, int b) {
     array[b] = tmp;
     return array;
 }
+*/
