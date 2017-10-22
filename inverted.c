@@ -28,6 +28,21 @@ void AppendIINode(char *newWord, IIRep *rep);// Inserts node to word linked list
 void showIIRep(IIRep *rep);
 IIRep *InitialiseRep(void);
 Queue SearchIndex(char *word, IIRep *r);
+int InvertedIndex(char **urlList);
+
+int main(void) {
+    int cardinality = LenCollection("collection.txt");
+    int length = SIZEOFURL;
+    char** urlList = GetCollection("collection.txt",cardinality, length);
+    InvertedIndex(urlList);
+    //free
+    int i = 0;
+    for (i = 0;i < cardinality;i++) {
+        free(urlList[i]);
+    }
+    free(urlList);
+    return 0;
+}
 
 void freeII (IIRep *r){         // Frees all memory associated with the InvertedIndex representation
     IINode *cur;
@@ -202,3 +217,5 @@ int InvertedIndex(char **urlList){
     free(dupList);
     return 0;
 }
+
+

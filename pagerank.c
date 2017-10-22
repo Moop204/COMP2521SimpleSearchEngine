@@ -15,9 +15,9 @@ int main(int argc, char* argv[]){
         printf("Needs four inputs.");
     }
     else{
-        double d = (double) (argv[1]);
-        double diffPR = (double) (argv[2]);
-        int maxIterations = (int) (argv[3]); 
+        double d = atof(argv[1]);
+        double diffPR = atof(argv[2]);
+        int maxIterations = atoi(argv[3]); 
         PageRankW(d, diffPR, maxIterations);
     }
 }
