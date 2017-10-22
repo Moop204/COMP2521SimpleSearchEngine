@@ -21,12 +21,7 @@ typedef struct IIRep {
     IINode  *front;
     IINode  *end;
 } IIRep;
-//Function Signatures
-void freeII (IIRep *r);
-void AppendIINode(char *newWord, IIRep *rep);// Inserts node to word linked list in alphabetical order
-void showIIRep(IIRep *rep);
-IIRep *InitialiseRep(void);
-Queue SearchIndex(char *word, IIRep *r);
+
 
 void freeII (IIRep *r){         // Frees all memory associated with the InvertedIndex representation
     IINode *cur;
@@ -117,14 +112,12 @@ Queue SearchIndex(char *word, IIRep *r){
 
 // Calculates and writes the inverted index to the invertedIndex.txt file
 int InvertedIndex(char **urlList){
-    int len = LenCollection("collection.txt");
+    int len = LenCollection("Sample1/collection.txt");
     // Strings used for editing (strcat)
-    char ** dupList = malloc(len * (SIZEOFURL + sizeof(".txt"));
+    char ** dupList = malloc(sizeof(urlList));
     int p;
     for(p = 0; p < len; p++)
         dupList[p] = strdup(urlList[p]);
-
-    // Initialising variables
     IIRep *r = InitialiseRep();
     Set sGlobal = newSet();
     int i;
@@ -133,15 +126,10 @@ int InvertedIndex(char **urlList){
     char * section; //where fscanf reads "Section-1" and "Section-2"
     hashtag = (char*) malloc((SIZEOFURL)*sizeof(char));
     section = (char*) malloc((10)*sizeof(char));
-
-    // Pointers to intial memory addresses
-    // Holds initial memory location for freeing
-    char* ftmp = tmp;           
+    char* ftmp = tmp;           // Holds initial memory location for freeing
     char* fhashtag = hashtag;
     char* fsection = section;
-
     // Generating Inverted Index    
-    // Searches for all urls
     for(i = 0; i < len; i++){
         char urlname[sizeof("Sample1/") + SIZEOFURL + sizeof(".txt")] = "Sample1/";
         Set sLocal = newSet();
@@ -149,14 +137,13 @@ int InvertedIndex(char **urlList){
         printf("%s\n",urlname);
         FILE *fptext = fopen(urlname, "r");      // Opens up url
         if(fptext != NULL){
-            if (!(fscanf(fptext,"%s %s",hashtag, section) == 2)) return 1;                  //error
-            if (strcmp(hashtag,"#start")+strcmp(section,"Section-1") != 0) return 1;        //error
+            if (!(fscanf(fptext,"%s %s",hashtag, section) == 2)) return 1;                 //error
+            if (strcmp(hashtag,"#start")+strcmp(section,"Section-1") != 0) return 1;     //error
             while(!(fscanf(fptext,"%s",section) == 1 && strcmp(section,"Section-2") == 0));
-            while ((fscanf(fptext,"%s",tmp) != EOF) && strcmp(tmp,"#end") != 0 ) {          // Reads by character
-                tmp = RemoveSpecialCharacters(tmp);         // Removes special characters
-                NormaliseWord(tmp);                         // Converts words to lowercase
-                // For words never seen before, create a head node that holds all urls containing it
-                if(!isElem(sGlobal, tmp)){            
+            while ((fscanf(fptext,"%s",tmp) != EOF) && strcmp(tmp,"#end") != 0 ) {    // Reads by character
+                tmp = RemoveSpecialCharacters(tmp);     // Removes special characters
+                NormaliseWord(tmp);                     // Converts words to lowercase
+                if(!isElem(sGlobal, tmp)){              // For words never seen before, create a head node that holds all urls containing it
                     insertInto(sGlobal, tmp);
                     AppendIINode(tmp, r);
                 }
@@ -165,9 +152,7 @@ int InvertedIndex(char **urlList){
                     Queue urlQ = SearchIndex(tmp,r);
                     enterQueue(urlQ, urlList[i]);
                 }
-                //^everything after works ok (frees are ok, when queue and IINode is used the frees dont match up (eg 2 more frees than usual)
             }
-            // check if next word is "Section-2", and finish
             if (!(fscanf(fptext,"%s",section) == 1 && strcmp(section,"Section-2") == 0)) {
                 return 1;   //error
             }
@@ -175,14 +160,12 @@ int InvertedIndex(char **urlList){
         fclose(fptext);
         disposeSet(sLocal);
     }
-
     disposeSet(sGlobal);    // Cleanup memory
     free(fhashtag);
     free(fsection);
     free(ftmp);
     free(hashtag);
     free(section);
-
     // Writing Process    
     FILE *fp = fopen("invertedIndex.txt", "w");
     IINode *cur;
@@ -191,11 +174,9 @@ int InvertedIndex(char **urlList){
         Queue url_q = cur->urls;
         char* url = malloc(sizeof(urlList[0]));
         char* furl = url;
-        if (!emptyQueue(url_q)) {//DEBUGGING///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            for(url = leavePriorQueue(url_q); ; url = leavePriorQueue(url_q)){
-                fprintf(fp, "%s ", url);                // Writes urls
-                if (emptyQueue(url_q)) break;         
-            }
+        for(url = leavePriorQueue(url_q); ; url = leavePriorQueue(url_q)){
+            fprintf(fp, "%s ", url);                // Writes urls
+            if (emptyQueue(url_q)) break;         
         }
         free(furl);
         fprintf(fp,"\n");
@@ -203,7 +184,6 @@ int InvertedIndex(char **urlList){
     fclose(fp);     // Cleanup memory
     freeII(r);
     for(p = 0; p < len; p++) free(dupList[p]);
-    free(dupList);
     printf("II done.\n");
     return 0;
 }

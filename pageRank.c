@@ -15,17 +15,19 @@ int PageRankW(double d, double diffPR, int maxIterations) {
     int sizeUrl = LenCollection("Sample1/collection.txt");
     char** urlList = GetCollection("Sample1/collection.txt",sizeUrl,SIZEOFURL);
     Graph g = GetGraph(urlList);
+    //CALLOC - urlPR to store the pageranks of every iteration.
     double** urlPR;     //[sizeUrl][maxIterations]
     urlPR = calloc(sizeUrl, sizeof(double *));
     int i,j,k;
 
     for (i = 0; i < sizeUrl; i++)
         urlPR[i] = calloc((maxIterations), sizeof(double));
+    
     int noIter = 0;     //number of iterations
     for(i = 0; i < sizeUrl; i++)
         urlPR[i][noIter] = (double)1/(double)sizeUrl;
 
-    // fifference in page rank sum
+    // difference in page rank sum
     double diff = diffPR;  
 
     // inlinks = # of links that link into this page j
@@ -84,21 +86,29 @@ int PageRankW(double d, double diffPR, int maxIterations) {
             weightOut[j][i] = (double)(outLinks[i])/(double)(sumOut);   // j->i
         }
     }
-    for (j = 0; j < sizeUrl; j++) {
+    //printing the weightIn and weightOut tables:
+    /*for (j = 0; j < sizeUrl; j++) {
         for(i = 0; i < sizeUrl; i++) {
             if (weightIn[j][i] == 0) {
+                printf("               ");
                 continue;
-            }  
+            } else {
+                printf("[%d][%d]%lf ",j,i,weightIn[j][i]);
+            }
         }
+        printf("\n");
     }
     for (j = 0; j < sizeUrl; j++) {
         for(i = 0; i < sizeUrl; i++) {
             if (weightOut[j][i] == 0) {
-                printf("                ");
+                printf("               ");
                 continue;
-            }   
+            } else {
+                printf("[%d][%d]%lf ",j,i,weightOut[j][i]);
+            }
         }
-    }
+        printf("\n");
+    }*/
 
     // PageRankWeighted algorithm
     while ((noIter < maxIterations-1 && diff >= diffPR) || noIter == 0) {
@@ -110,6 +120,7 @@ int PageRankW(double d, double diffPR, int maxIterations) {
                 urlPR[i][noIter] += d * (double)urlPR[j][noIter-1] * (double)weightIn[j][i] * (double)weightOut[j][i];
             }
         }
+        //calculate diff
         diff = 0;
         for (i = 0; i < sizeUrl; i++) {
             double difference = urlPR[i][noIter] - urlPR[i][noIter-1];
@@ -118,7 +129,8 @@ int PageRankW(double d, double diffPR, int maxIterations) {
         }
     }
 
-    int* seen = calloc(sizeUrl, sizeof(char));
+    int* seen = calloc(sizeUrl, sizeof(int));
+
     double maxurlPR = 0;
     int max = 0;
     FILE *fp = fopen("pagerankList.txt", "w");
@@ -140,6 +152,7 @@ int PageRankW(double d, double diffPR, int maxIterations) {
     fclose(fp);
 
     // freeing used memory
+    free(seen);
     disposeGraph(g);
     for(i = 0; i < sizeUrl; i++) free(urlPR[i]);
     free(urlPR);

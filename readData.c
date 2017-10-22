@@ -207,6 +207,29 @@ int wordTotal( char* url) {
     return (f);
 }
 
+
+char *RemoveSpecialCharacters(char* str){
+    int len = strlen(str);
+    int i,j;
+    for(i = 0; i < len; i++){
+        if ((str[i] < 'A') || (str[i] > 'Z' && str[i] < 'a') || (str[i] > 'z')) {//for str[i] not an alphabetical letter
+            for (j = i; j < len-1; j++) {//for the letter after
+                //move it back one
+                str[j] = str[j+1];
+            }
+            str[j] = '\0';
+            len--;
+        }
+        //printf("str[%d] = %c\n", i, str[i]);
+        //if(str[i] == '.' || str[i] == ';' || str[i] == '?' || str[i] == ','){
+        //    str[i] = '\0';
+        //}
+
+    }
+    return str;
+}
+
+
 /*
 // Code obtained from lab08 of COMP2521 course provided by UNSW CSE Faculty 
 // and edited by Andrew Phuoc Nguyen
@@ -247,18 +270,5 @@ void shiftRight(int *list, int pos, int max){
     for(cur = max-1; cur > pos; cur --){
         list[cur] = list[cur-1];
     }
-}
-
-char *RemoveSpecialCharacters(char* str){
-    int len = strlen(str);
-    int i;
-    for(i = 0; i < len; i++){
-//        printf("str[%d] = %c\n", i, str[i]);
-        if(str[i] == '.' || str[i] == ';' || str[i] == '?' || str[i] == ','){
-            str[i] = '\0';
-        }
-
-    }
-    return str;
 }
 

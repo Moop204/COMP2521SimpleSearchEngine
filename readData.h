@@ -12,6 +12,7 @@ Graph GetGraph(char** urlList);
 void shiftRight(int *list, int pos, int max);
 int wordFrequency(char* word, char* url);
 int wordTotal( char* url);
-char *RemoveSpecialCharacters(char* str);
-void NormaliseWord(char* word);
+char *RemoveSpecialCharacters(char* str);// Returns a string without special characters
+void NormaliseWord(char* word); // Taken from lab08 of COMP2521
+
 
