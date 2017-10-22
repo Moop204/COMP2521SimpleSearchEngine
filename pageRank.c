@@ -82,8 +82,8 @@ int PageRankW(double d, double diffPR, int maxIterations) {
                     sumOut += outLinks[k];
                 }
             }
-            weightIn[j][i]  = (double)(inLinks[i])/(double)(sumIn);    // j->i
-            weightOut[j][i] = (double)(outLinks[i])/(double)(sumOut); // j->i
+            weightIn[j][i]  = (double)(inLinks[i])/(double)(sumIn);     // j->i
+            weightOut[j][i] = (double)(outLinks[i])/(double)(sumOut);   // j->i
         }
     }
     //printing the weightIn and weightOut tables:
@@ -140,17 +140,17 @@ int PageRankW(double d, double diffPR, int maxIterations) {
                 if (seen[j] == 0) {
                     maxurlPR = urlPR[j][noIter];
                     max = j;
-                    //printf("    maxurlPR = %lf max = %d\n   urlPR[%d][%d] = %lf, yes thats right j = %d\n",maxurlPR,max,j,noIter,urlPR[j][noIter],j);
                 }
             }
         }
         seen[max] = 1;
-        //printf("url:%s outgoing links:%.0f page rank: %.7f\n", urlList[max], outLinks[max], urlPR[max][noIter]);
         fprintf(fp, "%s, %.0f, %.7f\n", urlList[max], outLinks[max], urlPR[max][noIter]);
         maxurlPR = 0;
         max = 0;
     }
+
     fclose(fp);
+
     // freeing used memory
     free(seen);
     disposeGraph(g);

@@ -6,9 +6,9 @@
 CC = gcc  -lm
 CFLAGS = -Wall -Werror -DDBUG=1
 
-test : test.o readData.o pageRank.o invertedIndex.o queue.o set.o graph.o 
+#test : test.o readData.o pageRank.o invertedIndex.o queue.o set.o graph.o 
 #pageRank.o searchTfIdf.o 
-#test : scaledFootrule.o readData.o queue.o set.o graph.o
+test : scaledFootrule.o readData.o queue.o set.o graph.o
 scaledFootrule.o : scaledFootrule.c scaledFootrule.h readData.h set.h queue.h graph.h 
 readData.o : readData.c readData.h invertedIndex.h set.h queue.h graph.h
 invertedIndex.o : invertedIndex.c invertedIndex.h readData.h queue.h set.h

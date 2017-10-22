@@ -20,7 +20,8 @@
 
 #define MAXVALUE 2000000000
 //for WCP smart algo
-#define W(x,y) WCP[(u-1)*x + y]
+#define W(x,y) WCP[(u)*x + y]
+
 
 int main(int argc, char* argv[]) {
     if (argc == 1) return -1;
@@ -33,25 +34,25 @@ int main(int argc, char* argv[]) {
         length[i] = LenCollection(argv[i+1]);
         if (length[i] > maxLength) maxLength = length[i];
     }
-    printf("malloc for arrays is ok\n");
+    //printf("malloc for arrays is ok\n");
     //MALLOC - array of arrays of char lists: urlList[argc][maxLength][SIZEOFURL]
     char*** list =(char***) malloc((argc-1)*maxLength*SIZEOFURL);
     for (i = 0; i < argc-1; i++) {
         list[i] = (char**) GetCollection(argv[i+1],maxLength,SIZEOFURL);
     }
-    printf("malloc for lists is ok\n");
+    //printf("malloc for lists is ok\n");
 
     //NEW SET
     Set seen = newSet();//to count the |union|
     Set new = newSet();//to create localRanks
 
     //getting union of all lists = N
-    printf("argc = %d\n", argc);
+    //printf("argc = %d\n", argc);
     for (i = 0; i < argc-1; i++) {
-        printf("array %d: %s\n",i, argv[i+1]);
+        //printf("array %d: %s\n",i, argv[i+1]);
         for (j = 0; j < maxLength; j++) {
             if (j < length[i]) {
-                printf("%d. %s\n",j,list[i][j]);
+                //printf("%d. %s\n",j,list[i][j]);
                 insertInto(seen,list[i][j]);
             }
         }
@@ -81,13 +82,13 @@ int main(int argc, char* argv[]) {
         localRank[i] = calloc(u,sizeof(int));
     }
 
-
+    //printing out urlList
     k = 0;//the index of urlList
     for (i = 0; i < argc-1; i++) {
         for (j = 0; j < maxLength; j++) {
             if (j < length[i]) {
                 if(!isElem(new,list[i][j])) {
-                    printf("urlList[%d]. %s\n",k,list[i][j]);
+                    //printf("urlList[%d]. %s\n",k,list[i][j]);
                     insertInto(seen,list[i][j]);
                     insertInto(new,list[i][j]);
                     urlList[k] = list[i][j];
@@ -101,20 +102,20 @@ int main(int argc, char* argv[]) {
             }
         }
     }
-
+    //printing LocalRank
     for (i = 0; i < argc-1; i++) {
         for (j = 0; j < u; j++) {
-            printf("[%d][%d]%d ",i,j,localRank[i][j]);
+            //printf("[%d][%d]%d ",i,j,localRank[i][j]);
         }
-        printf("\n");
+        //printf("\n");
     }
 
 
-    //starting "brute force" method with smart algorithm techniques (early exit)
+    //initial "brute force" method with early exit.
+    //see below for smart algorithm
+    /*
     double W = 0;
     double Wmin = MAXVALUE;
-    //CALLOC - saves the best ranking yet
-    int* save = calloc(u, sizeof(int));
     //using Prank list
     //Heap's Algorithm (https://en.wikipedia.org/wiki/Heap%27s_algorithm)
     //Test Prank
@@ -189,21 +190,21 @@ int main(int argc, char* argv[]) {
         printf(",%d",save[i]);
     }
     printf("\n");
-
+    */
 
     //Smart Algorithm
-    //Based of Kruskal's Algorithm for graphs, the same idea made for PQueue
+    //Based of Kruskal's Algorithm for graphs, the same idea made for Footrule
     //1. start with empty list
     //2. consider all single permutations of order in increasing W order
-    //3. add the smallest ones, can only add one of each so ignore if the thing 
-    //   has been added
+    //3. add the smallest ones, can only add if both the Pth place is free and 
+    //   Cth url is free.
     //4. stop when u elements have been added. 
 
     //1. 
     //CALLOC - the W table that stores the W for putting elem C at rank P
     double* WCP = (double*) calloc(u*u, sizeof(double));
-    //use save that was used earlier;
-    for (i = 0; i < u; i++) save[i] = 0;
+    //CALLOC - saves the best ranking yet
+    int* save = calloc(u, sizeof(int));
     Queue q = newQueue();
     //2.a record all permutations for W in a u*u matrix.
     for (j = 0; j < argc-1; j++) {//for each list
@@ -213,40 +214,79 @@ int main(int argc, char* argv[]) {
             for (l = 0; l < u; l++) {//for each Possible final rank
                 W((localRank[j][k]-1),l) += fabs(((double)(k+1)/(double)length[j])-((double)(l+1)/(double)u));
                 //printf("@%dth urlList index, at place %d, WCP = %d/%d - %d/%d = %lf\n", 
-                //        localRank[j][k]-1,l+1,
+                //        localRank[j][k]-1,l,
                 //        (k+1),length[j],(l+1),u,
                 //        fabs(((double)(k+1)/(double)length[j])-((double)(l+1)/(double)u)));
             }
         }
     }
     //show table
-    printf("WCP:\n");
+    //printf("WCP:\n");
     for (i = 0; i < u; i++) {//for every url in urllist 
         for (j = 0; j < u; j++) {//for every place P
-            printf("[%d][%d].%lf ",i,j+1,W(i,j));
+            //printf("[%d][%d].%lf ",i,j+1,W(i,j));
         }
-        printf("\n");
+        //printf("\n");
     }
     //2.b order all permutations for W in increasing order.
     //CALLOC - records the permutations for W in order
-    int* orderW = calloc(u*u, sizeof(int));
-    /*int bestW = MAXVALUE;
-    //int best = 0;
-    for (i = 0; i < u*u; i++) {
-        
-        for (j = 0; j < u; j++) {//for every url
-            for (k = 0; k < u; k++) {//for every arrangement in place P
-                if ((W(j,k) == 0) || (W(j,k) <= bestW)) { //(W(j,k) == 0) is early exit to get the 0s
-                    if (j
-                    bestW = W(j,k);
-                    //best = j*(u-1)+k;
+    int* orderW = calloc(u*u, sizeof(int));//points back to WCP in ascending order
+
+    for(i = 0; i < u*u; i++) orderW[i] = -1;
+    int sizeOrderW = u*u;
+
+
+    for(i = 0; i < u*u; i++){    // Iterates INITIAL ORDER
+        double val = WCP[i];
+        //printf("%d(aka %d, %d) has %lf weight\n", i, (i-i%u)/u, i%u, val);
+        int e;
+        for(e = 0; e < sizeOrderW; e++){ // Iterates saving order until it finds a new place or finds a lower val
+            int urlRef = orderW[e];
+            if(urlRef == -1){
+                orderW[e] = i;
+                break;
+            }
+            else{
+                if(val <= WCP[urlRef]){
+                    shiftRight(orderW, e, sizeOrderW);
+                    orderW[e] = i;
+                    break;
                 }
             }
-        //append best to list
-        //Worder[best] = 
         }
-    }*/
+    }
+    //printf("orderW:\n");
+    //for(i = 0; i < u*u; i++) printf("%d(%d,%d) %lf\n", orderW[i], orderW[i]/u, orderW[i]%u,W((orderW[i]/u),(orderW[i]%u)));
+
+    // Insert to final list
+    int* visitedP = calloc(u, sizeof(int));//set to store the seen P in final rank
+    int* visitedC = calloc(u, sizeof(int));//set to store the seen C in union
+    int idx = 0;
+    double Wsmartalgo = 0;
+    for(i = 0; i < u*u; i++){
+        int setPos = orderW[i];
+        if(visitedP[setPos%u] == 0){
+            if(visitedC[setPos/u] == 0) {
+                visitedP[setPos%u] = 1;
+                visitedC[setPos/u] = 1;
+                Prank[setPos%u] = setPos/u + 1;
+                //printf("%d.Placing %d in %d position.\n",i,setPos/u, setPos%u);
+                Wsmartalgo += W((setPos/u),(setPos%u));
+                idx++;
+            }
+        } 
+        if(idx == u) break;
+    }
+    printf("%6lf\n", Wsmartalgo);
+    for (i = 0; i < u; i++) printf("%s\n",urlList[Prank[i]-1]);
+
+    // DEBUG
+    //for(idx = 0; idx < u; idx++) printf("%d ", Prank[idx]);
+    //printf("\n");
+
     //free
+    free(visitedP);
+    free(visitedC);
     free(orderW);
     free(WCP);
     disposeQueue(q);
