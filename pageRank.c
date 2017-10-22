@@ -80,8 +80,8 @@ int PageRankW(double d, double diffPR, int maxIterations) {
                     sumOut += outLinks[k];
                 }
             }
-            weightIn[j][i]  = (double)(inLinks[i])/(double)(sumIn);    // j->i
-            weightOut[j][i] = (double)(outLinks[i])/(double)(sumOut); // j->i
+            weightIn[j][i]  = (double)(inLinks[i])/(double)(sumIn);     // j->i
+            weightOut[j][i] = (double)(outLinks[i])/(double)(sumOut);   // j->i
         }
     }
     for (j = 0; j < sizeUrl; j++) {
@@ -117,10 +117,8 @@ int PageRankW(double d, double diffPR, int maxIterations) {
             diff += difference;
         }
     }
-    // UMMMMM WTF
 
     int* seen = calloc(sizeUrl, sizeof(char));
-
     double maxurlPR = 0;
     int max = 0;
     FILE *fp = fopen("pagerankList.txt", "w");
@@ -130,20 +128,17 @@ int PageRankW(double d, double diffPR, int maxIterations) {
                 if (seen[j] == 0) {
                     maxurlPR = urlPR[j][noIter];
                     max = j;
-                    //printf("    maxurlPR = %lf max = %d\n   urlPR[%d][%d] = %lf, yes thats right j = %d\n",maxurlPR,max,j,noIter,urlPR[j][noIter],j);
                 }
             }
         }
-        //printf("    max = %d, maxPR = %lf\n", max, maxurlPR);
         seen[max] = 1;
-        //printf("url:%s outgoing links:%.0f page rank: %.7f\n", urlList[max], outLinks[max], urlPR[max][noIter]);
         fprintf(fp, "%s, %.0f, %.7f\n", urlList[max], outLinks[max], urlPR[max][noIter]);
-        //for (k = 0; k < noIter; k++) printf("[%d]%lf", k,urlPR[max][k]);
-        //printf("\n");
         maxurlPR = 0;
         max = 0;
     }
+
     fclose(fp);
+
     // freeing used memory
     disposeGraph(g);
     for(i = 0; i < sizeUrl; i++) free(urlPR[i]);

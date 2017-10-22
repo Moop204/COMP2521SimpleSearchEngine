@@ -21,12 +21,16 @@ int main(int argc, char **argv){
     assert(argc > 1);
 
     int length = LenCollection();
-    char **collection = GetCollection("Sample1/collection.txt",length, SIZEOFURL);   // INITIAL ORDER reference
-    int *listFreq = calloc(length, sizeof(int));            // INITIAL ORDER of frequency
+    // Reference by which all other arrays except listPrint follows
+    char **collection = GetCollection("Sample1/collection.txt",length, SIZEOFURL);  
+    // Frequency of each URL
+    int *listFreq = calloc(length, sizeof(int));                                    
+    // PageRank of each URL
     double *listPgRank = calloc(length, sizeof(double));
 
     PageRankW(0.850000, 0.000010, 1000);
  
+    // Inserts frequency of all pages for all words
     int idx;
     for(idx = 0; idx < argc; idx++){
         char *arg = argv[idx];
@@ -101,28 +105,23 @@ int main(int argc, char **argv){
 }
 */
 
+// Reads pagerankList.txt to find pagerank based on url
 double readPageRank(char* url){
     char* tmp = calloc(MAXWORD, sizeof(char));
-
-
-
     FILE *open = fopen("pagerankList.txt", "r");    
     double result;
     if(open != NULL){
         while(fscanf(open, "%s", tmp) != EOF){
             RemoveSpecialCharacters(tmp);
-            printf("Tut %s  %s\n", tmp, url);
             if(strcmp(tmp, url) == 0) break;
-            
         }
-     	fscanf(open, "%s", tmp); //Passes output count
+     	fscanf(open, "%s", tmp); // Passes output count
         if(fscanf(open, "%lf", &result) != EOF){
             free(tmp);
             return result;
         }
         else{
             free(tmp);
-            printf("%s\n", tmp);
             return -1.0; // Error
         }
     }
