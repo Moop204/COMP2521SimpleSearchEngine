@@ -33,57 +33,11 @@ void shiftRight(int *list, int pos, int max);
 double tf(char* word, char* url) {
     int N = 0; //# of total words
     int f = 0; //f of the term
-    
 
-/*
-    //open inverted index, find N
-    char file_name[SIZEOFDIR+SIZEOFURL+SIZEOFEXT+TERMINATING] = "Sample1/";
-    strcat(strcat(file_name,url),".txt");
-    //printf("filename %s\n",file_name);
-    printf("FILE %s\n", file_name);
-    FILE *open = fopen(file_name, "r");
-    char* tmp;
-    tmp = (char *) malloc((SIZEOFURL)*sizeof(char));
-    char* hashtag;
-    hashtag = (char *) malloc((SIZEOFURL)*sizeof(char));
-    char* section;
-    section = (char *) malloc((MAXWORD)*sizeof(char));
-
-    //char* ftmp = tmp;
-    //char* fhashtag = hashtag;
-    char* fsection = section;  
-
-    if(open != NULL){
-        //scan through to Section-2
-        if (!(fscanf(open,"%s %s", hashtag, section) == 2)) return -1;                 //error
-        if (strcmp(hashtag,"#start")+strcmp(section,"Section-1") != 0) return -2;     //error
-        //printf("%s %s:\n",hashtag,section);
-        while((fscanf(open,"%s", tmp) != EOF) && strcmp(tmp,"#end") != 0);
-        //tmp == #end, make sure Section-1 is next and then close
-        if (!(fscanf(open,"%s", section) == 1 && strcmp(section,"Section-1") == 0)) return -3;//error
-        //check if at Section-2
-        if (!(fscanf(open,"%s %s", hashtag, section) == 2)) return -4;                 //error
-        if (strcmp(hashtag,"#start")+strcmp(section,"Section-2") != 0) return -5;     //error
-        while((fscanf(open,"%s", tmp) != EOF) && strcmp(tmp,"#end") != 0) {
-            //printf("tmp = %s\n",tmp);
-            N++;
-            //normalise the word 
-            tmp = RemoveSpecialCharacters(tmp);     // Removes special characters
-            NormaliseWord(tmp); 
-            if (strcmp(word, tmp) == 0) f++;
-        }
-        //tmp == #end, make sure Section-2 is next and then close
-        if (!(fscanf(open,"%s",section) == 1 && strcmp(section,"Section-2") == 0)) return -6;//error
-        //done, close file
-    }
-    fclose(open);
-    //free(ftmp);
-    //free(fhashtag);
-    free(fsection);
-*/
+    // obtain values
     f = wordFrequency(word, url);
     N = wordTotal(url);
-    //calculating f
+    // calculating f
     printf("f = %d\nN = %d\n", f, N);
 
     return (double)(f)/(double)(N);
@@ -179,7 +133,7 @@ char line[MAXCHAR];
     fclose(open);
 */
 
-
+/*
 
 int main(int argc, char **argv){
 
@@ -237,11 +191,6 @@ int main(int argc, char **argv){
 
     for(i = 0; i < length; i++){    // Iterates INITIAL ORDER
         int val = listFreq[i];
-        printf("%d has %d freq\n", i, val);
-
-
-
-
         int e;
         if(val != 0){
             for(e = 0; e < MAXOUTPUT; e++){ // Iterates printing order until it finds a new place or finds a lower val
@@ -283,10 +232,4 @@ int main(int argc, char **argv){
     free(listPrint);
     return 0;
 }
-
-void shiftRight(int *list, int pos, int max){
-    int cur;
-    for(cur = max-1; cur > pos; cur --){
-        list[cur] = list[cur-1];
-    }
-}
+*/

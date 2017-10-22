@@ -207,21 +207,9 @@ int wordTotal( char* url) {
     return (f);
 }
 
-char *RemoveSpecialCharacters(char* str){
-    int len = strlen(str);
-    int i;
-    for(i = 0; i < len; i++){
-        if(str[i] == '.' || str[i] == ';' || str[i] == '?'){
-            str[i] = '\0';
-        }
-
-    }
-    return str;
-}
-
 /*
-// Code obtained from lab08 of COMP2521 course provided by UNSW CSE Faculty
-// Modified by Andrew Phuoc Nguyen and Justin Chun Sang Or
+// Code obtained from lab08 of COMP2521 course provided by UNSW CSE Faculty 
+// and edited by Andrew Phuoc Nguyen
 *NormalizeWord*
 ---------------
 Description: Make sure all the Roman letters in the URL are
@@ -244,9 +232,33 @@ Input: input_url
 void NormaliseWord(char* word)
 {
   int i = 0;
-  while (word[i]) {
-    if (word[i] < 91 && word[i] > 64) // Bounded below so this funct. can run on all urls
-      word[i] += 32;
+  while (word[i] != '\0') {
+      // NEW
+    if (word[i] <= 'Z' && word[i] >= 'A') // Bounded below so this funct. can run on all urls
+      // /NEW
+      word[i] += 'a' - 'A';
     i++;
+    if(word[i] == '\0') break;
   }
 }
+
+void shiftRight(int *list, int pos, int max){
+    int cur;
+    for(cur = max-1; cur > pos; cur --){
+        list[cur] = list[cur-1];
+    }
+}
+
+char *RemoveSpecialCharacters(char* str){
+    int len = strlen(str);
+    int i;
+    for(i = 0; i < len; i++){
+//        printf("str[%d] = %c\n", i, str[i]);
+        if(str[i] == '.' || str[i] == ';' || str[i] == '?' || str[i] == ','){
+            str[i] = '\0';
+        }
+
+    }
+    return str;
+}
+
