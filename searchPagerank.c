@@ -13,16 +13,16 @@
 #include "invertedIndex.h"
 
 #define MAXPRINT 30
-/*
+
 double readPageRank(char* url);
 
 int main(int argc, char **argv){
 
     assert(argc > 1);
 
-    int length = LenCollection();
+    int length = LenCollection("collection.txt");
     // Reference by which all other arrays except listPrint follows
-    char **collection = GetCollection("Sample1/collection.txt",length, SIZEOFURL);  
+    char **collection = GetCollection("collection.txt",length, SIZEOFURL);  
     // Frequency of each URL
     int *listFreq = calloc(length, sizeof(int));                                    
     // PageRank of each URL
@@ -92,7 +92,7 @@ int main(int argc, char **argv){
             break;
         else{
             int ref = listPrint[i];
-            printf("%s %d %.7lf\n", collection[ref], listFreq[ref], listPgRank[ref]);
+            printf("%s\n", collection[ref]);
         }
     }
  
@@ -103,7 +103,7 @@ int main(int argc, char **argv){
     free(listPgRank);
     return 0;
 }
-*/
+
 
 // Reads pagerankList.txt to find pagerank based on url
 double readPageRank(char* url){

@@ -12,8 +12,8 @@
 
 int PageRankW(double d, double diffPR, int maxIterations) {
     // initialising variables and pointers
-    int sizeUrl = LenCollection("Sample1/collection.txt");
-    char** urlList = GetCollection("Sample1/collection.txt",sizeUrl,SIZEOFURL);
+    int sizeUrl = LenCollection("collection.txt");
+    char** urlList = GetCollection("collection.txt",sizeUrl,SIZEOFURL);
     Graph g = GetGraph(urlList);
     //CALLOC - urlPR to store the pageranks of every iteration.
     double** urlPR;     //[sizeUrl][maxIterations]

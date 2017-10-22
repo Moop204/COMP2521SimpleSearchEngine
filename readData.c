@@ -209,11 +209,9 @@ char *RemoveSpecialCharacters(char* str){
     int len = strlen(str);
     int i;
     for(i = 0; i < len; i++){
-        //printf("str[%d] = %c\n", i, str[i]);
         if(str[i] == '.' || str[i] == ';' || str[i] == '?' || str[i] == ','){
             str[i] = '\0';
         }
-
     }
     return str;
 }
