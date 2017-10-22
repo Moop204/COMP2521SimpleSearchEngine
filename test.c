@@ -20,7 +20,8 @@ int main (void) {
     Graph g = GetGraph(urlList);
     printf("nV = %d", nVertices(g));
     if (!PageRankW(0.850000,0.000010,1000)) printf("PageRank succeeded.\n");
-    InvertedIndex(urlList);
+    printf("%s\n", RemoveSpecialCharacters("He'llo!"));
+    //InvertedIndex(urlList);
     //double k = tf("mars", "url11");
     //printf("tf = %lf\n", k);
     //k = idf("mars");
