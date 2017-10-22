@@ -84,7 +84,6 @@ int main(int argc, char **argv){
     char **collection = GetCollection("collection.txt",length, SIZEOFURL);   // INITIAL ORDER reference
     int *listFreq = calloc(length, sizeof(int));            // INITIAL ORDER of frequency
     double *listTfIdf = malloc(length * sizeof(double));
-    InvertedIndex(collection);
 
     int idx;
     int nUrls;

@@ -27,8 +27,6 @@ int main(int argc, char **argv){
     int *listFreq = calloc(length, sizeof(int));                                    
     // PageRank of each URL
     double *listPgRank = calloc(length, sizeof(double));
-
-    PageRankW(0.850000, 0.000010, 1000);
  
     // Inserts frequency of all pages for all words
     int idx;
