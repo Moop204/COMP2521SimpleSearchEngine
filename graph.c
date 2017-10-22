@@ -6,6 +6,7 @@
 #include <assert.h>
 #include <string.h>
 #include "graph.h"
+#include "readData.h"
 
 #define strEQ(g,t) (strcmp((g),(t)) == 0)
 

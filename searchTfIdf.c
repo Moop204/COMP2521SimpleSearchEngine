@@ -9,8 +9,8 @@
 #include <string.h>
 #include <stdlib.h>
 #include "readData.h"
-#include "invertedIndex.h"
-#include "pageRank.h"
+#include "inverted.h"
+#include "pagerank.h"
 #include "searchTfIdf.h"
 #include "set.h"
 #include "queue.h"

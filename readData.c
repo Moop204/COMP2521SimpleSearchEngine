@@ -4,7 +4,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include "readData.h"
-#include "invertedIndex.h"
+#include "inverted.h"
 #include "set.h"
 #include "queue.h"
 #include "graph.h"
@@ -259,3 +259,19 @@ void shiftRight(int *list, int pos, int max){
     }
 }
 
+// Strdup source code from 
+// https://stackoverflow.com/questions/37132549/implementation-of-strdup-in-c-programming
+char *strdup(char *src)
+{
+
+    char *str;
+    int len;
+
+    while (src[len])
+        len++;
+    str = (char*)malloc(sizeof(*str) * (len+1));
+    while (*src)
+        *str++ = *src++;
+    *str = '\0';
+    return (str);
+}

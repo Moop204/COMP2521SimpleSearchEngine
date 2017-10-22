@@ -5,8 +5,8 @@
 #include <string.h>
 #include <math.h>
 #include "readData.h"
-#include "invertedIndex.h"
-#include "pageRank.h"
+#include "inverted.h"
+#include "pagerank.h"
 #include "scaledFootrule.h"
 #include "set.h"
 #include "queue.h"

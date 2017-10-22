@@ -4,7 +4,7 @@
 #define MAXOUTPUT 30
 
 #include "graph.h"
-#include "invertedIndex.h"
+#include "inverted.h"
 
 char** GetCollection(char* file, int elements, int length);
 int LenCollection(char *filename);
@@ -14,5 +14,5 @@ int wordFrequency(char* word, char* url);
 int wordTotal( char* url);
 char *RemoveSpecialCharacters(char* str);// Returns a string without special characters
 void NormaliseWord(char* word); // Taken from lab08 of COMP2521
-
+char *strdup(char *src);
 

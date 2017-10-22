@@ -8,9 +8,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
-#include "pageRank.h"
+#include "pagerank.h"
 #include "readData.h"
-#include "invertedIndex.h"
+#include "inverted.h"
 
 #define MAXPRINT 30
 
