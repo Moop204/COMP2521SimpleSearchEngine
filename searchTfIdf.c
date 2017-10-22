@@ -191,9 +191,14 @@ int main(int argc, char **argv){
     int length = LenCollection("Sample1/collection.txt");
     char **collection = GetCollection(length, SIZEOFURL);   // INITIAL ORDER reference
     int *listFreq = calloc(length, sizeof(int));            // INITIAL ORDER of frequency
-    double *listTfIdf = calloc(length, sizeof(int));
-    int idx;
+    double *listTfIdf = malloc(length * sizeof(double));
 
+    int idx;
+    int nUrls;
+
+    for(nUrls = 0; nUrls < length; nUrls++){
+        listTfIdf[nUrls] = 0.0;         
+    }
     
     int debug;    
 
@@ -206,11 +211,12 @@ int main(int argc, char **argv){
         }
     }
 
-    for(idx = 0; idx < argc; idx++){
+    for(idx = 1; idx < argc; idx++){
         char *arg = argv[idx];
-        int nUrls;
         for(nUrls = 0; nUrls < length; nUrls++){
-            listTfIdf[nUrls] += tfIdf(arg, collection[nUrls]); 
+            double value = tfIdf(arg, collection[nUrls]);
+            listTfIdf[nUrls] += value; 
+            
             printf("%s  %.7lf\n", collection[nUrls], listTfIdf[nUrls]);
         }
     }
@@ -267,7 +273,7 @@ int main(int argc, char **argv){
         if(listPrint[i] == -1)
             break;
         else
-            printf("%s %d %.7lf\n", collection[listPrint[i]], listFreq[i+1], listTfIdf[i+1]);
+            printf("%s %d %.7lf\n", collection[listPrint[i]], listFreq[listPrint[i]], listTfIdf[listPrint[i]]);
     }
  
     for(idx = 0; idx < length; idx++)free(collection[idx]);
