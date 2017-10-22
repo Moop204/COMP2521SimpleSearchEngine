@@ -12,7 +12,7 @@
 #include "queue.h"
 #include "graph.h"
 
-/*
+
 //#define URL(i,j,k) (urlLists[dim2*dim3*i + dim3*j + k])
 //const int dim1, dim2, dim3;  // Global variables, dimension
 //double * array = (double *)malloc(dim1*dim2*dim3*sizeof(double));
@@ -277,4 +277,4 @@ int* swap(int* array, int a, int b) {
     array[a] = array[b];
     array[b] = tmp;
     return array;
-}*/
+}
