@@ -71,28 +71,7 @@ double idf(char* word) {
             f++;
         }
    }     
-
-/*        while (fgets(line,sizeof(line),open)) {
-            //read the word
-            tokenWord = strtok(line," ");
-//            printf("tokenWord = %s\n", tokenWord);
-            NormaliseWord(tokenWord); 
-            if (strcmp(word,tokenWord) != 0) continue;
-            //read the urls
-            while (1) {
-                tokenUrl = strtok(NULL, " ");
-                if ((tokenUrl == NULL)) break;// || (strcmp(tokenUrl,"url") < 0)) break;
-                f++;
- //               printf("tokenUrl = %s\n", tokenUrl);
-            }
-            f++;
-        }
-
-    }
-    if (tokenWord) printf(" ");
-*/
     free(ftmp);
-
     fclose(open);
     //calculating
     printf("N = %d\n f = %d\n", N, f);
@@ -103,37 +82,9 @@ double idf(char* word) {
 
 double tfIdf(char*word, char*url) {
     //printf("tf %.7lf \nidf %.7lf\n",tf(word,url), idf(word,url));
-    return tf(word,url);// * idf(word);
+    return tf(word,url) * idf(word);
 }
 
-
-/* UNUSED CODE THAT MAY BE USEFUL
-char line[MAXCHAR];
-    char* file_name = "invertedIndex.txt";
-    FILE *open = fopen(file_name, "r");
-    char* tokenWord = (char*) malloc((MAXWORD)*sizeof(char));
-    //char* tokenUrl = (char*) malloc((SIZEOFURL)*sizeof(char));
-    if(open != NULL){
-        while (fgets(line,sizeof(line),open)) {
-            //read the word
-            tokenWord = strtok(line," ");
-            //printf("tokenWord = %s\n", tokenWord);
-            f++;
-            if (strcmp(word,tokenWord) != 0) continue;
-            //read the urls
-            while (1) {
-                tokenUrl = strtok(NULL, " ");
-                if ((tokenUrl == NULL)) break;// || (strcmp(tokenUrl,"url") < 0)) break;
-                f++;
-                printf("tokenUrl = %s\n", tokenUrl);
-            }
-        }
-    }
-    if (tokenWord);
-    fclose(open);
-*/
-
-/*
 
 int main(int argc, char **argv){
 
@@ -232,4 +183,4 @@ int main(int argc, char **argv){
     free(listPrint);
     return 0;
 }
-*/
+

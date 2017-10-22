@@ -22,6 +22,7 @@
 //for WCP smart algo
 #define W(x,y) WCP[(u-1)*x + y]
 
+/*
 int main(int argc, char* argv[]) {
     if (argc == 1) return -1;
     //for each file, translate file to a real list
@@ -230,22 +231,49 @@ int main(int argc, char* argv[]) {
     //2.b order all permutations for W in increasing order.
     //CALLOC - records the permutations for W in order
     int* orderW = calloc(u*u, sizeof(int));
-    /*int bestW = MAXVALUE;
-    //int best = 0;
-    for (i = 0; i < u*u; i++) {
-        
-        for (j = 0; j < u; j++) {//for every url
-            for (k = 0; k < u; k++) {//for every arrangement in place P
-                if ((W(j,k) == 0) || (W(j,k) <= bestW)) { //(W(j,k) == 0) is early exit to get the 0s
-                    if (j
-                    bestW = W(j,k);
-                    //best = j*(u-1)+k;
+
+    for(i = 0; i < u*u; i++) orderW[i] = -1;
+    int sizeOrderW = u*u;
+
+    for(i = 0; i < u*u; i++){    // Iterates INITIAL ORDER
+        double val = WCP[i];
+        printf("%d has %lf weight\n", i, val);
+        int e;
+        for(e = 0; e < sizeOrderW; e++){ // Iterates saving order until it finds a new place or finds a lower val
+            int urlRef = orderW[e];
+            if(urlRef == -1){
+                orderW[e] = i;
+                break;
+            }
+            else{
+                if(val <= WCP[urlRef]){
+                    shiftRight(orderW, e, sizeOrderW);
+                    orderW[e] = i;
+                    break;
                 }
             }
-        //append best to list
-        //Worder[best] = 
         }
-    }*/
+    }
+
+    // Insert to final list
+    
+    int* visited = calloc(u, sizeof(int));
+    int idx = 0;
+
+    for(i = 0; i < u*u; i++){
+        int setPos = orderW[i];
+        if(visited[setPos%u] == 0){
+            visited[setPos%u] = 1;
+            Prank[idx] = orderW[i]/u + 1;
+            idx++;
+        } 
+        if(idx == u) break;
+    }
+
+    // DEBUG
+    for(idx = 0; idx < u; idx++) printf("%d ", Prank[idx]);
+    printf("\n");
+
     //free
     free(orderW);
     free(WCP);
