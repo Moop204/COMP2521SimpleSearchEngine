@@ -208,21 +208,11 @@ int wordTotal( char* url) {
 
 char *RemoveSpecialCharacters(char* str){
     int len = strlen(str);
-    int i,j;
+    int i;
     for(i = 0; i < len; i++){
-        if ((str[i] < 'A') || (str[i] > 'Z' && str[i] < 'a') || (str[i] > 'z')) {//for str[i] not an alphabetical letter
-            for (j = i; j < len-1; j++) {//for the letter after
-                //move it back one
-                str[j] = str[j+1];
-            }
-            str[j] = '\0';
-            len--;
+        if(str[i] == '.' || str[i] == ';' || str[i] == '?' || str[i] == ','){
+            str[i] = '\0';
         }
-        //printf("str[%d] = %c\n", i, str[i]);
-        //if(str[i] == '.' || str[i] == ';' || str[i] == '?' || str[i] == ','){
-        //    str[i] = '\0';
-        //}
-
     }
     return str;
 }

@@ -12,8 +12,8 @@
 
 int PageRankW(double d, double diffPR, int maxIterations) {
     // initialising variables and pointers
-    int sizeUrl = LenCollection("Sample1/collection.txt");
-    char** urlList = GetCollection("Sample1/collection.txt",sizeUrl,SIZEOFURL);
+    int sizeUrl = LenCollection("collection.txt");
+    char** urlList = GetCollection("collection.txt",sizeUrl,SIZEOFURL);
     Graph g = GetGraph(urlList);
     //CALLOC - urlPR to store the pageranks of every iteration.
     double** urlPR;     //[sizeUrl][maxIterations]
@@ -86,29 +86,6 @@ int PageRankW(double d, double diffPR, int maxIterations) {
             weightOut[j][i] = (double)(outLinks[i])/(double)(sumOut);   // j->i
         }
     }
-    //printing the weightIn and weightOut tables:
-    /*for (j = 0; j < sizeUrl; j++) {
-        for(i = 0; i < sizeUrl; i++) {
-            if (weightIn[j][i] == 0) {
-                printf("               ");
-                continue;
-            } else {
-                printf("[%d][%d]%lf ",j,i,weightIn[j][i]);
-            }
-        }
-        printf("\n");
-    }
-    for (j = 0; j < sizeUrl; j++) {
-        for(i = 0; i < sizeUrl; i++) {
-            if (weightOut[j][i] == 0) {
-                printf("               ");
-                continue;
-            } else {
-                printf("[%d][%d]%lf ",j,i,weightOut[j][i]);
-            }
-        }
-        printf("\n");
-    }*/
 
     // PageRankWeighted algorithm
     while ((noIter < maxIterations-1 && diff >= diffPR) || noIter == 0) {
