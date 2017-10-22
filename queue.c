@@ -56,6 +56,7 @@ void disposeQueue(Queue q)
 		disposeNode(curr);	
 		curr = next;
 	}
+    free(q);
 }
 
 // enterQueue(Queue,Str)
@@ -98,20 +99,21 @@ char *leavePriorQueue(Queue q){
     for(cur = q->front; cur != NULL; cur = cur->next){
         if(isAlphaLess(cur->val, str)){
             if(iterSave != NULL){
-                preSave = iterSave; 
+                preSave = iterSave;     // Pointer to node before current priority
             } 
             str = cur->val;
-            save = cur;
+            save = cur;                 // Pointer to the highest current priority
         }
-        iterSave = cur;
+        iterSave = cur;                 // Saves pointer to previous node (if any)
     }
     Link nextSave = save->next;
+    
     if(preSave != NULL) preSave->next = nextSave;
-    if(strcmp(save->val, q->front->val)) q->front = nextSave;
-    if(strcmp(save->val, q->back->val)) q->back = preSave;
+    if(strcmp(save->val, q->front->val) == 0) q->front = nextSave;
+    if(strcmp(save->val, q->back->val) == 0) q->back = preSave;
 
-    free(save);
     return str;
+    
 }
 
 int max(int a1, int a2){
@@ -158,14 +160,16 @@ void showQueue(Queue q)
 	if (q->front == NULL)
 		printf("Queue is empty\n");
 	else {
-		printf("Queue (front-to-back):\n");
+		printf("Queue (front-to-back):");
 		int id = 0;
 		curr = q->front;
 		while (curr != NULL) {
+            printf("%s ", curr->val);
 			printf("[%03d] %s\n", id, curr->val);
 			id++;
 			curr = curr->next;
 		}
+        printf("\n");
 	}
 }
 

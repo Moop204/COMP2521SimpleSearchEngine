@@ -11,13 +11,17 @@
 #include "readData.h"
 #include "invertedIndex.h"
 #include "pageRank.h"
-#include "tfIdf.h"
+#include "searchTfIdf.h"
 #include "set.h"
 #include "queue.h"
 #include "graph.h"
 
-#define MAXCHAR 1000
+#define MAXCHAR   1000
+#define SIZEOFDIR 10
+#define SIZEOFEXT 4
+#define TERMINATING 1
 
+void shiftRight(int *list, int pos, int max);
 
 //TF = term frequency
 //     f of the term
@@ -28,50 +32,130 @@ double tf(char* word, char* url) {
     int N = 0; //# of total words
     int f = 0; //f of the term
 
-    //open inverted index
-    char line[MAXCHAR];
-    char* file_name = "invertedIndex.txt";
-    FILE *open = fopen(file_name, "r");
-    tmp = (char*) malloc((SIZEOFURL)*sizeof(char));
-    hashtag = (char*) malloc((SIZEOFURL)*sizeof(char));
-    section = (char*) malloc((10)*sizeof(char));
-    if(open != NULL){
-        if (!(fscanf(open,"%s %s",hashtag, section) == 2)) return NULL;//error
-        if (strcmp(hashtag,"#start")+strcmp(section,"Section-1") != 0) return NULL;//error
-        //printf("%s %s:\n",hashtag,section);
-        while((fscanf(open,"%s", tmp) != EOF) && strcmp(tmp,"#end") != 0) {
-            //printf("WHILE: tmp = %s\n", tmp);
-            for (k = 0; k < graphSize; k++){
-                //printf("FOR k = %d\n", k);
-                if (strcmp(urlList[k], tmp) == 0) {
-                    //printf("Adding an edge between %s and %s\n", urlList[i], urlList[k]);
-                    addEdge(g, urlList[i], urlList[k]);
-                    //break;
-                }
-            }
-        }
-        //tmp == #end, make sure Section-1 is next and then close
-        if (!(fscanf(open,"%s",section) == 1 && strcmp(section,"Section-1") == 0)) return NULL;//error
-        //printf("%s %s. closing\n", tmp, section);
-        //done, close and break to next iteration of connection.
-    }
-    fclose(open);
-    
-    //calculating
-
+    // obtain values
+    f = wordFrequency(word, url);
+    N = wordTotal(url);
     return (double)(f)/(double)(N);
 }
 
 //IDF = Inverse document frequency
-//                   total words
+//                   total docs
 //    = log  (---------------------------)
 //         10  # of docs containing word
 
-double idf(char* word, char* url) {
-    int N = 0; //# of total words
+double idf(char* word) {
+    int N = 0; //# of docs
     int f = 0; //# of docs containing word
-    
-    //calculating
 
+    N = LenCollection("collection.txt");
+    char* file_name = "invertedIndex.txt";
+    FILE *open = fopen(file_name, "r");
+    char* tmp = calloc(MAXWORD, sizeof(char));
+    char* ftmp = tmp;
+    if(open != NULL){
+        while(fscanf(open, "%s", tmp) != EOF && strcmp(tmp, word) != 0);
+        while(fscanf(open, "%s", tmp) != EOF 
+              && (tmp[0] == 'u' 
+              &&  tmp[1] == 'r' 
+              &&  tmp[2] == 'l')){
+            f++;
+        }
+    }     
+    free(ftmp);
+    fclose(open);
+    //calculating
     return log10((double)(N)/(double)(f));
 }
+
+double tfIdf(char*word, char*url) {
+    return tf(word,url) * idf(word);
+}
+
+
+int main(int argc, char **argv){
+
+    if(!(argc > 1)){
+        perror("Please select one or more words to search");
+        return 1;
+    }
+
+
+    int length = LenCollection("collection.txt");
+    char **collection = GetCollection("collection.txt",length, SIZEOFURL);   // INITIAL ORDER reference
+    int *listFreq = calloc(length, sizeof(int));            // INITIAL ORDER of frequency
+    double *listTfIdf = malloc(length * sizeof(double));
+    InvertedIndex(collection);
+
+    int idx;
+    int nUrls;
+
+    for(nUrls = 0; nUrls < length; nUrls++){
+        listTfIdf[nUrls] = 0.0;         
+    }
+    
+    for(idx = 1; idx < argc; idx++){
+        char *arg = argv[idx];
+        int nUrls;
+        for(nUrls = 0; nUrls < length; nUrls++){
+            listFreq[nUrls] += wordFrequency(arg, collection[nUrls]); 
+        }
+    }
+
+    for(idx = 1; idx < argc; idx++){
+        char *arg = argv[idx];
+        for(nUrls = 0; nUrls < length; nUrls++){
+            double value = tfIdf(arg, collection[nUrls]);
+            listTfIdf[nUrls] += value;             
+        }
+    }
+
+    int *listPrint = calloc(MAXOUTPUT, sizeof(int));        // order of printing, refers to INITIAL ORDER in order
+    int i;
+    for(i = 0; i < MAXOUTPUT; i++){
+        listPrint[i] = -1;
+    }
+
+    for(i = 0; i < length; i++){    // Iterates INITIAL ORDER
+        int val = listFreq[i];
+        int e;
+        if(val != 0){
+            for(e = 0; e < MAXOUTPUT; e++){ // Iterates printing order until it finds a new place or finds a lower val
+                int printRef = listPrint[e];
+                if(printRef == -1){
+                    listPrint[e] = i;
+                    break;
+                }
+                else{
+                    if(val > listFreq[printRef]){
+                        shiftRight(listPrint, e, MAXOUTPUT);
+                        listPrint[e] = i;
+                        break;
+                    }
+                    else if(val == listFreq[printRef]){
+                        if(listTfIdf[i] > listTfIdf[printRef]){
+                            shiftRight(listPrint, e, MAXOUTPUT);
+                            listPrint[e] = i; 
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        else continue;
+    }
+
+    for(i = 0; i < MAXOUTPUT; i++){
+        if(listPrint[i] == -1)
+            break;
+        else
+            printf("%s  %.6lf\n", collection[listPrint[i]], listTfIdf[listPrint[i]]);
+    }
+
+    for(idx = 0; idx < length; idx++)free(collection[idx]);
+    free(collection);
+    free(listFreq);
+    free(listTfIdf);
+    free(listPrint);
+    return 0;
+}
+

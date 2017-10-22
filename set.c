@@ -59,7 +59,15 @@ void disposeSet(Set s)
 		disposeNode(curr);	
 		curr = next;
 	}
+    free(s);
 }
+/*NOTE: 
+static void disposeNode(Link curr)
+{
+	assert(curr != NULL);
+	free(curr->val);
+	free(curr);
+}*/
 
 // insertInto(Set,Str)
 // - ensure that Str is in Set
