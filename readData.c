@@ -42,7 +42,7 @@ char** GetCollection(char* file, int elements, int length) {
     if (collection != NULL) {
         while (fscanf(collection,"%s",tmp) != EOF) {
             strcat(tmp, "\0");
-            strcpy(list[i],tmp);        // list[i] = strdup(tmp);
+            strcpy(list[i],tmp);       
             i++;
         }
     }
@@ -259,19 +259,3 @@ void shiftRight(int *list, int pos, int max){
     }
 }
 
-// Strdup source code from 
-// https://stackoverflow.com/questions/37132549/implementation-of-strdup-in-c-programming
-char *strdup(char *src)
-{
-
-    char *str;
-    int len;
-
-    while (src[len])
-        len++;
-    str = (char*)malloc(sizeof(*str) * (len+1));
-    while (*src)
-        *str++ = *src++;
-    *str = '\0';
-    return (str);
-}

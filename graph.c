@@ -164,6 +164,8 @@ static int vertexID(char *str, char **names, int N)
 // - add Str at end of Names
 int addVertex(char *str, char **names, int N)
 {
-	names[N] = strdup(str);
+    names[N] = malloc(strlen(str) * sizeof(char));
+    strcpy(names[N],str);	
+    //names[N] = strdup(str);
 	return N;
 }

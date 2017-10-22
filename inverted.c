@@ -65,7 +65,10 @@ void freeII (IIRep *r){         // Frees all memory associated with the Inverted
 void AppendIINode(char *newWord, IIRep *rep){      // Inserts node to word linked list in alphabetical order
     IINode *newNode = malloc(sizeof(IINode));
     IINode *cur;
-    newNode->word = strdup(newWord);
+
+    newNode->word = malloc(strlen(newWord) + 1);
+    strcpy(newNode->word, newWord);
+
     newNode->next = NULL;
     newNode->urls = newQueue();
     if(rep->end == NULL){
@@ -133,9 +136,10 @@ int InvertedIndex(char **urlList){
     // Strings used for editing (strcat)
     char ** dupList = malloc(len * (SIZEOFURL + sizeof(".txt")));
     int p;
-    for(p = 0; p < len; p++)
-        dupList[p] = strdup(urlList[p]);
-
+    for(p = 0; p < len; p++){
+        dupList[p] = malloc(strlen(urlList[p]) + 1);
+        strcpy(dupList[p], urlList[p]);
+    }
     // Initialising variables
     IIRep *r = InitialiseRep();
     Set sGlobal = newSet();
